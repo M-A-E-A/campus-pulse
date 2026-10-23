@@ -1,0 +1,7 @@
+﻿Impossible d’extraire la variable « $disconnect », car elle n’a pas été définie.
+Au caractère Ligne:1 : 359
++ ...  deleted:',d.count,'users deleted:',u.count); await p.$disconnect();"
++                                                           ~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation : (disconnect:String) [], RuntimeException
+    + FullyQualifiedErrorId : VariableIsUndefined
+ 

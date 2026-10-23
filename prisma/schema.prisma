@@ -1,0 +1,147 @@
+// Campus Pulse — database schema
+// Events are stored in UTC. Display happens in the campus time zone (CAMPUS_TZ).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum Role {
+  STUDENT
+  ORGANIZER
+  ADMIN
+}
+
+enum EventStatus {
+  DRAFT
+  PENDING
+  PUBLISHED
+  REJECTED
+  CANCELLED
+}
+
+enum RsvpStatus {
+  CONFIRMED
+  CANCELLED
+  WAITLISTED
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         Role     @default(STUDENT)
+  // Secret URL token for the personal "all my events" ICS feed.
+  // Rotating it invalidates the old feed link.
+  calendarToken String? @unique
+  createdAt    DateTime @default(now())
+
+  memberships  ClubMember[]
+  rsvps        Rsvp[]
+  savedEvents  SavedEvent[]
+  follows      Follow[]
+}
+
+model Club {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String
+  logo        String?
+  createdAt   DateTime @default(now())
+
+  members     ClubMember[]
+  events      Event[]
+  followers   Follow[]
+}
+
+// Ties an organizer to a club. Being in this table is what makes someone
+// an organizer for that club's events.
+model ClubMember {
+  id       String   @id @default(cuid())
+  userId   String
+  clubId   String
+  joinedAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  club Club @relation(fields: [clubId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, clubId])
+}
+
+model Category {
+  id     String  @id @default(cuid())
+  name   String  @unique
+  events Event[]
+}
+
+model Event {
+  id              String      @id @default(cuid())
+  title           String
+  description     String
+  coverImage      String?
+  startsAt        DateTime // UTC
+  endsAt          DateTime // UTC
+  location        String
+  capacity        Int? // null = no limit
+  status          EventStatus @default(DRAFT)
+  rejectionReason String?
+  clubId          String
+  categoryId      String
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  club     Club     @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  category Category @relation(fields: [categoryId], references: [id])
+  rsvps    Rsvp[]
+  savedBy  SavedEvent[]
+
+  @@index([status, startsAt])
+  @@index([clubId])
+}
+
+model Rsvp {
+  id           String     @id @default(cuid())
+  userId       String
+  eventId      String
+  status       RsvpStatus @default(CONFIRMED)
+  ticketCode   String     @unique // random, unguessable; encoded in the QR
+  checkedInAt  DateTime? // set once at the door; never counted twice
+  createdAt    DateTime   @default(now())
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  // Nobody can RSVP to the same event twice, even across status changes.
+  @@unique([userId, eventId])
+  @@index([eventId, status])
+}
+
+model SavedEvent {
+  id      String   @id @default(cuid())
+  userId  String
+  eventId String
+  savedAt DateTime @default(now())
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, eventId])
+}
+
+model Follow {
+  id         String   @id @default(cuid())
+  userId     String
+  clubId     String
+  followedAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  club Club @relation(fields: [clubId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, clubId])
+}
