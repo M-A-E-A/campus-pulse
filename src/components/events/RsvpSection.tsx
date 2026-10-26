@@ -31,6 +31,9 @@ export function RsvpSection({
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
 
+  // Send the visitor back to this event after signing in, not to a dashboard.
+  const loginHref = `/login?from=${encodeURIComponent(`/events/${eventId}`)}`;
+
   async function handleRsvp() {
     setBusy(true);
     setMessage(null);
@@ -67,20 +70,20 @@ export function RsvpSection({
 
   if (!isAuthenticated) {
     return (
-      <div className="card p-5">
+      <div className="border-2 border-ink bg-surface p-5">
         <p className="font-semibold">{t("detail.rsvp.wantToGo")}</p>
         <p className="mt-1 text-sm text-muted">{t("detail.rsvp.loginPrompt")}</p>
-        <a href="/login" className="btn btn-primary mt-4 w-full">{t("detail.rsvp.loginToRsvp")}</a>
+        <a href={loginHref} className="btn btn-primary mt-4 min-h-11 w-full">{t("detail.rsvp.loginToRsvp")}</a>
       </div>
     );
   }
 
   return (
-    <div className="card p-5">
+    <div className="border-2 border-ink bg-surface p-5">
       {ticket?.waitlisted ? (
         /* Queue spot, not a ticket: badge + explanation, no QR. */
         <div>
-          <span className="badge bg-[#fff3cd] text-[#8a6d00]">
+          <span className="bg-ink px-2.5 py-1 text-sm font-bold text-paper">
             {t("detail.rsvp.waitlistBadge", { n: ticket.rank ?? 1 })}
           </span>
           <p className="mt-2 font-semibold">{ticket.event.title}</p>
@@ -89,7 +92,7 @@ export function RsvpSection({
           </p>
           <p className="mt-3 text-sm text-muted">{t("detail.rsvp.waitlistHint")}</p>
           <button
-            className="btn btn-secondary mt-4 w-full"
+            className="btn btn-secondary mt-4 min-h-11 w-full"
             onClick={handleCancel}
             disabled={busy}
           >
@@ -104,7 +107,7 @@ export function RsvpSection({
           <p className="mt-1 text-sm text-muted">
             {t("detail.rsvp.cta")}
           </p>
-          <button className="btn btn-primary mt-4 w-full" onClick={handleRsvp} disabled={busy}>
+          <button className="btn btn-primary mt-4 min-h-11 w-full" onClick={handleRsvp} disabled={busy}>
             {busy && <span className="spinner" aria-hidden="true" />}
             {busy
               ? t("detail.rsvp.busy")

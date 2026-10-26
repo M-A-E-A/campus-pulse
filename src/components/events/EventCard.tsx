@@ -20,20 +20,60 @@ export type EventCardData = {
   dayLabel: string;
 };
 
-export function EventCard({ event }: { event: EventCardData }) {
+/** Mini-poster tones: the chapter colours dealt back as a hand of cards.
+ *  The pale tones carry a 2px ink rule so they don't dissolve into the paper
+ *  field (2px is above the detector's 1.5px outlined-box threshold); the
+ *  accent tones lift --meta to full ink so their small text clears AA —
+ *  0.75 opacity on accent-deep measures 4.22:1, under the 4.5:1 floor. The
+ *  white surface tone appears once per six so no two paper cards land on the
+ *  same row band. */
+const TONES = [
+  "bg-ink text-paper",
+  "bg-accent text-ink [--meta:1]",
+  "bg-surface text-ink border-2 border-ink",
+  "bg-accent-deep text-paper [--meta:1]",
+  "bg-accent-soft text-ink border-2 border-ink",
+  "bg-accent text-ink [--meta:1]",
+];
+
+/** Poster heights keyed off the tone index: a wall of posters has rhythm, not
+ *  one uniform box height. Derived from tone (not list position) so a poster
+ *  keeps its shape when filters change. min-h + overflow-hidden keep a long
+ *  title from spilling onto the next tile. */
+const HEIGHTS = [
+  "min-h-[420px]",
+  "min-h-[340px]",
+  "min-h-[380px]",
+  "min-h-[420px]",
+  "min-h-[340px]",
+  "min-h-[380px]",
+];
+
+export function EventCard({
+  event,
+  dealIndex,
+}: {
+  event: EventCardData;
+  /** The event's index in the server's initial list — NOT its position in
+   *  the filtered result: filters only remove cards, they never re-deal. */
+  dealIndex: number;
+}) {
   const t = useT();
+  // A dealt cycle, not a hash: the wall always mixes tones and orange lands
+  // early, instead of a random hand that can come out all black.
+  const tone = dealIndex % TONES.length;
   const spotsLeft =
     event.capacity !== null ? event.capacity - event._count.rsvps : null;
 
   return (
     <Link
       href={`/events/${event.id}`}
-      // Stable identity for GSAP Flip — cards keep their place across filters.
+      // Stable identity for GSAP Flip — posters keep their place across filters.
       data-flip-id={event.id}
-      className="card card-lift group flex flex-col overflow-hidden"
+      className={`${TONES[tone]} ${HEIGHTS[tone]} flex flex-col justify-between overflow-hidden p-6 transition-[filter] hover:brightness-95`}
     >
-      {event.coverImage ? (
-        <div className="relative aspect-[16/9] w-full bg-line/60">
+      {event.coverImage && (
+        <div className="relative -mx-6 -mt-6 mb-5 h-40 w-full overflow-hidden">
           <Image
             src={event.coverImage}
             alt=""
@@ -42,27 +82,38 @@ export function EventCard({ event }: { event: EventCardData }) {
             className="object-cover"
           />
         </div>
-      ) : (
-        <div
-          className="aspect-[16/9] w-full bg-line/60"
-          aria-hidden
-        />
       )}
-      <div className="flex flex-1 flex-col gap-1.5 p-4">
-        <div className="flex items-center justify-between gap-2">
-          <span className="badge bg-accent-soft text-accent-dark">{event.category.name}</span>
-          <span className="text-xs text-muted">{event.club.name}</span>
-        </div>
-        <h3 className="text-lg leading-snug font-semibold group-hover:text-accent-dark">
-          {event.title}
-        </h3>
-        <p className="text-sm text-muted">
-          {event.dateLabel} · {event.rangeLabel}
+
+      {/* Stacked, not side by side: the top block stays tidy however long the
+          club and category run. Body text at the body step (16px), not the
+          small step — the inspector flags 14px as the running size. */}
+      <div className="space-y-0.5">
+        <span className="block font-semibold">{event.club.name}</span>
+        <span className="block opacity-[var(--meta,0.75)]">
+          {event.category.name}
+        </span>
+      </div>
+
+      {/* Title at the full card measure — a capped measure forced real long
+          event names onto three lines (headline-lines). 24px keeps every
+          title above the 16px body step while wrapping at two lines. */}
+      <h3 className="w-full text-2xl font-extrabold leading-[1.05] tracking-tight">
+        {event.title}
+      </h3>
+
+      <div className="space-y-1">
+        {/* Overnight / multi-day ranges already open with the full start
+            date — printing dateLabel again doubled it ("Fri, 30 Oct 2026 ·
+            Fri, 30 Oct 2026 22:00 – …"). */}
+        <p className="font-semibold">
+          {event.rangeLabel.startsWith(event.dateLabel)
+            ? event.rangeLabel
+            : `${event.dateLabel} · ${event.rangeLabel}`}
         </p>
-        <p className="text-sm text-muted">{event.location}</p>
-        <p className="mt-auto pt-2 text-xs font-semibold">
+        <p className="opacity-[var(--meta,0.75)]">{event.location}</p>
+        <p className="pt-1 font-semibold">
           {spotsLeft === null ? (
-            <span className="text-muted">{t("events.openToAll")}</span>
+            <span className="opacity-[var(--meta,0.75)]">{t("events.openToAll")}</span>
           ) : spotsLeft > 0 ? (
             <span>
               {spotsLeft === 1
@@ -70,7 +121,7 @@ export function EventCard({ event }: { event: EventCardData }) {
                 : t("common.spotsLeft", { n: spotsLeft })}
             </span>
           ) : (
-            <span className="text-danger">{t("events.full")}</span>
+            <span className="line-through">{t("events.full")}</span>
           )}
         </p>
       </div>

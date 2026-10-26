@@ -1,8 +1,11 @@
 @import "tailwindcss";
 
-/* ---- Design system: Campus Pulse ----
-   One direction: warm paper background, near-black ink, one signal-orange
-   accent. Space Grotesk for display, Inter for everything else. */
+/* ---- Design system: Campus Pulse — "colour chapters" ----
+   The page is a wall of posters: every section is a full-bleed flat field
+   (ink / paper / signal orange) butted edge to edge. One typeface —
+   Cabinet Grotesk (self-hosted), swapped wholesale to IBM Plex Sans
+   Arabic in RTL. Direction: taste-skill seed 2136379154, approved
+   2026-10-24. Brief + learned constraints: .ui-craft/brief.md. */
 
 @theme {
   --color-paper: #faf7f2;
@@ -19,10 +22,17 @@
   --color-success: #1a7f37;
   --color-danger: #c62828;
 
-  --font-display: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-cabinet), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-cabinet), ui-sans-serif, system-ui, sans-serif;
 
   --radius-card: 14px;
+
+  /* Type steps (the direction's five sizes, clamped). */
+  --step-small: 0.8125rem;
+  --step-body: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);
+  --step-lead: clamp(1.25rem, 1.1rem + 0.7vw, 1.625rem);
+  --step-chapter: clamp(2.25rem, 1rem + 4vw, 3.75rem);
+  --step-hero: clamp(2.75rem, 1.5rem + 7.2vw, 9rem);
 }
 
 body {
@@ -51,53 +61,73 @@ h1, h2, h3 {
   font-family: var(--font-arabic), var(--font-display);
 }
 
-/* Visible keyboard focus everywhere, using the accent. */
+/* Visible keyboard focus everywhere. The accent ring alone disappears on the
+   orange field (same colour), so an ink halo backs it: every surface now
+   shows a ring at ≥3:1 non-text contrast. */
 :focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
+  box-shadow: 0 0 0 4px var(--color-ink);
+}
+/* The chapter rail butts colour swatch against colour swatch, so an outer
+   ring would land on a neighbouring tone. An inset ring in the label's own
+   colour always contrasts its own ground (the label is AA on that ground). */
+.hero-rail a:focus-visible {
+  outline-color: currentColor;
+  outline-offset: -3px;
+  box-shadow: none;
 }
 
-/* ---- Shared components ---- */
+/* ---- Shared components (every surface) ---- */
 
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  border-radius: 10px;
-  padding: 0.625rem 1.25rem;
-  font-weight: 600;
-  font-size: 0.925rem;
-  line-height: 1.25rem;
-  transition: background-color 0.15s ease, color 0.15s ease,
-    border-color 0.15s ease, transform 0.1s ease;
-  cursor: pointer;
-  border: 1px solid transparent;
+/* Buttons are square — the poster language has no soft corners. Inputs keep
+   6px and cards 14px, so the radius scale varies by element on purpose. */
+/* Component classes live in @layer components so Tailwind utilities (which sit
+   in @layer utilities, later) can override a property at the call site — e.g.
+   `.input border-ink bg-paper` on the events filter rail. Unlayered rules beat
+   every layer, so without this the utility overrides silently lose. That is
+   exactly what happened to `.btn`: the rail's square ink border never shipped. */
+@layer components {
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 0;
+    padding: 0.625rem 1.25rem;
+    font-weight: 600;
+    font-size: 0.925rem;
+    line-height: 1.25rem;
+    transition: background-color 0.15s ease, color 0.15s ease,
+      border-color 0.15s ease, transform 0.1s ease;
+    cursor: pointer;
+    border: 1px solid transparent;
+  }
+
+  .btn-primary {
+    background: var(--color-accent-dark);
+    color: #fff;
+  }
+  .btn-primary:hover:not(:disabled) { background: var(--color-accent-deep); }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--color-ink);
+    border-color: var(--color-line);
+  }
+  .btn-secondary:hover:not(:disabled) { border-color: var(--color-ink); }
+
+  .btn-danger {
+    background: transparent;
+    color: var(--color-danger);
+    border-color: var(--color-danger);
+  }
+  .btn-danger:hover:not(:disabled) { background: var(--color-danger); color: #fff; }
+
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  /* Press feedback — the tactile half of the micro-interaction budget. */
+  .btn:active:not(:disabled) { transform: scale(0.98); }
 }
-
-.btn-primary {
-  background: var(--color-accent-dark);
-  color: #fff;
-}
-.btn-primary:hover:not(:disabled) { background: var(--color-accent-deep); }
-
-.btn-secondary {
-  background: transparent;
-  color: var(--color-ink);
-  border-color: var(--color-line);
-}
-.btn-secondary:hover:not(:disabled) { border-color: var(--color-ink); }
-
-.btn-danger {
-  background: transparent;
-  color: var(--color-danger);
-  border-color: var(--color-danger);
-}
-.btn-danger:hover:not(:disabled) { background: var(--color-danger); color: #fff; }
-
-.btn:disabled { opacity: 0.5; cursor: not-allowed; }
-/* Press feedback — the tactile half of the micro-interaction budget. */
-.btn:active:not(:disabled) { transform: scale(0.98); }
 
 /* Hover lift for INTERACTIVE cards only (event cards, dashboard tickets).
    Dashboards, tables, and forms stay animation-free on purpose. */
@@ -123,59 +153,227 @@ h1, h2, h3 {
 }
 @keyframes cp-spin { to { transform: rotate(360deg); } }
 
-.input {
+/* Component classes live in @layer components so Tailwind utilities (which sit
+   in @layer utilities, later) can override a property at the call site — e.g.
+   `.input border-ink bg-paper` on the events filter rail. Unlayered rules beat
+   every layer, so without this the utility overrides silently lose. */
+@layer components {
+  .input {
+    width: 100%;
+    border: 1px solid var(--color-line);
+    background: var(--color-surface);
+    border-radius: 6px;
+    padding: 0.625rem 0.875rem;
+    font-size: 0.95rem;
+  }
+  .input:focus { border-color: var(--color-ink); }
+
+  .label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 0.375rem;
+  }
+
+  .card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-card);
+  }
+
+  /* Status chips (app-screens.md 7.6): a pale tint with dark text of the same
+     hue, sentence case, 13px, and never squeezed — `nowrap` + `flex: none`
+     so a long status cannot collapse to a box with its word spilling out.
+     Every text colour here is measured at >=4.5:1 against its own tint. */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    flex: none;
+    white-space: nowrap;
+    border-radius: 999px;
+    padding: 0.2rem 0.625rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+  }
+
+  /* Status colors used on event rows in dashboards and the admin queue. */
+  .badge-draft { background: #eee9dd; color: #5f5a4d; }      /* 5.7:1 */
+  .badge-pending { background: #fff3cd; color: #7a5f00; }    /* 5.5:1 */
+  .badge-published { background: #e6f4ea; color: #166534; }  /* 6.4:1 */
+  .badge-rejected { background: #fdecea; color: var(--color-danger); }  /* 4.9:1 */
+  .badge-cancelled { background: #e5e0d5; color: var(--color-ink); }
+
+  /* Empty states: one pattern everywhere — a filled ground, not a dashed box
+     (the direction bans dashed rules). */
+  .empty {
+    background: var(--color-surface);
+    padding: 2.5rem 1.5rem;
+    text-align: center;
+    color: var(--color-muted);
+  }
+
+  /* Tables. Sentence case at 13px: uppercase tracked headers are the mark of
+     the generated dashboard (references/app-screens.md, "never -> instead"). */
+  .th { text-align: start; font-size: 0.8125rem; font-weight: 500; color: var(--color-muted); padding: 0.5rem 0.75rem; }
+  .td { padding: 0.625rem 0.75rem; border-top: 1px solid var(--color-line); font-size: 0.925rem; }
+}
+
+/* ---- Landing: the poster wall ---- */
+
+/* The three field colours. Text colour is part of the field — never grey. */
+.field-ink { background: var(--color-ink); color: var(--color-paper); }
+.field-paper { background: var(--color-paper); color: var(--color-ink); }
+.field-orange { background: var(--color-accent); color: var(--color-ink); }
+
+/* Display sizes. Headings very large and tight; the words carry it. */
+.display-hero {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--step-hero);
+  line-height: 0.9;
+  letter-spacing: -0.035em;
+}
+.display-chapter {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--step-chapter);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+}
+/* Detail titles: display size, but capped so a real 50-character event title
+   still wraps inside two lines at 1440 while staying above the 4.5vw
+   focal-point floor. */
+.display-title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2.5rem, 1.25rem + 4.5vw, 4.5rem);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+}
+/* On a phone the longest real title (52 characters) has to hold two lines.
+   Measured against the live face at 390px: 40px wraps to three, 30px to two —
+   so the phone step is capped at 30px and floored at 28px (a title below 26px
+   stops reading as a display title). */
+@media (max-width: 639px) {
+  .display-title {
+    font-size: clamp(1.75rem, 4.6vw + 11.5px, 1.875rem);
+  }
+}
+/* This page's title is data-capped at 30px on phones, so its section heads
+   step down with it and the event title stays the largest type at every width.
+   Scoped to the detail page: the landing and list pages cap their titles far
+   higher and keep the full chapter step. The cap is 24px, not 26, so a phone
+   head sits a clear step under the ~30px title instead of crowding it. */
+@media (max-width: 639px) {
+  .detail-page .display-chapter {
+    font-size: clamp(1.375rem, 1rem + 2.6vw, 1.5rem);
+  }
+}
+.display-figure {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(150px, 23vw, 380px);
+  line-height: 0.8;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+/* Proof band: one line of names cropped by both edges, drifting slowly. */
+.marquee {
+  overflow: hidden;
   width: 100%;
-  border: 1px solid var(--color-line);
-  background: var(--color-surface);
-  border-radius: 10px;
-  padding: 0.625rem 0.875rem;
-  font-size: 0.95rem;
 }
-.input:focus { border-color: var(--color-ink); }
-
-.label {
-  display: block;
-  font-size: 0.85rem;
-  font-weight: 600;
-  margin-bottom: 0.375rem;
-}
-
-.card {
-  background: var(--color-surface);
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-card);
-}
-
-.badge {
+.marquee-track {
   display: inline-flex;
-  align-items: center;
-  border-radius: 999px;
-  padding: 0.15rem 0.625rem;
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+  align-items: baseline;
+  white-space: nowrap;
+  animation: cp-marquee 40s linear infinite;
+}
+@keyframes cp-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+/* Arabic reads right to left: the band drifts the other way so new names
+   enter where the eye starts. */
+:where(html[dir="rtl"]) .marquee-track { animation-direction: reverse; }
+
+/* CTA wallpaper: the word stack falls like water (doubled for a seamless
+   loop), and hovering the flank pauses it while one word becomes the mark. */
+.cp-fall {
+  animation: cp-fall 34s linear infinite;
+}
+@keyframes cp-fall {
+  from { transform: translateY(-50%); }
+  to { transform: translateY(0); }
+}
+.cp-flank:hover .cp-fall { animation-play-state: paused; }
+.cp-word {
+  position: relative;
+  display: inline-block;
+}
+.cp-word .cp-txt {
+  display: inline-block;
+  transition: opacity 0.18s ease;
+}
+/* The wallpaper glyphs are decoration (aria-hidden): set as CSS content,
+   not as a text node, so the page's text-integrity checks judge the real
+   copy — not a tone-on-tone texture that its tile crops on purpose. */
+.cp-txt::before {
+  content: "pulse";
 }
 
-/* Status colors used on event rows in dashboards and the admin queue. */
-.badge-draft { background: #eee9dd; color: #6f6a5e; }
-.badge-pending { background: #fff3cd; color: #8a6d00; }
-.badge-published { background: #e6f4ea; color: var(--color-success); }
-.badge-rejected { background: #fdecea; color: var(--color-danger); }
-.badge-cancelled { background: #fdecea; color: var(--color-danger); }
-
-/* Empty states: one pattern everywhere. */
-.empty {
-  border: 1px dashed var(--color-line);
-  border-radius: var(--radius-card);
-  padding: 2.5rem 1.5rem;
-  text-align: center;
-  color: var(--color-muted);
+/* Chapter-rail hints: the hidden-until-hover start state exists only where
+   motion is allowed. Under reduced motion the hint is simply there — the
+   reduced page is the finished page. */
+.rail-hint { opacity: 1; }
+@media (prefers-reduced-motion: no-preference) {
+  .rail-hint {
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+  .hero-rail a:hover .rail-hint,
+  .hero-rail a:focus-visible .rail-hint {
+    opacity: 1;
+  }
+}
+.cp-word .cp-mark {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0.7em;
+  height: 0.7em;
+  color: var(--color-ink);
+  opacity: 0;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.18s ease;
+}
+.cp-word:hover .cp-txt { opacity: 0; }
+.cp-word:hover .cp-mark { opacity: 1; }
+/* Reading upward from the bottom-left, both directions. */
+.sliver-label {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
 }
 
-/* Tables for attendee lists. */
-.th { text-align: start; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-muted); padding: 0.5rem 0.75rem; }
-.td { padding: 0.625rem 0.75rem; border-top: 1px solid var(--color-line); font-size: 0.925rem; }
+/* How-it-works accordion: flex-basis carries the open/close, 450ms. */
+.acc-panel {
+  transition: flex-basis 0.45s cubic-bezier(0.22, 0.61, 0.36, 1),
+    opacity 0.45s ease;
+  overflow: hidden;
+}
+
+/* Events deck: sticky stage, cards slide as the page scrolls (GSAP scrub). */
+.deck-stage {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: hidden;
+}
+.deck-row {
+  display: flex;
+  gap: 12px;
+  will-change: transform;
+}
 
 /* Reduced motion: kill transitions and animations globally.
    transition: none (not a 0.01ms duration) — a near-zero transition still
@@ -189,4 +387,6 @@ h1, h2, h3 {
     transition: none !important;
     scroll-behavior: auto !important;
   }
+  /* The marquee must rest at its start, not jump to -50%. */
+  .marquee-track { animation: none !important; }
 }

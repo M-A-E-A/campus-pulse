@@ -1,9 +1,9 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { CAMPUS_TZ } from "@/lib/tz";
 import { getT } from "@/i18n/server";
+import { AdminHeader } from "../AdminHeader";
 import { Insights, type HeatCell } from "@/components/admin/Insights";
 
 /** en-GB short weekday → JS day index (0 = Sun … 6 = Sat). */
@@ -86,26 +86,22 @@ export default async function AdminInsightsPage() {
   }
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-10">
-      <h1 className="text-3xl font-bold">{t("ins.header")}</h1>
-      <nav className="mt-2 flex gap-4 text-sm">
-        <Link href="/admin" className="text-muted hover:text-ink">{t("admin.nav.queue")}</Link>
-        <Link href="/admin/clubs" className="text-muted hover:text-ink">{t("admin.nav.clubs")}</Link>
-        <Link href="/admin/categories" className="text-muted hover:text-ink">{t("admin.nav.categories")}</Link>
-        <Link href="/admin/insights" className="font-semibold text-accent-dark">{t("admin.nav.insights")}</Link>
-      </nav>
+    <>
+      <AdminHeader titleKey="ins.header" active="/admin/insights" width="max-w-5xl" />
 
-      <p className="mt-2 text-sm text-muted">{t("ins.sub")}</p>
+      <main className="mx-auto max-w-5xl px-4 py-8">
+        <p className="text-sm text-muted">{t("ins.sub")}</p>
 
-      <Insights
-        matrix={matrix}
-        totals={{
-          events: events.length,
-          rsvps: totalRsvps,
-          checkIns: totalCheckIns,
-        }}
-        maxCheckIns={maxCheckIns}
-      />
-    </div>
+        <Insights
+          matrix={matrix}
+          totals={{
+            events: events.length,
+            rsvps: totalRsvps,
+            checkIns: totalCheckIns,
+          }}
+          maxCheckIns={maxCheckIns}
+        />
+      </main>
+    </>
   );
 }

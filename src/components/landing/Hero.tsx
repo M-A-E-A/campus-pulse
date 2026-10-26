@@ -10,82 +10,173 @@ import { useT } from "@/i18n/provider";
 gsap.registerPlugin(useGSAP);
 
 // The Three.js canvas never renders on the server.
-const HeroScene = dynamic(() => import("./HeroScene"), {
+const PulseCanvas = dynamic(() => import("./PulseCanvas"), {
   ssr: false,
   loading: () => null,
 });
 
 /**
- * Decides whether the 3D scene is worth loading: off for reduced motion,
+ * Decides whether the dot field is worth loading: off for reduced motion,
  * off for weak devices (few cores / small screens), off as a safety net
- * if WebGL is missing. Everyone else gets the scene plus a static
- * gradient behind it so the hero never looks broken.
+ * if WebGL is missing. Everyone else gets the moving field on top of the
+ * static SVG pulse line, so the hero never looks broken.
  */
 function useShouldLoadScene() {
   const [shouldLoad, setShouldLoad] = useState(false);
 
   useEffect(() => {
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const weak =
-      (navigator.hardwareConcurrency ?? 8) < 4 ||
-      window.innerWidth < 768 ||
-      typeof WebGLRenderingContext === "undefined";
-    setShouldLoad(!reduced && !weak);
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const evaluate = () => {
+      const weak =
+        (navigator.hardwareConcurrency ?? 8) < 4 ||
+        window.innerWidth < 768 ||
+        typeof WebGLRenderingContext === "undefined";
+      setShouldLoad(!mq.matches && !weak);
+    };
+    evaluate();
+    // The OS setting can flip while the tab is open: honour it live.
+    mq.addEventListener("change", evaluate);
+    return () => mq.removeEventListener("change", evaluate);
   }, []);
 
   return shouldLoad;
 }
 
-export function Hero() {
+/**
+ * Chapter one of the poster wall: the ink field. The two-line statement,
+ * one primary action, the pulse strip, and the swatch column — the
+ * navigation doubles as a preview of the page, each block the ground
+ * colour of the chapter it points to. The sticky nav carries the name.
+ */
+export function Hero({ upcomingEvents }: { upcomingEvents: number }) {
   const loadScene = useShouldLoadScene();
   const t = useT();
 
-  // Headline: one reveal, then stop. Runs once.
+  // The lines rise once, then the page is still. Runs once.
   useGSAP(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     gsap.from("[data-hero-line]", {
-      y: 40,
+      y: 32,
       opacity: 0,
-      duration: 0.8,
+      duration: 0.7,
       ease: "power3.out",
-      stagger: 0.12,
-      delay: 0.1,
+      stagger: 0.09,
+      delay: 0.05,
     });
   }, []);
 
+  const swatches = [
+    { href: "#how", label: t("landing.how.title"), hint: t("landing.nav.howHint"), cls: "bg-paper text-ink" },
+    { href: "#clubs", label: t("landing.nav.clubs"), hint: t("landing.nav.clubsHint"), cls: "bg-accent text-ink" },
+    { href: "#deck", label: t("landing.comingUp"), hint: t("landing.nav.comingHint"), cls: "bg-paper text-ink" },
+    { href: "/events", label: t("nav.events"), hint: t("landing.nav.eventsHint"), cls: "bg-accent-deep text-paper" },
+    { href: "/register", label: t("nav.signup"), hint: t("landing.nav.signupHint"), cls: "bg-paper text-ink" },
+  ];
+
   return (
-    <section className="relative flex min-h-[calc(100svh-3.5rem)] flex-col items-center justify-center overflow-hidden px-4 text-center">
-      {/* Static backdrop — also the no-WebGL / reduced-motion fallback. */}
-      <div
+    <section className="field-ink relative min-h-[92svh] overflow-hidden">
+      {/* The floor: a static pulse line, visible with or without the canvas. */}
+      <svg
         aria-hidden
-        className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,var(--color-accent-soft),transparent_65%)]"
-      />
+        viewBox="0 0 1200 100"
+        preserveAspectRatio="none"
+        className="pointer-events-none absolute inset-x-0 bottom-[26%] h-20 w-full opacity-25"
+      >
+        <path
+          d="M0 60 H380 l18-28 16 56 22-84 20 56 H760 l14-20 12 38 18-58 14 40 H1200"
+          fill="none"
+          stroke="var(--color-accent)"
+          strokeWidth="2.5"
+        />
+      </svg>
       {loadScene && (
         <div aria-hidden className="absolute inset-0">
-          <HeroScene />
+          <PulseCanvas />
         </div>
       )}
 
-      <div className="relative z-10 max-w-3xl">
-        <p data-hero-line className="text-sm font-semibold uppercase tracking-[0.18em] text-accent-dark">
-          {t("landing.hero.eyebrow")}
-        </p>
-        <h1 className="mt-4 text-5xl font-bold leading-[1.05] sm:text-7xl">
-          <span data-hero-line className="block">{t("landing.hero.title1")}</span>
-          <span data-hero-line className="block text-accent">{t("landing.hero.title2")}</span>
-        </h1>
-        <p data-hero-line className="mx-auto mt-6 max-w-xl text-lg text-muted">
-          {t("landing.hero.sub")}
-        </p>
-        <div data-hero-line className="mt-8 flex flex-wrap justify-center gap-3">
-          <Link href="/events" className="btn btn-primary px-7! py-3! text-base!">
-            {t("landing.hero.browse")}
+      {/* Desktop: the swatch column is the chapter index. */}
+      <nav
+        aria-label={t("landing.nav.chapters")}
+        className="hero-rail absolute end-0 top-0 z-10 hidden h-full w-56 flex-col lg:flex"
+      >
+        {swatches.map((s) => (
+          <Link
+            key={s.href}
+            href={s.href}
+            className={`${s.cls} group flex flex-1 items-start justify-end p-5 text-base font-semibold transition-[filter] hover:brightness-95`}
+          >
+            <span className="text-end">
+              <span className="block">{s.label}</span>
+              {/* Hover / keyboard focus reveals what the chapter holds; under
+                  reduced motion the hint stays visible (see .rail-hint). */}
+              <span className="rail-hint mt-1 block text-sm font-medium">
+                {s.hint}
+              </span>
+            </span>
           </Link>
-          <Link href="/register" className="btn btn-secondary px-7! py-3! text-base!">
-            {t("landing.hero.signup")}
-          </Link>
+        ))}
+      </nav>
+
+      <div className="relative z-10 mx-auto flex min-h-[92svh] w-full max-w-6xl flex-col justify-between px-4 py-8 lg:pe-56">
+        <div className="py-12">
+          <h1 className="display-hero">
+            <span data-hero-line className="block">
+              {t("landing.hero.title1")}
+            </span>
+            <span data-hero-line className="block text-accent">
+              {t("landing.hero.title2")}
+            </span>
+          </h1>
+          <p data-hero-line className="mt-8 max-w-xl text-[length:var(--step-body)] text-paper/75">
+            {t("landing.hero.sub")}
+          </p>
+          <div data-hero-line className="mt-8 flex flex-wrap items-center gap-6">
+            <Link
+              href="/events"
+              className="bg-accent px-8 py-3 text-base font-semibold text-ink transition-colors hover:bg-paper"
+            >
+              {t("landing.hero.browse")}
+            </Link>
+            <Link
+              href="/register"
+              className="text-base font-semibold text-paper underline-offset-4 hover:underline"
+            >
+              {t("landing.hero.signup")}
+            </Link>
+          </div>
+        </div>
+
+        {/* The live figure sits at the end of the content column, clear of
+            the action row. Its own ink ground lets the pulse line run
+            behind the label instead of through it. */}
+        <div data-hero-line className="flex items-end justify-end">
+          <div className="-mt-10 flex items-end gap-4 bg-ink pb-1 pt-10">
+            <span className="display-chapter tabular-nums text-accent">
+              {upcomingEvents}
+            </span>
+            <span className="mb-2 max-w-xs text-sm text-paper/70">
+              {t("landing.pulse.label")}
+            </span>
+          </div>
         </div>
       </div>
+
+      {/* Phone: the swatch column becomes five full-width bars. */}
+      <nav
+        aria-label={t("landing.nav.chapters")}
+        className="relative z-10 flex flex-col lg:hidden"
+      >
+        {swatches.map((s) => (
+          <Link
+            key={s.href}
+            href={s.href}
+            className={`${s.cls} flex h-[52px] items-center px-4 text-base font-semibold`}
+          >
+            {s.label}
+          </Link>
+        ))}
+      </nav>
     </section>
   );
 }

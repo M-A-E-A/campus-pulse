@@ -103,9 +103,13 @@ export function Ticket({
   return (
     <div>
       <div className="flex items-center gap-2">
-        <span className="badge bg-accent-soft text-accent-dark">{t("detail.ticket.going")}</span>
+        <span className="bg-accent-soft px-2.5 py-1 text-sm font-bold text-accent-dark">
+          {t("detail.ticket.going")}
+        </span>
         {ticket.checkedInAt && (
-          <span className="badge bg-[#e6f4ea] text-[color:var(--color-success)]">{t("detail.ticket.checkedIn")}</span>
+          <span className="border-2 border-success bg-white px-2.5 py-1 text-sm font-bold text-success">
+            {t("detail.ticket.checkedIn")}
+          </span>
         )}
       </div>
       <p className="mt-2 font-semibold">{ticket.event.title}</p>
@@ -113,7 +117,7 @@ export function Ticket({
         {ticket.startsAtLabel} · {ticket.event.location}
       </p>
 
-      <div className="mt-4 flex flex-col items-center gap-2 rounded-xl border border-line bg-white p-4">
+      <div className="mt-4 flex flex-col items-center gap-2 border-2 border-ink bg-white p-4">
         {qr ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={qr} alt={t("detail.ticket.qrAlt", { code: ticket.ticketCode })} width={180} height={180} />

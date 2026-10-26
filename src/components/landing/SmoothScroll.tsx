@@ -16,7 +16,8 @@ gsap.registerPlugin(ScrollTrigger);
  */
 export function SmoothScroll({ children }: { children: React.ReactNode }) {
   useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (mq.matches) return;
 
     const lenis = new Lenis({ lerp: 0.12 });
 
@@ -26,9 +27,21 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
     gsap.ticker.add(tick);
     gsap.ticker.lagSmoothing(0);
 
-    return () => {
+    // The OS setting can flip while the tab is open: stop smoothing live.
+    // (No restart on flip-back — re-registering ScrollTrigger mid-session
+    // is riskier than staying on native scroll.)
+    let stopped = false;
+    const stop = () => {
+      if (stopped) return;
+      stopped = true;
       gsap.ticker.remove(tick);
       lenis.destroy();
+    };
+    mq.addEventListener("change", stop);
+
+    return () => {
+      mq.removeEventListener("change", stop);
+      stop();
     };
   }, []);
 

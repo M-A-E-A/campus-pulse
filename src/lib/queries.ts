@@ -1,7 +1,8 @@
 import { unstable_cache } from "next/cache";
 import { prisma } from "@/lib/prisma";
-import { CAMPUS_TZ, formatDate, formatEventRange, formatTime } from "@/lib/tz";
+import { formatDate, formatEventRange, formatTime, formatDayLong } from "@/lib/tz";
 import type { EventCardData } from "@/components/events/EventCard";
+import type { Locale } from "@/i18n/core";
 
 /**
  * One cache tag for everything the public catalogue shows (events page,
@@ -11,13 +12,6 @@ import type { EventCardData } from "@/components/events/EventCard";
  */
 export const EVENTS_TAG = "events";
 
-const dayLabelFormatter = new Intl.DateTimeFormat("en-GB", {
-  timeZone: CAMPUS_TZ,
-  weekday: "long",
-  day: "numeric",
-  month: "long",
-});
-
 /**
  * Published events that haven't ended yet, formatted for EventCard.
  * Cached for 60s — the pages around it stay dynamic (session read), so
@@ -26,7 +20,7 @@ const dayLabelFormatter = new Intl.DateTimeFormat("en-GB", {
  * dates are formatted on the server so client tzdata never disagrees.
  */
 export const getPublishedEvents = unstable_cache(
-  async (): Promise<EventCardData[]> => {
+  async (locale: Locale): Promise<EventCardData[]> => {
     const now = new Date();
     const events = await prisma.event.findMany({
       where: { status: "PUBLISHED", endsAt: { gte: now } },
@@ -49,12 +43,12 @@ export const getPublishedEvents = unstable_cache(
       club: e.club,
       category: e.category,
       _count: e._count,
-      dateLabel: formatDate(e.startsAt),
-      rangeLabel: formatEventRange(e.startsAt, e.endsAt),
-      dayLabel: dayLabelFormatter.format(e.startsAt),
+      dateLabel: formatDate(e.startsAt, locale),
+      rangeLabel: formatEventRange(e.startsAt, e.endsAt, locale),
+      dayLabel: formatDayLong(e.startsAt, locale),
     }));
   },
-  ["published-events"],
+  ["published-events", "locale"],
   { revalidate: 60, tags: [EVENTS_TAG] }
 );
 
@@ -82,7 +76,7 @@ export type StripItem = {
 
 /** Landing "Coming up" strip: the next six events, labels precomputed. */
 export const getUpcomingStrip = unstable_cache(
-  async (): Promise<StripItem[]> => {
+  async (locale: Locale): Promise<StripItem[]> => {
     const now = new Date();
     const events = await prisma.event.findMany({
       where: { status: "PUBLISHED", endsAt: { gte: now } },
@@ -100,11 +94,47 @@ export const getUpcomingStrip = unstable_cache(
       title: e.title,
       categoryName: e.category.name,
       clubName: e.club.name,
-      dateLabel: formatDate(e.startsAt),
+      dateLabel: formatDate(e.startsAt, locale),
       timeLabel: formatTime(e.startsAt),
       spotsLeft: e.capacity !== null ? e.capacity - e._count.rsvps : null,
     }));
   },
-  ["upcoming-strip"],
+  ["upcoming-strip", "locale"],
+  { revalidate: 60, tags: [EVENTS_TAG] }
+);
+
+/**
+ * Landing proof band: club names that have published upcoming events,
+ * plus a couple that exist in the catalogue — the wall of organisers.
+ * Additive query for the redesign; same cache tag as the rest of the
+ * public catalogue, so admin club edits revalidate it too.
+ */
+export const getClubNames = unstable_cache(
+  async (): Promise<string[]> => {
+    const clubs = await prisma.club.findMany({
+      orderBy: { name: "asc" },
+      select: { name: true },
+    });
+    return clubs.map((c) => c.name);
+  },
+  ["club-names"],
+  { revalidate: 300, tags: [EVENTS_TAG] }
+);
+
+/** Landing: two honest figures, straight from the catalogue. */
+export const getLandingStats = unstable_cache(
+  async (): Promise<{ upcomingEvents: number; confirmedRsvps: number }> => {
+    const now = new Date();
+    const published = await prisma.event.findMany({
+      where: { status: "PUBLISHED" },
+      select: { id: true, endsAt: true },
+    });
+    const upcomingIds = published.filter((e) => e.endsAt >= now).map((e) => e.id);
+    const confirmedRsvps = await prisma.rsvp.count({
+      where: { status: "CONFIRMED", eventId: { in: upcomingIds } },
+    });
+    return { upcomingEvents: upcomingIds.length, confirmedRsvps };
+  },
+  ["landing-stats"],
   { revalidate: 60, tags: [EVENTS_TAG] }
 );

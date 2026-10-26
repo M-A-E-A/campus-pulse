@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useT } from "@/i18n/provider";
 
 export type MobileNavItem = { href: string; label: string };
@@ -19,6 +19,7 @@ export function MobileNav({
   onLogout?: () => Promise<void>;
 }) {
   const [open, setOpen] = useState(false);
+  const toggleRef = useRef<HTMLButtonElement>(null);
   const pathname = usePathname();
   const t = useT();
 
@@ -30,7 +31,12 @@ export function MobileNav({
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
+      if (e.key === "Escape") {
+        setOpen(false);
+        // Focus returns to the toggle so closing never strands the
+        // keyboard user at the top of the document.
+        toggleRef.current?.focus();
+      }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -39,7 +45,8 @@ export function MobileNav({
   return (
     <div className="md:hidden">
       <button
-        className="rounded-md p-2 text-ink hover:bg-line/50"
+        ref={toggleRef}
+        className="rounded-md p-3 text-ink hover:bg-line/50"
         aria-expanded={open}
         aria-controls="mobile-nav"
         aria-label={open ? t("nav.closeMenu") : t("nav.openMenu")}
@@ -57,16 +64,28 @@ export function MobileNav({
       {open && (
         <nav
           id="mobile-nav"
-          className="absolute left-0 right-0 top-full border-b border-line bg-paper px-4 pb-4 pt-2 shadow-md"
+          className="absolute left-0 right-0 top-full border-b border-line bg-paper px-4 pb-4 pt-2"
         >
           <ul className="flex flex-col gap-0.5 text-sm font-medium">
-            {items.map((item) => (
-              <li key={item.href}>
-                <Link href={item.href} className="block rounded-md px-3 py-2 hover:bg-line/50">
-                  {item.label}
-                </Link>
-              </li>
-            ))}
+            {items.map((item) => {
+              const active =
+                pathname === item.href || pathname.startsWith(item.href + "/");
+              return (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    aria-current={active ? "page" : undefined}
+                    className={
+                      active
+                        ? "block rounded-md bg-ink px-3 py-2 text-paper"
+                        : "block rounded-md px-3 py-2 hover:bg-line/50"
+                    }
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              );
+            })}
             {onLogout && (
               <li>
                 <form action={onLogout}>

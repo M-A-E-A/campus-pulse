@@ -10,7 +10,16 @@ const compat = new FlatCompat({ baseDirectory: __dirname });
 const eslintConfig = [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
   {
-    ignores: [".next/**", "node_modules/**", "public/**", "next-env.d.ts"],
+    // Installed skill mirrors (canonical .agents/skills plus the copies other
+    // tooling dirs hold) and taste-skill working files are not project code.
+    ignores: [
+      ".next/**",
+      "node_modules/**",
+      "public/**",
+      "next-env.d.ts",
+      "**/skills/**",
+      "**/.taste-skill/**",
+    ],
   },
 ];
 

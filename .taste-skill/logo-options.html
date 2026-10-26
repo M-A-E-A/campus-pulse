@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Campus Pulse — logo options</title>
+<style>
+  :root { --ink: #14130f; --paper: #faf7f2; --accent: #ff4d00; }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 40px; background: #e8e4dd; font: 14px/1.5 "Segoe UI", system-ui, sans-serif; color: var(--ink); }
+  h1 { font-size: 20px; margin: 0 0 4px; }
+  p.sub { margin: 0 0 28px; color: #555; }
+  .grid { display: flex; flex-wrap: wrap; gap: 24px; }
+  .card { background: #fff; border: 1px solid #cfc9c0; padding: 20px; width: 340px; }
+  .card h2 { font-size: 15px; margin: 0 0 2px; }
+  .card .note { color: #666; font-size: 12.5px; margin: 0 0 14px; min-height: 34px; }
+  .rows { display: grid; gap: 12px; }
+  .row { display: flex; align-items: center; gap: 18px; padding: 10px 14px; }
+  .row.light { background: var(--paper); color: var(--ink); }
+  .row.dark  { background: var(--ink);   color: var(--paper); }
+  .row.orange{ background: var(--accent); color: var(--ink); }
+  .sz { font-size: 11px; width: 44px; opacity: .6; font-variant-numeric: tabular-nums; }
+  .rec { outline: 3px solid var(--accent); }
+  .badge { display: inline-block; background: var(--accent); color: #fff; font-size: 11px; font-weight: 700; padding: 2px 8px; margin-bottom: 10px; letter-spacing: .04em; }
+</style>
+</head>
+<body>
+<h1>Campus Pulse — three one-colour marks</h1>
+<p class="sub">Every mark renders in a single currentColor, square caps, tested at 16 / 24 / 64&nbsp;px on the three chapter grounds.</p>
+
+<div class="grid">
+
+  <!-- OPTION 1 — BEAT (current production mark) -->
+  <div class="card rec">
+    <span class="badge">RECOMMENDED · already in production</span>
+    <h2>Option 1 — Beat</h2>
+    <p class="note">One ECG stroke, square caps. The same gesture as the hero pulse line and the CTA wallpaper. Reads at 16px (proven in the live nav).</p>
+    <div class="rows">
+      <div class="row light"><span class="sz">16</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M1 13.5h4.5L8 6l4 13 3-9 1.8 3.5H23" stroke="currentColor" stroke-width="2.6" stroke-linecap="square"/></svg><span class="sz">24</span><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M1 13.5h4.5L8 6l4 13 3-9 1.8 3.5H23" stroke="currentColor" stroke-width="2.6" stroke-linecap="square"/></svg><span class="sz">64</span><svg width="64" height="64" viewBox="0 0 24 24" fill="none"><path d="M1 13.5h4.5L8 6l4 13 3-9 1.8 3.5H23" stroke="currentColor" stroke-width="2.6" stroke-linecap="square"/></svg></div>
+      <div class="row dark"><span class="sz">16</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M1 13.5h4.5L8 6l4 13 3-9 1.8 3.5H23" stroke="currentColor" stroke-width="2.6" stroke-linecap="square"/></svg><span class="sz">24</span><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M1 13.5h4.5L8 6l4 13 3-9 1.8 3.5H23" stroke="currentColor" stroke-width="2.6" stroke-linecap="square"/></svg><span class="sz">64</span><svg width="64" height="64" viewBox="0 0 24 24" fill="none"><path d="M1 13.5h4.5L8 6l4 13 3-9 1.8 3.5H23" stroke="currentColor" stroke-width="2.6" stroke-linecap="square"/></svg></div>
+      <div class="row orange"><span class="sz">16</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M1 13.5h4.5L8 6l4 13 3-9 1.8 3.5H23" stroke="currentColor" stroke-width="2.6" stroke-linecap="square"/></svg><span class="sz">24</span><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M1 13.5h4.5L8 6l4 13 3-9 1.8 3.5H23" stroke="currentColor" stroke-width="2.6" stroke-linecap="square"/></svg><span class="sz">64</span><svg width="64" height="64" viewBox="0 0 24 24" fill="none"><path d="M1 13.5h4.5L8 6l4 13 3-9 1.8 3.5H23" stroke="currentColor" stroke-width="2.6" stroke-linecap="square"/></svg></div>
+    </div>
+  </div>
+
+  <!-- OPTION 2 — STAMP -->
+  <div class="card">
+    <h2>Option 2 — Stamp</h2>
+    <p class="note">Solid square, ECG knocked out as negative space. Most mass at 16px — the strongest favicon of the three, but it owns a square silhouette everywhere.</p>
+    <div class="rows">
+      <div class="row light"><span class="sz">16</span><svg width="16" height="16" viewBox="0 0 24 24"><mask id="mk16"><rect width="24" height="24" fill="#000"/><path d="M1 13.5h4.5L8 6l4 13 3-9 1.8 3.5H23" stroke="#fff" stroke-width="2.6" stroke-linecap="square" fill="none"/></mask><rect width="24" height="24" fill="currentColor" mask="url(#mk16)"/></svg><span class="sz">24</span><svg width="24" height="24" viewBox="0 0 24 24"><mask id="mk24"><rect width="24" height="24" fill="#000"/><path d="M1 13.5h4.5L8 6l4 13 3-9 1.8 3.5H23" stroke="#fff" stroke-width="2.6" stroke-linecap="square" fill="none"/></mask><rect width="24" height="24" fill="currentColor" mask="url(#mk24)"/></svg><span class="sz">64</span><svg width="64" height="64" viewBox="0 0 24 24"><mask id="mk64"><rect width="24" height="24" fill="#000"/><path d="M1 13.5h4.5L8 6l4 13 3-9 1.8 3.5H23" stroke="#fff" stroke-width="2.6" stroke-linecap="square" fill="none"/></mask><rect width="24" height="24" fill="currentColor" mask="url(#mk64)"/></svg></div>
+      <div class="row dark"><span class="sz">16</span><svg width="16" height="16" viewBox="0 0 24 24"><mask id="mkd16"><rect width="24" height="24" fill="#000"/><path d="M1 13.5h4.5L8 6l4 13 3-9 1.8 3.5H23" stroke="#fff" stroke-width="2.6" stroke-linecap="square" fill="none"/></mask><rect width="24" height="24" fill="currentColor" mask="url(#mkd16)"/></svg><span class="sz">24</span><svg width="24" height="24" viewBox="0 0 24 24"><mask id="mkd24"><rect width="24" height="24" fill="#000"/><path d="M1 13.5h4.5L8 6l4 13 3-9 1.8 3.5H23" stroke="#fff" stroke-width="2.6" stroke-linecap="square" fill="none"/></mask><rect width="24" height="24" fill="currentColor" mask="url(#mkd24)"/></svg><span class="sz">64</span><svg width="64" height="64" viewBox="0 0 24 24"><mask id="mkd64"><rect width="24" height="24" fill="#000"/><path d="M1 13.5h4.5L8 6l4 13 3-9 1.8 3.5H23" stroke="#fff" stroke-width="2.6" stroke-linecap="square" fill="none"/></mask><rect width="24" height="24" fill="currentColor" mask="url(#mkd64)"/></svg></div>
+      <div class="row orange"><span class="sz">16</span><svg width="16" height="16" viewBox="0 0 24 24"><mask id="mko16"><rect width="24" height="24" fill="#000"/><path d="M1 13.5h4.5L8 6l4 13 3-9 1.8 3.5H23" stroke="#fff" stroke-width="2.6" stroke-linecap="square" fill="none"/></mask><rect width="24" height="24" fill="currentColor" mask="url(#mko16)"/></svg><span class="sz">24</span><svg width="24" height="24" viewBox="0 0 24 24"><mask id="mko24"><rect width="24" height="24" fill="#000"/><path d="M1 13.5h4.5L8 6l4 13 3-9 1.8 3.5H23" stroke="#fff" stroke-width="2.6" stroke-linecap="square" fill="none"/></mask><rect width="24" height="24" fill="currentColor" mask="url(#mko24)"/></svg><span class="sz">64</span><svg width="64" height="64" viewBox="0 0 24 24"><mask id="mko64"><rect width="24" height="24" fill="#000"/><path d="M1 13.5h4.5L8 6l4 13 3-9 1.8 3.5H23" stroke="#fff" stroke-width="2.6" stroke-linecap="square" fill="none"/></mask><rect width="24" height="24" fill="currentColor" mask="url(#mko64)"/></svg></div>
+    </div>
+  </div>
+
+  <!-- OPTION 3 — FRAME BEAT -->
+  <div class="card">
+    <h2>Option 3 — Frame Beat</h2>
+    <p class="note">Poster crop brackets around the beat — the wall's framing device made portable. Richest at 64px; the brackets thin out at 16px.</p>
+    <div class="rows">
+      <div class="row light"><span class="sz">16</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M0 0h8v3H3v5H0V0Zm24 24h-8v-3h5v-5h3v8Z" fill="currentColor"/><path d="M4 14h3.2L9 8.6l2.6 8.6 2-5.6 1.2 2.4H20" stroke="currentColor" stroke-width="2.4" stroke-linecap="square"/></svg><span class="sz">24</span><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M0 0h8v3H3v5H0V0Zm24 24h-8v-3h5v-5h3v8Z" fill="currentColor"/><path d="M4 14h3.2L9 8.6l2.6 8.6 2-5.6 1.2 2.4H20" stroke="currentColor" stroke-width="2.4" stroke-linecap="square"/></svg><span class="sz">64</span><svg width="64" height="64" viewBox="0 0 24 24" fill="none"><path d="M0 0h8v3H3v5H0V0Zm24 24h-8v-3h5v-5h3v8Z" fill="currentColor"/><path d="M4 14h3.2L9 8.6l2.6 8.6 2-5.6 1.2 2.4H20" stroke="currentColor" stroke-width="2.4" stroke-linecap="square"/></svg></div>
+      <div class="row dark"><span class="sz">16</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M0 0h8v3H3v5H0V0Zm24 24h-8v-3h5v-5h3v8Z" fill="currentColor"/><path d="M4 14h3.2L9 8.6l2.6 8.6 2-5.6 1.2 2.4H20" stroke="currentColor" stroke-width="2.4" stroke-linecap="square"/></svg><span class="sz">24</span><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M0 0h8v3H3v5H0V0Zm24 24h-8v-3h5v-5h3v8Z" fill="currentColor"/><path d="M4 14h3.2L9 8.6l2.6 8.6 2-5.6 1.2 2.4H20" stroke="currentColor" stroke-width="2.4" stroke-linecap="square"/></svg><span class="sz">64</span><svg width="64" height="64" viewBox="0 0 24 24" fill="none"><path d="M0 0h8v3H3v5H0V0Zm24 24h-8v-3h5v-5h3v8Z" fill="currentColor"/><path d="M4 14h3.2L9 8.6l2.6 8.6 2-5.6 1.2 2.4H20" stroke="currentColor" stroke-width="2.4" stroke-linecap="square"/></svg></div>
+      <div class="row orange"><span class="sz">16</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M0 0h8v3H3v5H0V0Zm24 24h-8v-3h5v-5h3v8Z" fill="currentColor"/><path d="M4 14h3.2L9 8.6l2.6 8.6 2-5.6 1.2 2.4H20" stroke="currentColor" stroke-width="2.4" stroke-linecap="square"/></svg><span class="sz">24</span><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M0 0h8v3H3v5H0V0Zm24 24h-8v-3h5v-5h3v8Z" fill="currentColor"/><path d="M4 14h3.2L9 8.6l2.6 8.6 2-5.6 1.2 2.4H20" stroke="currentColor" stroke-width="2.4" stroke-linecap="square"/></svg><span class="sz">64</span><svg width="64" height="64" viewBox="0 0 24 24" fill="none"><path d="M0 0h8v3H3v5H0V0Zm24 24h-8v-3h5v-5h3v8Z" fill="currentColor"/><path d="M4 14h3.2L9 8.6l2.6 8.6 2-5.6 1.2 2.4H20" stroke="currentColor" stroke-width="2.4" stroke-linecap="square"/></svg></div>
+    </div>
+  </div>
+
+  <!-- OPTION 4 — CASCADE -->
+  <div class="card">
+    <h2>Option 4 — Cascade</h2>
+    <p class="note">The same heartbeat, but falling: one stroke descending across the frame. Pairs with the new falling wallpaper — mark and motion share one idea.</p>
+    <div class="rows">
+      <div class="row light"><span class="sz">16</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M1.3 7h4l2 4 2.5-7 2.5 13 2.5-8 2 4h2.5l2 4h1.4" stroke="currentColor" stroke-width="2.6" stroke-linecap="square"/></svg><span class="sz">24</span><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M1.3 7h4l2 4 2.5-7 2.5 13 2.5-8 2 4h2.5l2 4h1.4" stroke="currentColor" stroke-width="2.6" stroke-linecap="square"/></svg><span class="sz">64</span><svg width="64" height="64" viewBox="0 0 24 24" fill="none"><path d="M1.3 7h4l2 4 2.5-7 2.5 13 2.5-8 2 4h2.5l2 4h1.4" stroke="currentColor" stroke-width="2.6" stroke-linecap="square"/></svg></div>
+      <div class="row dark"><span class="sz">16</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M1.3 7h4l2 4 2.5-7 2.5 13 2.5-8 2 4h2.5l2 4h1.4" stroke="currentColor" stroke-width="2.6" stroke-linecap="square"/></svg><span class="sz">24</span><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M1.3 7h4l2 4 2.5-7 2.5 13 2.5-8 2 4h2.5l2 4h1.4" stroke="currentColor" stroke-width="2.6" stroke-linecap="square"/></svg><span class="sz">64</span><svg width="64" height="64" viewBox="0 0 24 24" fill="none"><path d="M1.3 7h4l2 4 2.5-7 2.5 13 2.5-8 2 4h2.5l2 4h1.4" stroke="currentColor" stroke-width="2.6" stroke-linecap="square"/></svg></div>
+      <div class="row orange"><span class="sz">16</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M1.3 7h4l2 4 2.5-7 2.5 13 2.5-8 2 4h2.5l2 4h1.4" stroke="currentColor" stroke-width="2.6" stroke-linecap="square"/></svg><span class="sz">24</span><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M1.3 7h4l2 4 2.5-7 2.5 13 2.5-8 2 4h2.5l2 4h1.4" stroke="currentColor" stroke-width="2.6" stroke-linecap="square"/></svg><span class="sz">64</span><svg width="64" height="64" viewBox="0 0 24 24" fill="none"><path d="M1.3 7h4l2 4 2.5-7 2.5 13 2.5-8 2 4h2.5l2 4h1.4" stroke="currentColor" stroke-width="2.6" stroke-linecap="square"/></svg></div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

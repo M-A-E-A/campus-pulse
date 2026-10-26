@@ -40,7 +40,7 @@ export const en = {
   "detail.spotsTakenLabel": "Spots taken",
   "detail.spotsLeftOne": "{n} spot left",
   "detail.noSpotsLeft": "No spots left",
-  "detail.addToCalendar": "Add to calendar (.ics)",
+  "detail.addToCalendar": "Add to calendar",
   "detail.seeTickets": "See all your tickets →",
 
   // RSVP panel (client)
@@ -67,8 +67,8 @@ export const en = {
   "detail.ticket.cancel": "Cancel RSVP",
 
   // Save / follow (client)
-  "detail.save.on": "★ Saved",
-  "detail.save.off": "☆ Save",
+  "detail.save.on": "Saved",
+  "detail.save.off": "Save",
   "detail.follow.on": "✓ Following club",
   "detail.follow.off": "+ Follow club",
   "detail.follow.unfollowedNote": "Unfollowed club",
@@ -105,7 +105,7 @@ export const fr: Record<keyof typeof en, string> = {
   "detail.spotsTakenLabel": "Places prises",
   "detail.spotsLeftOne": "{n} place restante",
   "detail.noSpotsLeft": "Plus aucune place",
-  "detail.addToCalendar": "Ajouter au calendrier (.ics)",
+  "detail.addToCalendar": "Ajouter au calendrier",
   "detail.seeTickets": "Voir tous vos billets →",
 
   "detail.rsvp.wantToGo": "Vous voulez y aller ?",
@@ -129,8 +129,8 @@ export const fr: Record<keyof typeof en, string> = {
   "detail.ticket.cancelling": "Annulation…",
   "detail.ticket.cancel": "Annuler l'inscription",
 
-  "detail.save.on": "★ Enregistré",
-  "detail.save.off": "☆ Enregistrer",
+  "detail.save.on": "Enregistré",
+  "detail.save.off": "Enregistrer",
   "detail.follow.on": "✓ Club suivi",
   "detail.follow.off": "+ Suivre le club",
   "detail.follow.unfollowedNote": "Club non suivi",
@@ -167,7 +167,7 @@ export const ar: Record<keyof typeof en, string> = {
   "detail.spotsTakenLabel": "الأماكن المحجوزة",
   "detail.spotsLeftOne": "بقيت {n} مكان واحد",
   "detail.noSpotsLeft": "لا توجد أماكن متاحة",
-  "detail.addToCalendar": "إضافة إلى التقويم (.ics)",
+  "detail.addToCalendar": "إضافة إلى التقويم",
   "detail.seeTickets": "عرض كل تذاكرك ←",
 
   "detail.rsvp.wantToGo": "هل تريد الحضور؟",
@@ -190,8 +190,8 @@ export const ar: Record<keyof typeof en, string> = {
   "detail.ticket.cancelling": "جارٍ الإلغاء…",
   "detail.ticket.cancel": "إلغاء التسجيل",
 
-  "detail.save.on": "★ محفوظ",
-  "detail.save.off": "☆ حفظ",
+  "detail.save.on": "محفوظ",
+  "detail.save.off": "حفظ",
   "detail.follow.on": "✓ تتابع النادي",
   "detail.follow.off": "+ متابعة النادي",
   "detail.follow.unfollowedNote": "تم إلغاء متابعة النادي",

@@ -1,7 +1,7 @@
 /** Landing page: hero, how-it-works, EMSI strip, upcoming strip, footer. Owner: main agent. */
 export const en = {
   "landing.hero.eyebrow": "EMSI — École Marocaine des Sciences de l'Ingénieur",
-  "landing.hero.title1": "Every club event.",
+  "landing.hero.title1": "Every event.",
   "landing.hero.title2": "One place.",
   "landing.hero.sub":
     "Stop hunting through Instagram stories and WhatsApp groups. Find EMSI campus events, RSVP in one tap, and show your QR at the door.",
@@ -9,6 +9,8 @@ export const en = {
   "landing.hero.signup": "Create an account",
 
   "landing.how.title": "How it works",
+  "landing.how.lead":
+    "Four steps, one counter: find the event, claim your spot, show your QR at the door, then rate the night.",
   "landing.how.s1t": "Find",
   "landing.how.s1x":
     "Search or filter by club, category, or date. Follow your clubs and their events rise to the top.",
@@ -45,11 +47,28 @@ export const en = {
   "landing.footer.clubsPage": "Clubs & student life",
   "landing.footer.legal":
     "Campus Pulse — a student project presented to EMSI · © 2026",
+
+  "landing.nav.clubs": "Clubs",
+  "landing.pulse.label": "upcoming events on campus",
+  "landing.nav.chapters": "Sections",
+  "landing.nav.howHint": "From search to QR",
+  "landing.nav.clubsHint": "40+ clubs, one wall",
+  "landing.nav.comingHint": "What's coming",
+  "landing.nav.eventsHint": "All of them, filterable",
+  "landing.nav.signupHint": "Join the wall",
+  "landing.proof.sentence": "Clubs already publishing their events here.",
+  "landing.stats.claim": "One campus, counted.",
+  "landing.stats.caption":
+    "Confirmed RSVPs for upcoming events, straight from the campus database. Every number on this page is real.",
+  "landing.cta.title": "Your club belongs on this wall.",
+  "landing.cta.text":
+    "Publish once. RSVPs, waitlists, QR check-in and real attendance — handled.",
+  "landing.cta.button": "Start publishing",
 } as const;
 
 export const fr: Record<keyof typeof en, string> = {
   "landing.hero.eyebrow": "EMSI — L'École Marocaine des Sciences de l'Ingénieur",
-  "landing.hero.title1": "Tous les événements des clubs.",
+  "landing.hero.title1": "Événements.",
   "landing.hero.title2": "Un seul endroit.",
   "landing.hero.sub":
     "Fini les stories Instagram et les groupes WhatsApp. Trouvez les événements du campus EMSI, inscrivez-vous en un clic et présentez votre QR à l'entrée.",
@@ -57,6 +76,8 @@ export const fr: Record<keyof typeof en, string> = {
   "landing.hero.signup": "Créer un compte",
 
   "landing.how.title": "Comment ça marche",
+  "landing.how.lead":
+    "Quatre étapes, un seul compteur : trouver l'événement, réserver sa place, montrer son QR à la porte, puis noter la soirée.",
   "landing.how.s1t": "Trouver",
   "landing.how.s1x":
     "Cherchez ou filtrez par club, catégorie ou date. Suivez vos clubs et leurs événements remontent en haut.",
@@ -93,11 +114,28 @@ export const fr: Record<keyof typeof en, string> = {
   "landing.footer.clubsPage": "Clubs & BDE",
   "landing.footer.legal":
     "Campus Pulse — projet étudiant présenté à l'EMSI · © 2026",
+
+  "landing.nav.clubs": "Clubs",
+  "landing.pulse.label": "événements à venir sur le campus",
+  "landing.nav.chapters": "Sections",
+  "landing.nav.howHint": "De la recherche au QR",
+  "landing.nav.clubsHint": "40+ clubs, un seul mur",
+  "landing.nav.comingHint": "Ce qui arrive",
+  "landing.nav.eventsHint": "Tous, filtrables",
+  "landing.nav.signupHint": "Rejoins le mur",
+  "landing.proof.sentence": "Des clubs publient déjà leurs événements ici.",
+  "landing.stats.claim": "Un campus, compté.",
+  "landing.stats.caption":
+    "Inscriptions confirmées aux événements à venir, directement depuis la base du campus. Chaque chiffre de cette page est réel.",
+  "landing.cta.title": "Votre club a sa place sur ce mur.",
+  "landing.cta.text":
+    "Publiez une fois. Inscriptions, liste d'attente, QR à la porte et vraie présence — le reste est géré.",
+  "landing.cta.button": "Commencer à publier",
 };
 
 export const ar: Record<keyof typeof en, string> = {
   "landing.hero.eyebrow": "EMSI — المدرسة المغربية لعلوم المهندس",
-  "landing.hero.title1": "كل فعاليات الأندية.",
+  "landing.hero.title1": "فعاليات.",
   "landing.hero.title2": "مكان واحد.",
   "landing.hero.sub":
     "لا داعي للبحث في ستوريات إنستغرام ومجموعات واتساب. اعثر على فعاليات الحرم في EMSI، سجّل حضورك بنقرة واحدة واعرض رمز QR عند المدخل.",
@@ -105,6 +143,8 @@ export const ar: Record<keyof typeof en, string> = {
   "landing.hero.signup": "إنشاء حساب",
 
   "landing.how.title": "كيف يعمل",
+  "landing.how.lead":
+    "أربع خطوات وعدّاد واحد: اعثر على الفعالية، احجز مكانك، اعرض رمز QR على الباب، ثم قيّم الليلة.",
   "landing.how.s1t": "اعثر",
   "landing.how.s1x":
     "ابحث أو صفِّ حسب النادي أو الفئة أو التاريخ. تابع أنديةك لتظهر فعالياتها في المقدمة.",
@@ -141,4 +181,21 @@ export const ar: Record<keyof typeof en, string> = {
   "landing.footer.clubsPage": "الأندية واتحاد الطلبة",
   "landing.footer.legal":
     "Campus Pulse — مشروع طلابي يُعرض على مدرسة EMSI · © 2026",
+
+  "landing.nav.clubs": "الأندية",
+  "landing.pulse.label": "فعاليات قادمة في الحرم",
+  "landing.nav.chapters": "الأقسام",
+  "landing.nav.howHint": "من البحث إلى رمز QR",
+  "landing.nav.clubsHint": "أكثر من ٤٠ نادياً، جدار واحد",
+  "landing.nav.comingHint": "ما هو قادم",
+  "landing.nav.eventsHint": "الكل، مع فلاتر",
+  "landing.nav.signupHint": "انضم إلى الجدار",
+  "landing.proof.sentence": "أندية تنشر فعالياتها هنا بالفعل.",
+  "landing.stats.claim": "حرم واحد، محسوب.",
+  "landing.stats.caption":
+    "تسجيلات مؤكدة للفعاليات القادمة، مباشرةً من قاعدة بيانات الحرم. كل رقم في هذه الصفحة حقيقي.",
+  "landing.cta.title": "ناديك مكانه على هذا الجدار.",
+  "landing.cta.text":
+    "انشر مرة واحدة. التسجيلات، قائمة الانتظار، رمز QR عند المدخل، والحضور الفعلي — كل شيء مُدار.",
+  "landing.cta.button": "ابدأ النشر",
 };

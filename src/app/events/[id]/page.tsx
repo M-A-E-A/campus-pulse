@@ -6,10 +6,11 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { getWaitlistRank } from "@/lib/rsvp-core";
-import { formatDate, formatEventRange, formatDateTime } from "@/lib/tz";
-import { getT } from "@/i18n/server";
+import { formatDate, formatEventRange, formatDateTime, isSameCampusDay } from "@/lib/tz";
+import { getT, getLocale } from "@/i18n/server";
 import { RsvpSection } from "@/components/events/RsvpSection";
 import { SaveFollowButtons } from "@/components/events/SaveFollowButtons";
+import { Entrance } from "@/components/Entrance";
 import type { TicketData } from "@/components/events/Ticket";
 
 /** One fetch shared by the page and generateMetadata (React memoization). */
@@ -50,7 +51,9 @@ export default async function EventPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const [session, t] = await Promise.all([auth(), getT()]);
+  // Locale drives the printed dates: a French page must not print English
+  // weekday names under its headline.
+  const [session, t, locale] = await Promise.all([auth(), getT(), getLocale()]);
 
   const event = await getEvent(id);
 
@@ -92,7 +95,7 @@ export default async function EventPage({
         rsvpId: rsvp.id,
         ticketCode: rsvp.ticketCode,
         checkedInAt: rsvp.checkedInAt?.toISOString() ?? null,
-        startsAtLabel: formatDateTime(event.startsAt),
+        startsAtLabel: formatDateTime(event.startsAt, locale),
         event: {
           title: event.title,
           startsAt: event.startsAt.toISOString(),
@@ -108,7 +111,7 @@ export default async function EventPage({
         checkedInAt: null,
         waitlisted: true,
         rank: await getWaitlistRank(event.id, rsvp.createdAt),
-        startsAtLabel: formatDateTime(event.startsAt),
+        startsAtLabel: formatDateTime(event.startsAt, locale),
         event: {
           title: event.title,
           startsAt: event.startsAt.toISOString(),
@@ -122,31 +125,57 @@ export default async function EventPage({
   }
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-10">
-      {event.coverImage && (
-        <Image
-          src={event.coverImage}
-          alt=""
-          width={1400}
-          height={600}
-          priority
-          className="mb-8 aspect-[21/9] w-full rounded-2xl object-cover"
-        />
-      )}
+    <div className="field-paper detail-page min-h-screen">
+      <Entrance />
 
-      <div className="grid gap-10 lg:grid-cols-[1fr_20rem]">
-        <div>
-          <span className="badge bg-accent-soft text-accent-dark">{event.category.name}</span>
-          <h1 className="mt-3 text-4xl font-bold leading-tight">{event.title}</h1>
-
-          <div className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-2 text-muted">
-            <p className="font-medium text-ink">
-              {formatDate(start)} · {formatEventRange(start, end)}
-            </p>
-            <p>{event.location}</p>
+      {/* The poster: full-bleed ink band, the title carrying it. */}
+      <header className="field-ink">
+        <div className="mx-auto max-w-6xl px-4 pb-10 pt-12 sm:pt-16">
+          <h1 className="display-title" data-rise>
+            {event.title}
+          </h1>
+          {/* The range already carries both dates on a multi-day event —
+              prepending the start date would print it twice. */}
+          <p
+            className="mt-5 max-w-[52ch] text-balance text-[length:var(--step-lead)]"
+            data-rise
+          >
+            {isSameCampusDay(start, end)
+              ? `${formatDate(start, locale)} · ${formatEventRange(start, end, locale)}`
+              : formatEventRange(start, end, locale)}
+          </p>
+          {/* Credits line sits below the title on purpose: category and club
+              above a headline read as a kicker, which the poster system bans. */}
+          <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2" data-rise>
+            <span className="bg-accent px-2.5 py-1 text-sm font-bold text-ink">
+              {event.category.name}
+            </span>
+            <span className="text-sm font-semibold text-paper/75">{event.club.name}</span>
           </div>
+        </div>
+      </header>
 
-          <div className="mt-4">
+      {/* Facts rail: the same orange band the events list runs on. The venue
+          and the live capacity sit here so both clear the mobile fold. */}
+      <div className="field-orange" data-rise>
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-8 gap-y-3 px-4 py-4">
+          {/* 20px: the venue is a fact on the rail. Set any smaller it reads as
+              a label sitting above the next heading — the banned kicker. */}
+          <span className="text-xl font-semibold text-balance">{event.location}</span>
+          {/* text-xl, not the inherited 16: at 16 this live fact reads as a
+              small label sitting above the next heading — the banned kicker.
+              The numeric fact is lg+ only: on phones the meter panel directly
+              under the rail already states the capacity, and repeating it
+              spends fold height on the one screen with none to spare. An
+              uncapped event has no meter, so its "open to all" stays put. */}
+          {event.capacity === null ? (
+            <p className="text-xl font-semibold">{t("detail.openToAll")}</p>
+          ) : (
+            <p className="hidden text-xl font-semibold lg:block">
+              {t("detail.rsvp.spotsTaken", { n: taken, total: event.capacity })}
+            </p>
+          )}
+          <div className="sm:ms-auto">
             <SaveFollowButtons
               eventId={event.id}
               clubId={event.clubId}
@@ -155,96 +184,122 @@ export default async function EventPage({
               isAuthenticated={Boolean(session?.user)}
             />
           </div>
+        </div>
+      </div>
 
-          <hr className="my-8 border-line" />
+      {event.coverImage && (
+        <div className="mx-auto max-w-6xl px-4 pt-8" data-rise>
+          <Image
+            src={event.coverImage}
+            alt=""
+            width={1400}
+            height={600}
+            priority
+            className="aspect-[21/9] w-full border-2 border-ink object-cover"
+          />
+        </div>
+      )}
 
-          <h2 className="text-xl font-semibold">{t("detail.about")}</h2>
-          <p className="mt-3 whitespace-pre-line leading-relaxed text-ink/90">
+      {/* gap-20 (80px) on phones/tablets: the action panel is DOM-first now, so
+          its last control must clear the 72px proximity band the next heading
+          scans — otherwise a control label reads as that heading's kicker.
+          lg restores the 40px column gutter. */}
+      <div className="mx-auto grid max-w-6xl gap-20 px-4 py-10 lg:grid-cols-[1fr_22rem] lg:gap-10">
+        {/* The RSVP action leads. On a phone the grid is one column, so putting
+            the sidebar first in the DOM keeps the capacity meter and the CTA
+            above the fold instead of trailing the whole article. On lg the
+            columns are placed explicitly, so the story sits left and the panel
+            right — reading order and DOM order agree at both sizes. */}
+        <aside className="space-y-4 lg:sticky lg:top-20 lg:col-start-2 lg:row-start-1 lg:self-start">
+          {/* Meter only: the "X of Y taken" headline now lives on the facts
+              rail above, so repeating it here would print the number twice. */}
+          {event.capacity !== null && (
+            <div className="border-2 border-ink bg-surface p-5" data-rise>
+              <div
+                className="h-3 border border-ink bg-line"
+                role="progressbar"
+                aria-valuenow={taken}
+                aria-valuemin={0}
+                aria-valuemax={event.capacity}
+                aria-label={t("detail.spotsTakenLabel")}
+              >
+                <div
+                  className="h-full bg-accent transition-all"
+                  style={{ width: `${percent}%` }}
+                />
+              </div>
+              <p className="mt-2 text-sm text-ink/75">
+                {spotsLeft !== null && spotsLeft > 0
+                  ? spotsLeft === 1
+                    ? t("detail.spotsLeftOne", { n: spotsLeft })
+                    : t("common.spotsLeft", { n: spotsLeft })
+                  : t("detail.noSpotsLeft")}
+                {waitlistCount > 0 && (
+                  <>
+                    {" · "}
+                    {t("detail.rsvp.onWaitlist", { n: waitlistCount })}
+                  </>
+                )}
+              </p>
+            </div>
+          )}
+
+          <div data-rise>
+            <RsvpSection
+              eventId={event.id}
+              isAuthenticated={Boolean(session?.user)}
+              existingRsvp={existingRsvp}
+              startsAtLabel={formatDateTime(event.startsAt, locale)}
+              isFull={isFull}
+            />
+          </div>
+
+          <div className="space-y-3" data-rise>
+            <a
+              href={`/api/events/${event.id}/calendar`}
+              // Same 2px ink frame as the poster panel it sits under, so the
+              // calendar action reads as part of the panel, not a stray control.
+              className="btn btn-secondary w-full border-2 border-ink bg-surface"
+            >
+              {t("detail.addToCalendar")}
+            </a>
+            {session?.user && (
+              <Link
+                href="/dashboard"
+                className="block text-center text-sm font-semibold text-ink/80 hover:text-ink"
+              >
+                {t("detail.seeTickets")}
+              </Link>
+            )}
+          </div>
+        </aside>
+
+        <div className="lg:col-start-1 lg:row-start-1">
+          <h2 className="display-chapter" data-rise>
+            {t("detail.about")}
+          </h2>
+          <p
+            className="mt-4 max-w-[38rem] whitespace-pre-line text-[length:var(--step-body)] leading-relaxed"
+            data-rise
+          >
             {event.description}
           </p>
 
-          <hr className="my-8 border-line" />
-
-          <h2 className="text-xl font-semibold">{t("detail.organizer")}</h2>
-          <div className="mt-3 flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-full bg-accent-soft font-bold text-accent-dark">
+          <h2 className="display-chapter mt-14" data-rise>
+            {t("detail.organizer")}
+          </h2>
+          <div className="mt-5 flex items-start gap-4 border-2 border-ink bg-surface p-5" data-rise>
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center bg-ink text-xl font-extrabold text-paper">
               {event.club.name.charAt(0).toUpperCase()}
             </div>
             <div>
-              <p className="font-semibold">{event.club.name}</p>
-              <p className="text-sm text-muted">{event.club.description}</p>
+              <p className="font-bold">{event.club.name}</p>
+              <p className="mt-1 text-[length:var(--step-body)] text-ink/80">
+                {event.club.description}
+              </p>
             </div>
           </div>
         </div>
-
-        {/* Sidebar: capacity + RSVP */}
-        <aside className="space-y-4 lg:sticky lg:top-20 lg:self-start">
-          <div className="card p-5">
-            <p className="font-semibold">
-              {event.capacity === null ? (
-                <span>{t("detail.openToAll")}</span>
-              ) : (
-                <span>
-                  {t("detail.rsvp.spotsTaken", {
-                    n: taken,
-                    total: event.capacity,
-                  })}
-                  {waitlistCount > 0 && (
-                    <>
-                      {" · "}
-                      {t("detail.rsvp.onWaitlist", { n: waitlistCount })}
-                    </>
-                  )}
-                </span>
-              )}
-            </p>
-            {event.capacity !== null && (
-              <>
-                <div
-                  className="mt-3 h-2 overflow-hidden rounded-full bg-line"
-                  role="progressbar"
-                  aria-valuenow={taken}
-                  aria-valuemin={0}
-                  aria-valuemax={event.capacity}
-                  aria-label={t("detail.spotsTakenLabel")}
-                >
-                  <div
-                    className="h-full rounded-full bg-accent transition-all"
-                    style={{ width: `${percent}%` }}
-                  />
-                </div>
-                <p className="mt-2 text-sm text-muted">
-                  {spotsLeft !== null && spotsLeft > 0
-                    ? spotsLeft === 1
-                      ? t("detail.spotsLeftOne", { n: spotsLeft })
-                      : t("common.spotsLeft", { n: spotsLeft })
-                    : t("detail.noSpotsLeft")}
-                </p>
-              </>
-            )}
-          </div>
-
-          <a
-            href={`/api/events/${event.id}/calendar`}
-            className="btn btn-secondary w-full"
-          >
-            {t("detail.addToCalendar")}
-          </a>
-
-          <RsvpSection
-            eventId={event.id}
-            isAuthenticated={Boolean(session?.user)}
-            existingRsvp={existingRsvp}
-            startsAtLabel={formatDateTime(event.startsAt)}
-            isFull={isFull}
-          />
-
-          {session?.user && (
-            <Link href="/dashboard" className="block text-center text-sm text-muted hover:text-ink">
-              {t("detail.seeTickets")}
-            </Link>
-          )}
-        </aside>
       </div>
     </div>
   );

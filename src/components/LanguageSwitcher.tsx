@@ -25,7 +25,7 @@ export function LanguageSwitcher() {
     <div
       role="group"
       aria-label={t("nav.language")}
-      className="flex items-center rounded-md border border-line p-0.5"
+      className="flex items-center"
     >
       {OPTIONS.map(({ code, label }) => (
         <button
@@ -40,7 +40,7 @@ export function LanguageSwitcher() {
               window.location.reload();
             })
           }
-          className={`rounded px-2 py-1 text-xs font-semibold leading-none transition-colors ${
+          className={`inline-flex h-11 items-center rounded px-2.5 text-sm font-semibold leading-none transition-colors ${
             locale === code
               ? "bg-ink text-paper"
               : "text-muted hover:text-ink"

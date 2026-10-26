@@ -41,7 +41,7 @@ export function CalendarSubscribe({ token, origin }: { token: string; origin: st
   }
 
   return (
-    <section className="card mt-10 p-5">
+    <section className="border-2 border-ink bg-surface p-5">
       <h2 className="text-lg font-semibold">{t("cal.title")}</h2>
       <p className="mt-1 text-sm text-muted">{t("cal.desc")}</p>
 

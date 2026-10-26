@@ -9,6 +9,28 @@ import { getT, firstZodMessage } from "@/i18n/server";
 
 export type FormState = { error?: string } | null;
 
+/**
+ * Where a role lands after signing in. This only decides when there is no
+ * `from` — the middleware already sets `from` whenever it bounces someone off
+ * a protected page, and that return trip still wins (a student who tapped Save
+ * on an event has to come back to that event). Without this, every direct
+ * sign-in landed on the student dashboard, so organizers and admins were
+ * dropped on a page they cannot use.
+ */
+function homePathFor(role: string | undefined): string {
+  if (role === "ADMIN") return "/admin";
+  if (role === "ORGANIZER") return "/organizer";
+  return "/dashboard";
+}
+
+/** `from` is caller-controlled, so it is only ever honoured as an in-app path.
+ *  `//evil.com` and absolute URLs are discarded instead of redirected to. */
+function safeFrom(value: unknown): string | undefined {
+  return typeof value === "string" && value.startsWith("/") && !value.startsWith("//")
+    ? value
+    : undefined;
+}
+
 export async function registerAction(_prev: FormState, formData: FormData): Promise<FormState> {
   const parsed = registerSchema.safeParse({
     name: formData.get("name"),
@@ -39,17 +61,28 @@ export async function registerAction(_prev: FormState, formData: FormData): Prom
   await signIn("credentials", {
     email: parsed.data.email,
     password: parsed.data.password,
-    redirectTo: "/dashboard",
+    // Everyone registers as a student, so this is the student landing.
+    redirectTo: homePathFor("STUDENT"),
   });
   return null;
 }
 
 export async function loginAction(_prev: FormState, formData: FormData): Promise<FormState> {
   try {
+    const email = String(formData.get("email") ?? "");
+    // The role has to be read *before* signing in: `signIn` ends in a redirect,
+    // so nothing after it runs. It is only acted on once the password checks
+    // out — a wrong one throws first — so it tells an attacker nothing about
+    // whether the account exists.
+    const user = await prisma.user.findUnique({
+      where: { email },
+      select: { role: true },
+    });
+
     await signIn("credentials", {
-      email: formData.get("email"),
+      email,
       password: formData.get("password"),
-      redirectTo: (formData.get("from") as string) || "/dashboard",
+      redirectTo: safeFrom(formData.get("from")) ?? homePathFor(user?.role),
     });
     return null;
   } catch (error) {
