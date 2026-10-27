@@ -6,35 +6,10 @@ import {
   markAllNotificationsReadAction,
   markNotificationReadAction,
 } from "@/lib/actions/notifications";
+import { notificationMessage } from "@/lib/notification-message";
+import { PushToggle } from "@/components/pwa/PushToggle";
 import { useT } from "@/i18n/provider";
 import type { NotificationView } from "@/lib/notifications-query";
-
-/**
- * The sentence for one row, built AT READ TIME in the viewer's locale. The row
- * itself only ever stored a type — which is the whole reason a French reader
- * and an Arabic reader can be shown the same database row correctly.
- */
-function useMessageFor() {
-  const t = useT();
-  return (n: NotificationView): string => {
-    const title = n.title ?? "";
-    switch (n.type) {
-      case "WAITLIST_PROMOTED":
-        return t("notif.type.waitlist", { title });
-      case "EVENT_REMINDER":
-        // The slot lives in the dedupe key, so each pass reads differently.
-        return t(n.dedupeKey === "reminder:1h" ? "notif.type.reminder1" : "notif.type.reminder24", {
-          title,
-        });
-      case "EVENT_CANCELLED":
-        return t("notif.type.cancelled", { title });
-      case "NEW_CLUB_EVENT":
-        return t("notif.type.newEvent", { title, club: n.club ?? "" });
-      default:
-        return t("notif.type.generic");
-    }
-  };
-}
 
 function BellIcon() {
   // Same house style as MobileNav's icons: inline stroke SVG, currentColor,
@@ -65,7 +40,6 @@ export function NotificationBellClient({
   unreadCount: number;
 }) {
   const t = useT();
-  const messageFor = useMessageFor();
 
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -198,7 +172,7 @@ export function NotificationBellClient({
                       <span
                         className={`block text-[13px] ${read ? "text-muted" : "font-semibold text-ink"}`}
                       >
-                        {messageFor(n)}
+                        {notificationMessage(t, n)}
                       </span>
                       <span className="mt-0.5 block text-[13px] text-muted">{n.timeLabel}</span>
                     </span>
@@ -229,6 +203,11 @@ export function NotificationBellClient({
               })
             )}
           </ul>
+
+          {/* Web-push switch for this device: offered inside the panel, where
+              you're already reading notifications. Renders nothing where push
+              can't work, so it never leaves a stray rule. */}
+          <PushToggle />
         </div>
       )}
     </div>

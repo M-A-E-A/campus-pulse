@@ -17,6 +17,12 @@ export const en = {
   "notif.type.cancelled": "{title} was cancelled",
   "notif.type.newEvent": "{club} published a new event: {title}",
   "notif.type.generic": "Update on an event you're following",
+  // Web-push switch in the panel footer. Four states, four honest sentences —
+  // "blocked" names where to fix it, it can't be undone from this page.
+  "notif.push.enable": "Enable push alerts",
+  "notif.push.on": "Push alerts enabled",
+  "notif.push.off": "Turn off",
+  "notif.push.blocked": "Push alerts are blocked in your browser settings",
 } as const;
 
 export const fr: Record<keyof typeof en, string> = {
@@ -33,6 +39,10 @@ export const fr: Record<keyof typeof en, string> = {
   "notif.type.cancelled": "{title} est annulé",
   "notif.type.newEvent": "{club} a publié un nouvel événement : {title}",
   "notif.type.generic": "Mise à jour d'un événement que vous suivez",
+  "notif.push.enable": "Activer les alertes push",
+  "notif.push.on": "Alertes push activées",
+  "notif.push.off": "Désactiver",
+  "notif.push.blocked": "Les alertes push sont bloquées dans les réglages du navigateur",
 };
 
 export const ar: Record<keyof typeof en, string> = {
@@ -49,4 +59,8 @@ export const ar: Record<keyof typeof en, string> = {
   "notif.type.cancelled": "تم إلغاء {title}",
   "notif.type.newEvent": "{club} نشر فعالية جديدة: {title}",
   "notif.type.generic": "تحديث بخصوص فعالية تتابعها",
+  "notif.push.enable": "تفعيل الإشعارات الفورية",
+  "notif.push.on": "الإشعارات الفورية مفعّلة",
+  "notif.push.off": "إيقاف",
+  "notif.push.blocked": "الإشعارات الفورية محظورة في إعدادات المتصفح",
 };

@@ -1,0 +1,134 @@
+<!doctype html>
+<!--
+  Offline fallback, precached by /sw.js. Everything here is inline on
+  purpose: this page is what you get when the network is GONE, so it may
+  not reference a single external file — no font, no CSS, no image.
+  System font stack instead of Cabinet Grotesk for the same reason.
+
+  Language: the app stores its locale in the cp-locale cookie (readable
+  offline — cookies are local), falling back to the device language, then
+  French. Same trilingual contract as the rest of the app: French, English
+  and Arabic with correct direction, never a half-translated screen.
+-->
+<html lang="fr" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#14130f" />
+    <title>Campus Pulse — hors connexion</title>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { height: 100%; }
+      body {
+        background: #faf7f2;
+        color: #14130f;
+        font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+      }
+      /* The poster card: solid surface, hard ink rule, flat offset shadow —
+         the same printed-panel language as every panel in the app. */
+      main {
+        width: min(100%, 26rem);
+        background: #fff;
+        border: 2px solid #14130f;
+        box-shadow: 6px 6px 0 #14130f;
+        padding: 32px 28px;
+        text-align: start;
+      }
+      svg { display: block; margin-bottom: 20px; }
+      h1 {
+        font-size: 24px;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        line-height: 1.15;
+      }
+      p {
+        margin-top: 10px;
+        font-size: 15px;
+        line-height: 1.5;
+        color: #55524b;
+      }
+      button {
+        margin-top: 22px;
+        font: inherit;
+        font-size: 14px;
+        font-weight: 700;
+        background: #ff4d00;
+        color: #14130f;
+        border: 2px solid #14130f;
+        padding: 10px 18px;
+        cursor: pointer;
+        box-shadow: 4px 4px 0 #14130f;
+      }
+      button:hover { background: #ff6a2b; }
+      button:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 #14130f; }
+      button:focus-visible { outline: 3px solid #14130f; outline-offset: 2px; }
+      /* Arabic: flip the shadow and keep the same rhythm (RTL, not mirrored CSS). */
+      [dir="rtl"] main { text-align: start; }
+      [dir="rtl"] button { box-shadow: -4px 4px 0 #14130f; }
+      [dir="rtl"] button:active { transform: translate(-2px, 2px); box-shadow: -2px 2px 0 #14130f; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <!-- The mark, same path as src/components/Logo.tsx. -->
+      <svg width="44" height="44" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M1 13.5h4.5L8 6l4 13 3-9 1.8 3.5H23" stroke="#ff4d00" stroke-width="2.6" stroke-linecap="square" />
+      </svg>
+      <h1 data-i18n="title">Vous êtes hors connexion</h1>
+      <p data-i18n="body">
+        Le campus se tait, mais vos billets sont en sécurité. Vérifiez votre connexion puis
+        réessayez.
+      </p>
+      <button type="button" data-i18n="retry" onclick="location.reload()">Réessayer</button>
+    </main>
+
+    <script>
+      (function () {
+        var STRINGS = {
+          fr: {
+            title: "Vous êtes hors connexion",
+            body: "Le campus se tait, mais vos billets sont en sécurité. Vérifiez votre connexion puis réessayez.",
+            retry: "Réessayer",
+            doc: "Campus Pulse — hors connexion",
+          },
+          en: {
+            title: "You're offline",
+            body: "The campus is quiet, but your tickets are safe. Check your connection and try again.",
+            retry: "Try again",
+            doc: "Campus Pulse — offline",
+          },
+          ar: {
+            title: "أنت غير متصل",
+            body: "الحرم هادئ، لكن تذاكري في أمان. تحقق من اتصالك ثم أعد المحاولة.",
+            retry: "إعادة المحاولة",
+            doc: "Campus Pulse — بدون اتصال",
+          },
+        };
+
+        // The app's own choice first (cookie), then the device, then French.
+        var match = document.cookie.match(/(?:^|;\s*)cp-locale=(en|fr|ar)(?:;|$)/);
+        var lang = match
+          ? match[1]
+          : (navigator.language || "fr").toLowerCase().indexOf("ar") === 0
+            ? "ar"
+            : (navigator.language || "").toLowerCase().indexOf("en") === 0
+              ? "en"
+              : "fr";
+
+        var s = STRINGS[lang] || STRINGS.fr;
+        document.documentElement.lang = lang;
+        document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
+        document.title = s.doc;
+        var nodes = document.querySelectorAll("[data-i18n]");
+        for (var i = 0; i < nodes.length; i++) {
+          nodes[i].textContent = s[nodes[i].getAttribute("data-i18n")];
+        }
+      })();
+    </script>
+  </body>
+</html>

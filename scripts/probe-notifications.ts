@@ -149,9 +149,9 @@ async function main() {
 
     // --- cancelled-event fan-out ----------------------------------------
     const c1 = await notifyEventCancelled(eid);
-    check("cancellation reaches attendees", c1 >= 1, `created=${c1}`);
+    check("cancellation reaches attendees", c1.created >= 1, `created=${c1.created}`);
     const c2 = await notifyEventCancelled(eid);
-    check("repeat cancellation creates nothing", c2 === 0, `created=${c2}`);
+    check("repeat cancellation creates nothing", c2.created === 0, `created=${c2.created}`);
 
     // --- club-published fan-out ------------------------------------------
     const already = await prisma.follow.findUnique({
@@ -162,9 +162,9 @@ async function main() {
       createdFollow = true;
     }
     const f1 = await notifyClubFollowers(club.id, eid);
-    check("followers hear about a new event", f1 >= 1, `created=${f1}`);
+    check("followers hear about a new event", f1.created >= 1, `created=${f1.created}`);
     const f2 = await notifyClubFollowers(club.id, eid);
-    check("repeat publish fan-out creates nothing", f2 === 0, `created=${f2}`);
+    check("repeat publish fan-out creates nothing", f2.created === 0, `created=${f2.created}`);
   } finally {
     // Notifications first: deleting the event would otherwise SET their
     // eventId to NULL (SetNull) and leave rows behind.

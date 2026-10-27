@@ -47,6 +47,7 @@ model User {
   savedEvents    SavedEvent[]
   follows        Follow[]
   notifications  Notification[]
+  pushSubscriptions PushSubscription[]
 }
 
 model Club {
@@ -174,6 +175,11 @@ model Notification {
   // distinct in a unique index, so they're unconstrained by it.
   dedupeKey String?
   readAt    DateTime?
+  // Set once this row has been handed to the push service (or there was no
+  // device to hand it to at the time the dispatcher ran). NULL means "push
+  // still owed" — the dispatcher scans exactly that, so a failed send simply
+  // retries on the next dispatch instead of being lost.
+  pushedAt  DateTime?
   createdAt DateTime         @default(now())
 
   user  User    @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -184,4 +190,28 @@ model Notification {
   // The bell reads "unread, newest first" for one user — this index serves it.
   @@index([userId, readAt, createdAt])
   @@unique([userId, eventId, dedupeKey])
+}
+
+// One row per browser that switched push on. The endpoint is the push
+// service's address for that browser; p256dh/auth are the encryption keys
+// web-push needs to encrypt a payload only that browser can open.
+//
+// `locale` is captured at subscribe time because a push has no request to
+// read a cookie from: the payload's sentence is rendered in the language the
+// device actually asked for, same read-time rule as the bell itself.
+model PushSubscription {
+  id        String   @id @default(cuid())
+  userId    String
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+  locale    String   @default("fr")
+  createdAt DateTime @default(now())
+  // Bumped whenever the browser re-subscribes; lets a future cleanup pass
+  // prune endpoints that stopped re-appearing instead of guessing at expiry.
+  lastSeenAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }

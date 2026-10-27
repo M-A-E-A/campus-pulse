@@ -1,7 +1,8 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { IBM_Plex_Sans_Arabic } from "next/font/google";
 import { Nav } from "@/components/Nav";
+import { RegisterSW } from "@/components/pwa/RegisterSW";
 import { getLocale, getDict, getT, LOCALE_DIRS } from "@/i18n/server";
 import { I18nProvider } from "@/i18n/provider";
 import "./globals.css";
@@ -33,11 +34,29 @@ const plexArabic = IBM_Plex_Sans_Arabic({
   variable: "--font-arabic",
 });
 
+/**
+ * Next 15 moved themeColor from metadata to the viewport export. Ink, same as
+ * the manifest's theme_color — the address bar / standalone window chrome
+ * should match the app's own header rule.
+ */
+export const viewport: Viewport = {
+  themeColor: "#14130f",
+};
+
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getT();
   return {
     title: t("meta.title"),
     description: t("meta.description"),
+    // iOS ignores app/manifest.ts for home-screen chrome: it wants these meta
+    // tags (app/icon.png and app/apple-icon.png feed the link tags too).
+    appleWebApp: {
+      capable: true,
+      title: "Campus Pulse",
+      // The nav sits on paper, so a light status bar with dark text is the
+      // honest continuation of the page under it.
+      statusBarStyle: "default",
+    },
   };
 }
 
@@ -65,6 +84,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           </a>
           <Nav />
           <main id="main">{children}</main>
+          {/* PWA: registers the service worker (prod only, no-op otherwise). */}
+          <RegisterSW />
         </I18nProvider>
       </body>
     </html>

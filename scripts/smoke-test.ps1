@@ -165,6 +165,66 @@ if ($env:CRON_SECRET) {
     } catch { Check "Cron accepts valid secret" $false $_.Exception.Message }
 }
 
+# 10. PWA: manifest, service worker, offline page, icons, public VAPID key.
+#     These are the installability contract — if any of them 404s or ships
+#     the wrong shape, the browser simply refuses to offer "install" (or
+#     worse, installs an app with no offline page).
+try {
+    $mf = Invoke-WebRequest -Uri "$base/manifest.webmanifest" -UseBasicParsing -TimeoutSec 30
+    # PS 5.1 hands back byte[] for MIME types it doesn't know, and
+    # application/manifest+json is one of them — decode before parsing.
+    $mfText = if ($mf.Content -is [byte[]]) { [System.Text.Encoding]::UTF8.GetString($mf.Content) } else { [string]$mf.Content }
+    $mfj = $mfText | ConvertFrom-Json
+    $maskable = @($mfj.icons | Where-Object { $_.purpose -eq "maskable" })
+    Check "Manifest 200" ($mf.StatusCode -eq 200) "status $($mf.StatusCode)"
+    Check "Manifest installable shape" (
+        $mfj.display -eq "standalone" -and $mfj.scope -eq "/" -and $mfj.start_url -eq "/" -and
+        @($mfj.icons).Count -ge 3 -and $maskable.Count -eq 1 -and $mfj.theme_color -eq "#14130f"
+    ) "display=$($mfj.display) scope=$($mfj.scope) icons=$(@($mfj.icons).Count) maskable=$($maskable.Count)"
+} catch { Check "Manifest 200" $false $_.Exception.Message }
+
+try {
+    $sw = Invoke-WebRequest -Uri "$base/sw.js" -UseBasicParsing -TimeoutSec 30
+    Check "Service worker 200" ($sw.StatusCode -eq 200) "status $($sw.StatusCode)"
+    Check "SW has push, offline and api guard" (
+        $sw.Content -match "showNotification" -and
+        $sw.Content -match "offline.html" -and
+        $sw.Content -match 'startsWith\("/api/"\)'
+    ) "push handler + offline precache + /api/ skip"
+} catch { Check "Service worker 200" $false $_.Exception.Message }
+
+try {
+    $off = Invoke-WebRequest -Uri "$base/offline.html" -UseBasicParsing -TimeoutSec 30
+    Check "Offline page 200" ($off.StatusCode -eq 200) "status $($off.StatusCode)"
+    Check "Offline page trilingual" (
+        $off.Content -match "hors connexion" -and
+        $off.Content -match "You're offline" -and
+        $off.Content -match "غير متصل"
+    ) "fr + en + ar inline, no external assets"
+} catch { Check "Offline page 200" $false $_.Exception.Message }
+
+try {
+    $pk = Invoke-WebRequest -Uri "$base/api/push/public-key" -UseBasicParsing -TimeoutSec 30
+    $pkj = $pk.Content | ConvertFrom-Json
+    Check "Push public key served" (
+        $pk.StatusCode -eq 200 -and $pkj.ok -eq $true -and $pkj.publicKey.Length -gt 40
+    ) "status $($pk.StatusCode), keyLen=$($pkj.publicKey.Length)"
+} catch { Check "Push public key served" $false $_.Exception.Message }
+
+foreach ($icon in @("/icons/icon-192.png", "/icons/icon-512.png", "/icons/icon-maskable-512.png", "/icon.png", "/apple-icon.png")) {
+    try {
+        $ic = Invoke-WebRequest -Uri "$base$icon" -UseBasicParsing -TimeoutSec 30
+        $type = [string]$ic.Headers["Content-Type"]
+        Check "Icon $icon" ($ic.StatusCode -eq 200 -and $type -match "image/png") "status $($ic.StatusCode), type $type"
+    } catch { Check "Icon $icon" $false $_.Exception.Message }
+}
+
+# Head wiring: the browser only installs when these tags are actually in the
+# served HTML, not just present on disk.
+Check "Head links manifest" ($landing.Content -match 'rel="manifest"') "manifest link in <head>"
+Check "Head links apple-touch-icon" ($landing.Content -match 'rel="apple-touch-icon"') "iOS icon link in <head>"
+Check "Head carries theme-color" ($landing.Content -match 'name="theme-color"') "theme-color meta in <head>"
+
 # Report
 $pass = @($results | Where-Object Pass).Count
 $fail = @($results | Where-Object { -not $_.Pass }).Count

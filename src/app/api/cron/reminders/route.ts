@@ -1,6 +1,7 @@
 import { timingSafeEqual } from "crypto";
 import { prisma } from "@/lib/prisma";
 import { createEventReminders } from "@/lib/notifications-core";
+import { dispatchPushes } from "@/lib/push";
 
 /**
  * Reminder pass for the scheduler. Two windows per run:
@@ -62,14 +63,24 @@ export async function GET(req: Request) {
   ];
 
   const created: Record<string, number> = {};
+  const pushTargets: string[] = [];
   for (const w of windows) {
     const events = await prisma.event.findMany({
       where: { status: "PUBLISHED", startsAt: { gt: w.from, lte: w.to } },
       select: { id: true },
     });
-    const counts = await Promise.all(events.map((e) => createEventReminders(e.id, w.slot)));
-    created[w.slot] = counts.reduce((sum, n) => sum + n, 0);
+    const results = await Promise.all(events.map((e) => createEventReminders(e.id, w.slot)));
+    created[w.slot] = results.reduce((sum, r) => sum + r.created, 0);
+    for (const r of results) pushTargets.push(...r.userIds);
   }
 
-  return Response.json({ ok: true, at: new Date(now).toISOString(), created });
+  // Reminders are the reason push exists: hand the new rows to subscribed
+  // phones before answering. Best-effort by design — dispatchPushes never
+  // throws, so a push outage still returns an honest 200 with `created`
+  // counts (undelivered rows stay owed with pushedAt NULL for a later run),
+  // and already-pushed rows are skipped, so an over-eager scheduler can't
+  // spam anyone.
+  const push = await dispatchPushes(pushTargets);
+
+  return Response.json({ ok: true, at: new Date(now).toISOString(), created, push });
 }

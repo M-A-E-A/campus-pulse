@@ -28,11 +28,24 @@ type Row = {
   dedupeKey: string;
 };
 
+/**
+ * What a fan-out did, for its two different audiences:
+ *   created — rows that actually landed (0 on a repeat run: the unique index
+ *             swallowed them). The reminder cron reports this sum, so it keeps
+ *             its "how much work happened" meaning.
+ *   userIds — everyone the trigger targeted, landed or not. The push
+ *             dispatcher takes this set and is itself idempotent (it only
+ *             sends rows with pushedAt still NULL), so passing the full target
+ *             set through is safe even on a no-op run.
+ */
+export type Fanout = { created: number; userIds: string[] };
+
 /** Insert a batch; re-inserting identical rows is a no-op, not a duplicate. */
-async function insertMany(db: Db, rows: Row[]): Promise<number> {
-  if (rows.length === 0) return 0;
+async function insertMany(db: Db, rows: Row[]): Promise<Fanout> {
+  const userIds = [...new Set(rows.map((r) => r.userId))];
+  if (rows.length === 0) return { created: 0, userIds };
   const created = await db.notification.createMany({ data: rows, skipDuplicates: true });
-  return created.count;
+  return { created: created.count, userIds };
 }
 
 /**
@@ -57,7 +70,7 @@ export async function notifyWaitlistPromoted(
  * confirmed seat holders AND waitlisted students, since a queue spot is still
  * a plan somebody made.
  */
-export async function notifyEventCancelled(eventId: string): Promise<number> {
+export async function notifyEventCancelled(eventId: string): Promise<Fanout> {
   const attendees = await prisma.rsvp.findMany({
     where: { eventId, status: { in: ["CONFIRMED", "WAITLISTED"] } },
     select: { userId: true },
@@ -77,7 +90,7 @@ export async function notifyEventCancelled(eventId: string): Promise<number> {
  * An admin approved a pending event: tell every follower of its club that
  * something they asked to hear about is now live.
  */
-export async function notifyClubFollowers(clubId: string, eventId: string): Promise<number> {
+export async function notifyClubFollowers(clubId: string, eventId: string): Promise<Fanout> {
   const followers = await prisma.follow.findMany({
     where: { clubId },
     select: { userId: true },
@@ -104,7 +117,7 @@ export async function notifyClubFollowers(clubId: string, eventId: string): Prom
 export async function createEventReminders(
   eventId: string,
   slot: "24h" | "1h"
-): Promise<number> {
+): Promise<Fanout> {
   const attendees = await prisma.rsvp.findMany({
     where: { eventId, status: "CONFIRMED" },
     select: { userId: true },

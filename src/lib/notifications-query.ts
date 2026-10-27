@@ -19,16 +19,32 @@ export type NotificationView = {
 };
 
 /**
+ * Where a row should take its reader, shared by the bell and the push
+ * dispatcher so a tap on a push lands exactly where a tap on the bell row does.
+ *
+ * Why the link differs by type: /events/[id] calls notFound() for anything
+ * that isn't PUBLISHED, so a cancelled event would 404 the reader — those rows
+ * point at /dashboard, where the student's own RSVP row still lives.
+ *
+ * `published` comes from the event relation: false for a cancelled event (its
+ * status flipped away from PUBLISHED) and for anything else not live.
+ */
+export function notificationHref(
+  type: NotificationType,
+  eventId: string | null,
+  published: boolean
+): string | null {
+  if (!eventId) return null; // event was hard-deleted: nothing left to open
+  return type === "EVENT_CANCELLED" || !published ? "/dashboard" : `/events/${eventId}`;
+}
+
+/**
  * The bell's data for ONE user, plus their unread count.
  *
  * Deliberately NOT wrapped in unstable_cache, unlike src/lib/queries.ts:
  * cached payloads are shared across requests, so a cached per-user feed would
  * hand one student's notifications to another. The Nav that renders the bell
  * reads the session via auth(), so the page is dynamic anyway.
- *
- * Why the link differs by type: /events/[id] calls notFound() for anything
- * that isn't PUBLISHED, so a cancelled event would 404 the reader — those rows
- * point at /dashboard, where the student's own RSVP row still lives.
  */
 export async function getNotifications(
   userId: string,
@@ -48,17 +64,11 @@ export async function getNotifications(
   ]);
 
   const items = rows.map((r): NotificationView => {
-    const published = r.event?.status === "PUBLISHED";
     return {
       id: r.id,
       type: r.type,
       read: r.readAt !== null,
-      href:
-        !r.eventId
-          ? null // event was hard-deleted: nothing left to open
-          : r.type === "EVENT_CANCELLED" || !published
-            ? "/dashboard" // its own page would 404 — point at their RSVP row
-            : `/events/${r.eventId}`,
+      href: notificationHref(r.type, r.eventId, r.event?.status === "PUBLISHED"),
       title: r.event?.title ?? null,
       club: r.event?.club?.name ?? null,
       dedupeKey: r.dedupeKey,

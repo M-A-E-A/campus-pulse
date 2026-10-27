@@ -1,12 +1,14 @@
 "use server";
 
 import { revalidatePath, revalidateTag } from "next/cache";
+import { after } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { EVENTS_TAG } from "@/lib/queries";
 import { categorySchema, clubSchema, rejectSchema } from "@/lib/validation";
 import { getT, firstZodMessage } from "@/i18n/server";
 import { notifyClubFollowers } from "@/lib/notifications-core";
+import { dispatchPushes } from "@/lib/push";
 
 async function requireAdmin() {
   const session = await auth();
@@ -28,7 +30,10 @@ export async function approveEventAction(formData: FormData) {
     data: { status: "PUBLISHED", rejectionReason: null },
   });
   if (approved.count === 1 && event) {
-    await notifyClubFollowers(event.clubId, eventId);
+    const { userIds } = await notifyClubFollowers(event.clubId, eventId);
+    // Followers opted in for exactly this; it ships to the bell now and to
+    // subscribed devices right after the response goes out.
+    after(() => dispatchPushes(userIds));
   }
   revalidatePath("/admin");
   revalidatePath("/events");

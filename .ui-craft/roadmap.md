@@ -42,9 +42,63 @@ The retention foundation. An events platform with no heartbeat between
 Same triggers, email channel. Needs SMTP/Resend credentials in `.env` —
 design the mailer behind a provider interface, ship when creds exist.
 
-## Phase 2 — PWA + web push
+## Phase 2 — PWA + web push ✅ DONE (verified)
 Installable, offline fallback, web-push for the Phase 1 reminders. VAPID keys
 are generated locally (no external account needed), unlike 1b.
+
+- [x] **Icons** — `scripts/gen-pwa-icons.mjs` renders the Logo.tsx mark through
+      Chromium (no image deps): 192/512 + maskable-512 (64% scale, inside the
+      80% safe circle Android crops to) + `app/icon.png` (first tab favicon)
+      + `app/apple-icon.png`.
+- [x] **Manifest** — `app/manifest.ts`, localised name/description via `getT`
+      like every other metadata field, `standalone`, paper bg / ink theme,
+      scope `/`. Layout gains the `viewport` export (Next 15 moved
+      `themeColor` there) + `appleWebApp` for iOS home-screen chrome.
+- [x] **Service worker** — hand-rolled `public/sw.js`: precaches only
+      `/offline.html` (+ icon); network-first navigations with offline
+      fallback, cache-first for content-hashed `/_next/static/` + `/icons/`;
+      **never** touches `/api/` or non-GET. No page HTML is ever cached — a
+      cached dashboard on a shared machine is a session leak, and live seat
+      counts beat stale ones. Registered by `RegisterSW` in the root layout,
+      production-only (a dev SW would cache HMR assets).
+- [x] **Offline page** — static `public/offline.html`, zero external
+      references (it is what you get when the network is gone), trilingual via
+      the `cp-locale` cookie with device-language fallback, correct RTL, poster
+      card framing.
+- [x] **Web push** — `PushSubscription` model (endpoint unique, `locale`
+      captured at subscribe time because a push has no request to read a
+      cookie from); `Notification.pushedAt` NULL = push owed. `push.ts`
+      dispatches: newest owed row per user only (superseded = the bell keeps
+      history), marks all owed rows on ≥1 accepted send, deletes subscriptions
+      on 404/410, topic/TTL/8s-socket-timeout set, and **never throws** into
+      an action. Fan-out creators now return `{created, userIds}` — `created`
+      keeps the cron/probe "how much work happened" meaning, `userIds` feeds
+      dispatch. `RsvpResult.promotedUserId` carries the promotion out of the
+      transaction so the push fires only after commit (a rollback must never
+      celebrate a seat it refused). Dispatch call sites: cancel (promotion),
+      cancel-event, approve, cron — via `after()` in actions (post-response,
+      zero UI latency), awaited in the cron.
+- [x] **Subscribe flow** — server actions upsert by endpoint (rebind on
+      re-login, prune own rows only), `GET /api/push/public-key` serves the
+      public VAPID half (503 when unconfigured; private key never leaves
+      `.env`). Toggle lives in the bell panel footer: unsupported → hidden,
+      default → enable, granted → on/off, denied → honest "blocked in browser
+      settings" hint; payload renders in the app locale the device chose.
+- [x] i18n `notif.push.*` en/fr/ar. Custom `beforeinstallprompt` UI
+      deliberately skipped — a valid manifest gets the browser's own install
+      affordance (follow-up if we ever want an in-page CTA).
+- Verification: tsc 0 · eslint 0 · build 0 · smoke **45/45** (14 new PWA
+  checks: manifest shape incl. maskable, sw.js handlers, offline trilingual,
+  public key, 5 icons, head links) · race 34/34 · notifications probe 18/18
+  (`{created}` shape) · **new PWA probe 12/12** — SW active + controlling,
+  offline navigation to `/dashboard` served from precache (emulated on both
+  page and SW targets), permission → real toggle click → ON state, then a
+  real encrypted push accepted by the push service (`sent:1`, `pushedAt`
+  stamped, re-dispatch `sent:0`) and toggle back OFF · inspector 0 FAIL on
+  dashboard (identical findings to baseline) and landing (sanctioned
+  `few-pictures` allow; zero new findings). Motion count swings 0–11 across
+  runs on BOTH sides of this phase — capture-timing race on pre-existing
+  0.15s transitions, no CSS added here.
 
 ## Phase 3 — Poster engine
 `GET /api/events/[id]/poster` → SVG rendered with the approved design tokens

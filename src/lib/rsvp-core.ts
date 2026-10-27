@@ -13,7 +13,18 @@ import type { DictKey } from "@/i18n";
  * stable keys instead of English prose.
  */
 
-export type RsvpResult = { ok: boolean; messageKey: DictKey };
+export type RsvpResult = {
+  ok: boolean;
+  messageKey: DictKey;
+  /**
+   * Set when this cancel handed the freed seat to a waitlisted student. The
+   * promotion itself happens inside the transaction; the id escapes so the
+   * ACTION can push only AFTER commit — a web push must never leave a
+   * transaction that might roll back (nobody should be told "you're in" for a
+   * seat the database refused).
+   */
+  promotedUserId?: string;
+};
 
 export type CheckInResult =
   | { status: "ok"; name: string }
@@ -136,10 +147,13 @@ export async function performRsvp(userId: string, eventId: string): Promise<Rsvp
  * keeping their ticket code (update — never insert: the unique constraint
  * on (userId, eventId)). The event row is locked with SELECT ... FOR UPDATE
  * exactly like performRsvp, so the promotion can't race a fresh RSVP for
- * the freed seat. The promotion is silent: the promoted student finds the
- * ticket on their dashboard.
+ * the freed seat. The promoted student gets a bell row inside this same
+ * transaction (below) and a web push only AFTER it commits — hence
+ * promotedUserId on the result rather than pushing from in here, where a
+ * rollback could still erase the seat the push would be celebrating.
  */
 export async function performCancelRsvp(userId: string, eventId: string): Promise<RsvpResult> {
+  let promotedUserId: string | undefined;
   await prisma.$transaction(async (tx) => {
     // Same lock as performRsvp: serialize against RSVPs for this event.
     const rows = await tx.$queryRaw<{ capacity: number | null }[]>`
@@ -178,8 +192,13 @@ export async function performCancelRsvp(userId: string, eventId: string): Promis
     // Same transaction, so the "you got a seat" note commits only if the
     // promotion does — a rollback can never tell someone they got in.
     await notifyWaitlistPromoted(tx, next.userId, eventId);
+    promotedUserId = next.userId;
   });
-  return { ok: true, messageKey: "detail.rsvp.cancelled" };
+  return {
+    ok: true,
+    messageKey: "detail.rsvp.cancelled",
+    ...(promotedUserId ? { promotedUserId } : {}),
+  };
 }
 
 /**

@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath, revalidateTag } from "next/cache";
+import { after } from "next/server";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
@@ -10,6 +11,7 @@ import { fromLocalInputValue } from "@/lib/tz";
 import { uploadImage } from "@/lib/storage";
 import { getT, firstZodMessage } from "@/i18n/server";
 import { notifyEventCancelled } from "@/lib/notifications-core";
+import { dispatchPushes } from "@/lib/push";
 
 export type EventFormState = { error?: string; values?: Record<string, string> } | null;
 
@@ -168,8 +170,13 @@ export async function cancelEventAction(formData: FormData) {
 
   // Tell every attendee their plan is gone — but not on a repeat click of an
   // event that was already cancelled (the dedupe key would swallow it anyway;
-  // this just skips the attendee query).
-  if (!wasAlreadyCancelled) await notifyEventCancelled(eventId);
+  // this just skips the attendee query). The fan-out goes to the bell first,
+  // then after() hands the same rows to subscribed phones (dispatchPushes is
+  // itself idempotent, so nothing double-sends if this action re-runs).
+  if (!wasAlreadyCancelled) {
+    const { userIds } = await notifyEventCancelled(eventId);
+    after(() => dispatchPushes(userIds));
+  }
 
   revalidatePath("/organizer");
   revalidateTag(EVENTS_TAG); // cancelled events leave the public lists

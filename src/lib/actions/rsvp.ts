@@ -1,11 +1,13 @@
 "use server";
 
 import { revalidatePath, revalidateTag } from "next/cache";
+import { after } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { EVENTS_TAG } from "@/lib/queries";
 import { getT } from "@/i18n/server";
 import { performRsvp, performCancelRsvp } from "@/lib/rsvp-core";
+import { dispatchPushes } from "@/lib/push";
 
 /** What the client sees: the dictionary key already rendered to a sentence. */
 export type RsvpResult = { ok: boolean; message: string };
@@ -36,6 +38,14 @@ export async function cancelRsvpAction(eventId: string): Promise<RsvpResult> {
   revalidatePath(`/events/${eventId}`);
   revalidatePath("/dashboard");
   revalidateTag(EVENTS_TAG); // the spot returns to the pool
+
+  // A seat handed to someone on the waitlist is the loudest thing that
+  // happens in this app — push it. `after()` runs post-response, so the
+  // canceller's button doesn't wait on the push service (and dispatch itself
+  // never throws), while Next still guarantees the work outlives the request.
+  const promoted = result.promotedUserId;
+  if (promoted) after(() => dispatchPushes([promoted]));
+
   return { ok: result.ok, message: t(result.messageKey) };
 }
 
