@@ -1,5 +1,6 @@
 import { randomBytes } from "crypto";
 import { prisma } from "@/lib/prisma";
+import { notifyWaitlistPromoted } from "@/lib/notifications-core";
 import type { DictKey } from "@/i18n";
 
 /**
@@ -173,6 +174,10 @@ export async function performCancelRsvp(userId: string, eventId: string): Promis
       where: { id: next.id },
       data: { status: "CONFIRMED", checkedInAt: null }, // keeps its ticketCode
     });
+
+    // Same transaction, so the "you got a seat" note commits only if the
+    // promotion does — a rollback can never tell someone they got in.
+    await notifyWaitlistPromoted(tx, next.userId, eventId);
   });
   return { ok: true, messageKey: "detail.rsvp.cancelled" };
 }

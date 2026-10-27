@@ -9,6 +9,7 @@ import { eventSchema } from "@/lib/validation";
 import { fromLocalInputValue } from "@/lib/tz";
 import { uploadImage } from "@/lib/storage";
 import { getT, firstZodMessage } from "@/i18n/server";
+import { notifyEventCancelled } from "@/lib/notifications-core";
 
 export type EventFormState = { error?: string; values?: Record<string, string> } | null;
 
@@ -159,10 +160,17 @@ export async function cancelEventAction(formData: FormData) {
     return;
   }
 
+  const wasAlreadyCancelled = existing.status === "CANCELLED";
   await prisma.event.update({
     where: { id: eventId },
     data: { status: "CANCELLED" },
   });
+
+  // Tell every attendee their plan is gone — but not on a repeat click of an
+  // event that was already cancelled (the dedupe key would swallow it anyway;
+  // this just skips the attendee query).
+  if (!wasAlreadyCancelled) await notifyEventCancelled(eventId);
+
   revalidatePath("/organizer");
   revalidateTag(EVENTS_TAG); // cancelled events leave the public lists
 }

@@ -6,6 +6,7 @@ import { auth } from "@/lib/auth";
 import { EVENTS_TAG } from "@/lib/queries";
 import { categorySchema, clubSchema, rejectSchema } from "@/lib/validation";
 import { getT, firstZodMessage } from "@/i18n/server";
+import { notifyClubFollowers } from "@/lib/notifications-core";
 
 async function requireAdmin() {
   const session = await auth();
@@ -16,10 +17,19 @@ async function requireAdmin() {
 export async function approveEventAction(formData: FormData) {
   await requireAdmin();
   const eventId = String(formData.get("eventId") ?? "");
-  await prisma.event.updateMany({
+  const event = await prisma.event.findUnique({
+    where: { id: eventId },
+    select: { clubId: true },
+  });
+  // updateMany guarded on PENDING is the idempotency check: count === 1 means
+  // this approval actually flipped a row, so it's safe to fan out notices.
+  const approved = await prisma.event.updateMany({
     where: { id: eventId, status: "PENDING" },
     data: { status: "PUBLISHED", rejectionReason: null },
   });
+  if (approved.count === 1 && event) {
+    await notifyClubFollowers(event.clubId, eventId);
+  }
   revalidatePath("/admin");
   revalidatePath("/events");
   revalidateTag(EVENTS_TAG); // it's now live on the public lists

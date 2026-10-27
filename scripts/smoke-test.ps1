@@ -14,6 +14,8 @@ try {
     Check "Landing page 200" ($landing.StatusCode -eq 200) "status $($landing.StatusCode)"
     Check "Landing headline" ($landing.Content -match "Every club event") "hero headline present"
     Check "Landing upcoming strip" ($landing.Content -match "Coming up") "upcoming section present"
+    # Logged out the bell renders nothing at all — no trigger markup in the nav.
+    Check "Bell hidden when logged out" ($landing.Content -notmatch "notif-panel") "no bell trigger in anonymous nav"
 } catch { Check "Landing page 200" $false $_.Exception.Message }
 
 try {
@@ -65,6 +67,8 @@ try {
     $d = Invoke-WebRequest -Uri "$base/dashboard" -WebSession $s -UseBasicParsing -TimeoutSec 30
     Check "Student sees /dashboard" ($d.StatusCode -eq 200) "status $($d.StatusCode)"
     Check "Dashboard shows seeded RSVP" ($d.Content -match "Atelier robotique") "seeded RSVP listed"
+    # The trigger renders server-side; the panel only exists after a click.
+    Check "Bell renders for signed-in student" ($d.Content -match 'aria-controls="notif-panel"') "bell trigger present in nav"
 } catch { Check "Student sees /dashboard" $false $_.Exception.Message }
 
 try {
@@ -140,6 +144,26 @@ try {
         & node --import tsx scripts/set-event-status.ts seed-event-draft DRAFT 2>$null | Out-Null
     }
 } catch { Check "Admin sees queue" $false $_.Exception.Message }
+
+# 9. Reminder cron: refuses without the secret (401), or without it being
+#    configured at all (503 — fails closed, never open).
+try {
+    Invoke-WebRequest -Uri "$base/api/cron/reminders" -UseBasicParsing -TimeoutSec 30 -MaximumRedirection 0 -ErrorAction SilentlyContinue | Out-Null
+    Check "Cron refuses anonymous" $false "expected a refusal, got 200"
+} catch {
+    $code = $_.Exception.Response.StatusCode.value__
+    Check "Cron refuses anonymous" ($code -in 401,503) "status $code"
+}
+
+# Positive path only runs when the caller exported the same secret as the
+# server, so the suite stays environment-agnostic.
+if ($env:CRON_SECRET) {
+    try {
+        $cr = Invoke-WebRequest -Uri "$base/api/cron/reminders" -Headers @{ Authorization = "Bearer $env:CRON_SECRET" } -UseBasicParsing -TimeoutSec 30
+        $cj = $cr.Content | ConvertFrom-Json
+        Check "Cron accepts valid secret" ($cr.StatusCode -eq 200 -and $cj.ok -eq $true) "status $($cr.StatusCode), ok=$($cj.ok)"
+    } catch { Check "Cron accepts valid secret" $false $_.Exception.Message }
+}
 
 # Report
 $pass = @($results | Where-Object Pass).Count

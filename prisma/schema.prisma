@@ -42,10 +42,11 @@ model User {
   calendarToken String? @unique
   createdAt    DateTime @default(now())
 
-  memberships  ClubMember[]
-  rsvps        Rsvp[]
-  savedEvents  SavedEvent[]
-  follows      Follow[]
+  memberships    ClubMember[]
+  rsvps          Rsvp[]
+  savedEvents    SavedEvent[]
+  follows        Follow[]
+  notifications  Notification[]
 }
 
 model Club {
@@ -100,6 +101,7 @@ model Event {
   category Category @relation(fields: [categoryId], references: [id])
   rsvps    Rsvp[]
   savedBy  SavedEvent[]
+  notifications Notification[]
 
   @@index([status, startsAt])
   @@index([clubId])
@@ -144,4 +146,42 @@ model Follow {
   club Club @relation(fields: [clubId], references: [id], onDelete: Cascade)
 
   @@unique([userId, clubId])
+}
+
+// What kind of thing happened. The row stores the KIND plus a pointer to the
+// event — never a rendered sentence. The app is trilingual (fr/en/ar), so a
+// stored English string would be wrong for most readers; the message is built
+// at read time in the viewer's locale, and the event title is pulled via the
+// relation below.
+enum NotificationType {
+  WAITLIST_PROMOTED // you were on the waitlist; a seat opened up
+  EVENT_REMINDER    // an event you're attending starts soon
+  EVENT_CANCELLED   // an event you were attending was cancelled
+  NEW_CLUB_EVENT   // a club you follow published a new event
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  type      NotificationType
+  // Optional: a reminder always points at an event, and so do the others in
+  // practice, but the column stays nullable so a future type (e.g. a club
+  // announcement) needn't fake a link.
+  eventId   String?
+  // Set only on rows a scheduler may re-generate ("reminder:24h", "reminder:1h").
+  // The unique index below then makes the cron idempotent — re-running it can't
+  // double-notify. One-off rows leave it null, and Postgres treats NULLs as
+  // distinct in a unique index, so they're unconstrained by it.
+  dedupeKey String?
+  readAt    DateTime?
+  createdAt DateTime         @default(now())
+
+  user  User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // Deleting the event keeps the history readable: the message degrades to a
+  // generic line instead of 404-ing the notification's link target.
+  event Event?  @relation(fields: [eventId], references: [id], onDelete: SetNull)
+
+  // The bell reads "unread, newest first" for one user — this index serves it.
+  @@index([userId, readAt, createdAt])
+  @@unique([userId, eventId, dedupeKey])
 }

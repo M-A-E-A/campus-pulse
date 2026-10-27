@@ -6,6 +6,7 @@ import { LanguageSwitcher } from "./LanguageSwitcher";
 import { ActiveLink } from "./ActiveLink";
 import { MobileNav, type MobileNavItem } from "./MobileNav";
 import { PulseMark } from "./Logo";
+import { NotificationBell } from "./notifications/NotificationBell";
 
 export async function Nav() {
   const [session, t] = await Promise.all([auth(), getT()]);
@@ -70,6 +71,9 @@ export async function Nav() {
               </>
             )}
           </nav>
+
+          {/* Signed-in only: the bell renders nothing for visitors. */}
+          {user && <NotificationBell userId={user.id} />}
 
           {/* Small screens: the same links behind a menu button. */}
           <MobileNav items={mobileItems} onLogout={user ? logoutAction : undefined} />
