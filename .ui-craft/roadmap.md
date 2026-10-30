@@ -665,9 +665,76 @@ every load reads) and the service worker stays ticket-cache-only.
   queued-state shot (green check banner → amber queue card with count +
   Sync — the whole contract legible in one glance).
 
+## Quick win 2 ✅ — Ticket export: print → PDF + Apple .pkpass
+
+Two exports on `/tickets/[rsvpId]` (agreed scope: "idea 1 and 2"):
+
+- **Save ticket → print → PDF** — no credentials, works offline (the
+  SW caches this one page). `window.print()` button + `@media print`
+  scoped by `body:has([data-ticket])`: site header drops out, every
+  app affordance is marked `data-print-hide` (badges, offline banner,
+  QR hint + save link, wake lock, action rows, footer), the ink band
+  flips to ink-on-white via `print:` utilities — never rely on browsers
+  printing backgrounds (they don't by default → white text on white
+  paper) — the card keeps its ink border, QR, code and venue line, and
+  `break-inside: avoid` keeps the pass on one page. Hint copy sits at
+  the 13px floor (first draft was `text-xs`/12px; caught before ship).
+- **Apple Wallet `.pkpass`** behind env certs: `src/lib/pkpass.ts` =
+  pass.json (barcode carries the RAW ticket code — a pass barcode
+  cannot rotate, and the door accepts raw codes, same honest fallback
+  as the degraded QR) → manifest of SHA-1s → detached PKCS#7 over the
+  manifest (node-forge, sha256, openssl-style authenticated attributes,
+  WWDR + signer certs in the bag) → flat zip (`adm-zip`). Route
+  `GET /api/tickets/[rsvpId]/pass` reuses the QR route's owner guard
+  (401/404/403/409). **Shipped state is honest-unconfigured** (all five
+  `APPLE_*` unset, documented in `.env`): the ticket renders a note
+  instead of a button (Phase 1b rule — no dead CTA), the route answers
+  503 `not_configured`, and a configured-but-broken server degrades to
+  the inline `walletError` + print fallback (fetch+blob, never a JSON
+  error page shown to a student). Pass field labels come from the dict
+  (5 keys ×3 locales) and the date from `formatDateTime`, so the pass
+  speaks the student's language. Real-device import stays blocked on
+  Apple's WWDR intermediate + pass type ID certificate; dev chains live
+  in `.certs/` (gitignored).
+- `scripts/test-pkpass.ts` **15/15**: env flips on with all five vars,
+  one missing var = OFF; pass.json core/barcode/field/relevantDate
+  contracts; zip = exactly the four root entries; manifest SHA-1s match
+  the actual zipped bytes; icon bytes intact; signature parses as
+  ContentInfo signedData carrying data+sha256+messageDigest — and
+  **openssl cross-verifies the signature over the manifest**
+  (`cms -verify -noverify` → "Verification successful"; openssl
+  resolved relative to the Git install since it isn't on PATH).
+- `scripts/probe-pass.mjs` **16/16**: anon → 401; FR button copy exact
+  ("Enregistrer le billet"); Save-as-PDF hint; honest note with no
+  button/error; route 503 + `reason=not_configured`; print emulation —
+  header `display:none`, affordances gone (wake wrapper judged via its
+  `data-print-hide` ancestor: a child of a hidden box still reports its
+  OWN display), band `rgb(255,255,255)` + h1 ink (asserts away the
+  white-on-white trap), QR `naturalWidth=320` + code visible; screen
+  media restores chrome; logout → organiser session → Salma's pass →
+  **403**. Login hardened to the probe-wallet lesson (hydrate the React
+  form, listener-verified click, DOM fallback, one retry) — the second
+  login flaked exactly the documented way before that.
+- Deps: `node-forge` + `adm-zip` (+ `@types/*`). `pkpass.ts` is
+  deliberately not `server-only` (the tsx test imports it in plain
+  Node, where `server-only` throws); node:fs/node:crypto imports already
+  keep it out of client bundles.
+- Gates: tsc 0 · eslint 0 (caught `prop` never interpolated into the
+  probe's eval string — a runtime ReferenceError waiting to happen) ·
+  build 0 · smoke **82/82** · probe-wallet **15/15** (regression —
+  ticket page touched) · probe-pass **16/16** · test-pkpass **15/15** ·
+  inspector on the ticket page **0 FAIL / 4 WARN** (sanctioned
+  `--allow still-page`; the same four defended Phase-11 findings:
+  micro-label = club kicker in the poster idiom, palette-cream = brand
+  paper, hero-void + unused-canvas = the narrow centered column's
+  defended measurement). Screenshots scored: the print view reads as a
+  real paper pass (chromeless, band inverted, QR crisp, one page), the
+  desktop screen keeps one accent CTA over the honest note, and the
+  mobile fold holds at 390.
+
 ## Next — agreed order
-Quick win 2 (wallet-pass export) → Phase 14 camera QR scanner →
-quick win 5 ("who's going") → Phase 15 CI + rate limiting + audit log.
+Phase 14 camera QR scanner → quick win 5 ("who's going") →
+Phase 15 CI + rate limiting + audit log.
 Endgame after: SVG logo pick → `npx ui-craft-detect ./src` →
 `/finalize` → honest UICraftScore + Lighthouse mobile ≥ 70 per page.
 

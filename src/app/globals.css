@@ -375,6 +375,25 @@ h1, h2, h3 {
   will-change: transform;
 }
 
+/* ---- Print: the ticket page as a paper pass (quick win 2) ----
+   `window.print()` on /tickets/[rsvpId] is the "Save ticket" export: the
+   browser's dialog offers Save as PDF — no dependency, no credentials,
+   and it works from the service-worker-cached offline page. Scoping is
+   deliberate: `:has` opts in only the ticket page, `data-print-hide`
+   marks every app affordance (actions, wake lock, badges, links), and
+   `@page` sets comfortable pass margins. The ink header band flips to
+   paper via `print:` utilities at the call site — never rely on browsers
+   printing backgrounds (they don't by default, which would otherwise
+   leave white text on white paper). Borders and images do print, so the
+   card's ink rule and the QR survive untouched. */
+@media print {
+  @page { margin: 14mm; }
+  body:has([data-ticket]) header { display: none !important; }
+  [data-print-hide] { display: none !important; }
+  /* One page or nothing: a QR orphaned on page 2 is a broken ticket. */
+  [data-ticket] { break-inside: avoid; }
+}
+
 /* Reduced motion: kill transitions and animations globally.
    transition: none (not a 0.01ms duration) — a near-zero transition still
    ranks above every other cascade origin while "running", which freezes

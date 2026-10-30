@@ -6,6 +6,7 @@ import { auth } from "@/lib/auth";
 import { getWaitlistRank } from "@/lib/rsvp-core";
 import { formatDateTime } from "@/lib/tz";
 import { getT, getLocale } from "@/i18n/server";
+import { isPassConfigured } from "@/lib/pkpass";
 import { TicketFull } from "@/components/tickets/TicketFull";
 
 /**
@@ -77,14 +78,17 @@ export default async function TicketPage({
   return (
     <main className="mx-auto w-full max-w-md px-4 py-8" data-ticket={state}>
       <div className="border-2 border-ink bg-white">
-        <div className="border-b-2 border-ink bg-ink px-5 py-4 text-paper">
-          <p className="text-xs font-bold uppercase tracking-widest text-paper/70">
+        <div
+          data-tickethead
+          className="border-b-2 border-ink bg-ink px-5 py-4 text-paper print:border-b print:border-ink print:bg-white print:text-ink"
+        >
+          <p className="text-xs font-bold uppercase tracking-widest text-paper/70 print:text-muted">
             {rsvp.event.club.name}
           </p>
           <h1 className="mt-1 text-xl font-extrabold leading-tight">
             {rsvp.event.title}
           </h1>
-          <p className="mt-1 text-sm text-paper/80">
+          <p className="mt-1 text-sm text-paper/80 print:text-ink">
             {formatDateTime(rsvp.event.startsAt, locale)} · {rsvp.event.location}
           </p>
         </div>
@@ -129,12 +133,13 @@ export default async function TicketPage({
                 },
               }}
               eventHref={`/events/${rsvp.event.id}`}
+              walletConfigured={isPassConfigured()}
             />
           </div>
         )}
       </div>
 
-      <p className="mt-4 text-center text-xs text-muted">
+      <p className="mt-4 text-center text-xs text-muted" data-print-hide>
         <Link href="/dashboard" className="font-semibold hover:underline">
           {t("nav.myTickets")}
         </Link>
