@@ -55,6 +55,21 @@ export function CalendarSubscribe({ token, origin }: { token: string; origin: st
           onFocus={(e) => e.currentTarget.select()}
         />
         <button type="button" className="btn btn-secondary shrink-0" onClick={copy}>
+          {/* Confirmation mark as drawn imagery — never a ✓ character. */}
+          {copied && (
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 24 24"
+              className="h-3.5 w-3.5 shrink-0"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="3"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M20 6 9 17l-5-5" />
+            </svg>
+          )}
           {copied ? t("cal.copied") : t("cal.copy")}
         </button>
       </div>

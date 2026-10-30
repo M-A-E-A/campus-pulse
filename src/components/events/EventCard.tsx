@@ -1,6 +1,12 @@
+// Uses hooks (useT/useLocale) — every runtime importer so far was a client
+// component, which hid the missing directive; the club profile imports this
+// directly from a server component, so it must declare itself.
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
-import { useT } from "@/i18n/provider";
+import { useT, useLocale } from "@/i18n/provider";
+import { formatKm } from "@/lib/geo";
 
 export type EventCardData = {
   id: string;
@@ -9,6 +15,8 @@ export type EventCardData = {
   startsAt: string;
   endsAt: string;
   location: string;
+  lat: number | null;
+  lng: number | null;
   capacity: number | null;
   club: { id: string; name: string };
   category: { id: string; name: string };
@@ -52,13 +60,18 @@ const HEIGHTS = [
 export function EventCard({
   event,
   dealIndex,
+  distance,
 }: {
   event: EventCardData;
   /** The event's index in the server's initial list — NOT its position in
    *  the filtered result: filters only remove cards, they never re-deal. */
   dealIndex: number;
+  /** Straight-line distance from the visitor in near-me mode. Absent =
+   *  location line only (unknown venue, or near-me off). */
+  distance?: number;
 }) {
   const t = useT();
+  const locale = useLocale();
   // A dealt cycle, not a hash: the wall always mixes tones and orange lands
   // early, instead of a random hand that can come out all black.
   const tone = dealIndex % TONES.length;
@@ -110,7 +123,12 @@ export function EventCard({
             ? event.rangeLabel
             : `${event.dateLabel} · ${event.rangeLabel}`}
         </p>
-        <p className="opacity-[var(--meta,0.75)]">{event.location}</p>
+        <p className="opacity-[var(--meta,0.75)]">
+          {event.location}
+          {distance !== undefined && (
+            <span className="font-semibold"> · {formatKm(distance, locale)}</span>
+          )}
+        </p>
         <p className="pt-1 font-semibold">
           {spotsLeft === null ? (
             <span className="opacity-[var(--meta,0.75)]">{t("events.openToAll")}</span>

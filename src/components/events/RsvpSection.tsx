@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { rsvpAction, cancelRsvpAction } from "@/lib/actions/rsvp";
 import { useT } from "@/i18n/provider";
+import { isOfflineError } from "@/lib/offline";
 import { Ticket, type TicketData } from "./Ticket";
 
 /**
@@ -37,20 +39,25 @@ export function RsvpSection({
   async function handleRsvp() {
     setBusy(true);
     setMessage(null);
-    const result = await rsvpAction(eventId);
-    if (result.ok) {
-      // Fetch the fresh ticket (the code was generated server-side).
-      const res = await fetch(`/api/events/${eventId}/ticket`);
-      if (res.ok) {
-        const data = await res.json();
-        // Reuse the server-formatted label — never format this on the client.
-        setTicket({ ...data, startsAtLabel });
-        // Waitlisted? Use the server's translated message ("you've joined
-        // the waitlist") instead of the confirmed-ticket copy.
-        setMessage(data.waitlisted ? result.message : t("detail.rsvp.joined"));
+    try {
+      const result = await rsvpAction(eventId);
+      if (result.ok) {
+        // Fetch the fresh ticket (the code was generated server-side).
+        const res = await fetch(`/api/events/${eventId}/ticket`);
+        if (res.ok) {
+          const data = await res.json();
+          // Reuse the server-formatted label — never format this on the client.
+          setTicket({ ...data, startsAtLabel });
+          // Waitlisted? Use the server's translated message ("you've joined
+          // the waitlist") instead of the confirmed-ticket copy.
+          setMessage(data.waitlisted ? result.message : t("detail.rsvp.joined"));
+        }
+      } else {
+        setMessage(result.message);
       }
-    } else {
-      setMessage(result.message);
+    } catch (err) {
+      if (!isOfflineError(err)) throw err;
+      setMessage(t("errors.offline"));
     }
     setBusy(false);
   }
@@ -58,12 +65,17 @@ export function RsvpSection({
   async function handleCancel() {
     setBusy(true);
     setMessage(null);
-    const result = await cancelRsvpAction(eventId);
-    if (result.ok) {
-      setTicket(null);
-      setMessage(t("detail.rsvp.cancelledReturn"));
-    } else {
-      setMessage(result.message);
+    try {
+      const result = await cancelRsvpAction(eventId);
+      if (result.ok) {
+        setTicket(null);
+        setMessage(t("detail.rsvp.cancelledReturn"));
+      } else {
+        setMessage(result.message);
+      }
+    } catch (err) {
+      if (!isOfflineError(err)) throw err;
+      setMessage(t("errors.offline"));
     }
     setBusy(false);
   }
@@ -100,7 +112,18 @@ export function RsvpSection({
           </button>
         </div>
       ) : ticket ? (
-        <Ticket ticket={ticket} onCancel={handleCancel} busy={busy} />
+        <div>
+          <Ticket ticket={ticket} onCancel={handleCancel} busy={busy} />
+          {/* Standalone wallet page: same ticket, full-screen, cached by the
+              service worker so it still opens when the venue has no signal. */}
+          <Link
+            href={`/tickets/${ticket.rsvpId}`}
+            className="mt-4 inline-block text-sm font-semibold text-accent-dark hover:underline"
+            data-fullscreen-ticket
+          >
+            {t("ticket.fullScreen")}
+          </Link>
+        </div>
       ) : (
         <>
           <p className="font-semibold">{t("detail.rsvp.notYet")}</p>

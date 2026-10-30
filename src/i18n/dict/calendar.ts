@@ -7,7 +7,7 @@ export const en = {
   "cal.desc":
     "One secret link subscribes any calendar app (Google, Apple, Outlook) to every event you RSVP to — new events appear automatically.",
   "cal.copy": "Copy link",
-  "cal.copied": "Copied ✓",
+  "cal.copied": "Copied",
   "cal.webcal": "Apple Calendar / Outlook",
   "cal.google": "Add to Google Calendar",
   "cal.googlePrefix": "Campus Pulse event",
@@ -22,7 +22,7 @@ export const fr: Record<keyof typeof en, string> = {
   "cal.desc":
     "Un lien secret s'abonne à tous vos événements inscrits depuis n'importe quelle appli de calendrier (Google, Apple, Outlook) — les nouveaux événements apparaissent automatiquement.",
   "cal.copy": "Copier le lien",
-  "cal.copied": "Copié ✓",
+  "cal.copied": "Copié",
   "cal.webcal": "Apple Calendar / Outlook",
   "cal.google": "Ajouter à Google Calendar",
   "cal.googlePrefix": "Événement Campus Pulse",
@@ -37,7 +37,7 @@ export const ar: Record<keyof typeof en, string> = {
   "cal.desc":
     "رابط سري واحد يشترك به في كل فعالياتك المسجّلة من أي تطبيق تقويم (Google أو Apple أو Outlook) — وتظهر الفعاليات الجديدة تلقائياً.",
   "cal.copy": "نسخ الرابط",
-  "cal.copied": "تم النسخ ✓",
+  "cal.copied": "تم النسخ",
   "cal.webcal": "Apple Calendar / Outlook",
   "cal.google": "إضافة إلى Google Calendar",
   "cal.googlePrefix": "فعالية Campus Pulse",

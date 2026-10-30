@@ -8,6 +8,9 @@ export const en = {
     "Not your fault. Try again — if it keeps happening, the organizers already know about it.",
   "errors.broke.retry": "Try again",
 
+  "errors.offline":
+    "You're offline — reconnect, then try again.",
+
   "errors.notFound.title": "This page doesn't exist",
   "errors.notFound.body":
     "The link may be old, or the event was removed after it wrapped.",
@@ -21,6 +24,9 @@ export const fr: Record<keyof typeof en, string> = {
     "Ce n'est pas de votre faute. Réessayez — si ça continue, les organisateurs sont déjà au courant.",
   "errors.broke.retry": "Réessayer",
 
+  "errors.offline":
+    "Vous êtes hors connexion — reconnectez-vous, puis réessayez.",
+
   "errors.notFound.title": "Cette page n'existe pas",
   "errors.notFound.body":
     "Le lien est peut-être ancien, ou l'événement a été retiré après sa fin.",
@@ -33,6 +39,8 @@ export const ar: Record<keyof typeof en, string> = {
   "errors.broke.body":
     "ليس خطأك. حاول مجدداً — وإن استمرت المشكلة، فالمنظمون يعرفون بالأمر.",
   "errors.broke.retry": "إعادة المحاولة",
+
+  "errors.offline": "أنت غير متصل — أعد الاتصال ثم حاول مجدداً.",
 
   "errors.notFound.title": "هذه الصفحة غير موجودة",
   "errors.notFound.body": "قد يكون الرابط قديماً، أو حُذفت الفعالية بعد انتهائها.",

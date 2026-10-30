@@ -6,7 +6,10 @@ import gsap from "gsap";
 import { Flip } from "gsap/Flip";
 import { useT } from "@/i18n/provider";
 import { campusDayKey, campusDayLimit, campusTodayKey } from "@/lib/tz";
+import { searchMatches } from "@/lib/search";
+import { CAMPUSES, distanceKm, nearestCampus, type GeoPos } from "@/lib/geo";
 import { EventCard, type EventCardData } from "./EventCard";
+import { EventsMap } from "./EventsMap";
 
 gsap.registerPlugin(Flip, useGSAP);
 
@@ -16,14 +19,23 @@ type Filters = {
   query: string;
   categoryId: string; // "" = all
   when: "any" | "today" | "week" | "month";
-  view: "grid" | "calendar";
+  view: "grid" | "calendar" | "map";
 };
 
 const EMPTY_FILTERS: Filters = { query: "", categoryId: "", when: "any", view: "grid" };
 
 function matchesFilters(e: EventCardData, f: Filters): boolean {
-  const q = f.query.trim().toLowerCase();
-  if (q && !`${e.title} ${e.location} ${e.club.name}`.toLowerCase().includes(q)) return false;
+  // All four searchable fields — title, location, club AND category (the
+  // old matcher silently missed category). Normalization runs on both the
+  // haystack and the query, so Arabic diacritics / alef variants / ta
+  // marbuta and pasted direction marks still hit the stored text.
+  if (
+    !searchMatches(
+      `${e.title} ${e.location} ${e.club.name} ${e.category.name}`,
+      f.query
+    )
+  )
+    return false;
   if (f.categoryId && e.category.id !== f.categoryId) return false;
 
   if (f.when !== "any") {
@@ -63,6 +75,10 @@ export function EventsExplorer({
   const [debouncedQuery, setDebouncedQuery] = useState("");
   const gridRef = useRef<HTMLDivElement>(null);
   const searchTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // GSAP Flip capture slot (the docs' React recipe: capture BEFORE the state
+  // change — in setFilter and the location handlers — then replay in the
+  // layout effect below). Declared up here so every capturer can see it.
+  const flipState = useRef<ReturnType<typeof Flip.getState> | null>(null);
 
   // Debounce typing so Flip doesn't fire on every keystroke.
   useEffect(() => {
@@ -83,6 +99,105 @@ export function EventsExplorer({
     [initialEvents, activeFilters]
   );
 
+  // ---- Location (Phase 8) --------------------------------------------------
+  // "Near me" asks for geolocation ON CLICK — never on load, so no surprise
+  // permission prompts. Granted → strict distance order + a km label on every
+  // card that has coordinates. The first grant also auto-picks the nearest
+  // campus and persists it (localStorage); the campus select overrides or
+  // clears that choice. Venue-unknown events keep date order at the end —
+  // they claim no distance.
+  const [pos, setPos] = useState<GeoPos | null>(null);
+  const [locState, setLocState] = useState<"off" | "on" | "denied">("off");
+  const [campusId, setCampusId] = useState("");
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("cp-campus");
+      if (saved && CAMPUSES.some((c) => c.id === saved)) setCampusId(saved);
+    } catch {
+      // Private mode: the default (all campuses) simply stays.
+    }
+  }, []);
+
+  const captureFlip = () => {
+    if (gridRef.current) {
+      flipState.current = Flip.getState(
+        gridRef.current.querySelectorAll("[data-flip-id]")
+      );
+    }
+  };
+
+  const onNearMe = () => {
+    if (locState === "on") {
+      // Toggle off: the campus preference stays, the distance sort goes.
+      setLocState("off");
+      setPos(null);
+      return;
+    }
+    if (typeof navigator === "undefined" || !("geolocation" in navigator)) {
+      setLocState("denied");
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      (p) => {
+        const here = { lat: p.coords.latitude, lng: p.coords.longitude };
+        setPos(here);
+        setLocState("on");
+        // First grant picks the nearest campus — unless one is already chosen.
+        setCampusId((cur) => {
+          if (cur) return cur;
+          const picked = nearestCampus(here).id;
+          try {
+            localStorage.setItem("cp-campus", picked);
+          } catch {
+            // Private mode: the pick still applies for this visit.
+          }
+          return picked;
+        });
+      },
+      () => setLocState("denied"),
+      { enableHighAccuracy: false, timeout: 8000, maximumAge: 60000 }
+    );
+  };
+
+  const onCampus = (id: string) => {
+    setCampusId(id);
+    try {
+      if (id) localStorage.setItem("cp-campus", id);
+      else localStorage.removeItem("cp-campus");
+    } catch {
+      // Private mode: the choice applies for this visit only.
+    }
+  };
+
+  // Ordering, layered and stable: the campus preference pulls its events to
+  // the front (date order survives inside each group); the near-me state then
+  // orders strictly by distance. Both sorts keep the server's list index as
+  // tie-breaker, so the wall never shuffles arbitrarily — and the posters
+  // keep their dealt tones (slots stay keyed to the server order).
+  const ordered = useMemo(() => {
+    const base = filtered.map((e, i) => ({ e, i }));
+    if (campusId) {
+      base.sort((a, b) => {
+        const matches = (x: (typeof base)[number]) =>
+          x.e.lat !== null &&
+          x.e.lng !== null &&
+          nearestCampus({ lat: x.e.lat, lng: x.e.lng }).id === campusId;
+        return Number(matches(b)) - Number(matches(a)) || a.i - b.i;
+      });
+    }
+    if (locState === "on" && pos) {
+      base.sort((a, b) => {
+        const dist = (x: (typeof base)[number]) =>
+          x.e.lat === null || x.e.lng === null
+            ? Infinity
+            : distanceKm(pos, { lat: x.e.lat, lng: x.e.lng });
+        return dist(a) - dist(b) || a.i - b.i;
+      });
+    }
+    return base.map(({ e }) => e);
+  }, [filtered, campusId, locState, pos]);
+
   // The dealt hand: every event keeps its poster slot (colour + height) from
   // its position in the server's list. Filters only remove cards — they
   // never re-deal the wall, so posters stay recognisable across keystrokes.
@@ -91,12 +206,8 @@ export function EventsExplorer({
     [initialEvents]
   );
 
-  // GSAP Flip, done the way the docs prescribe for React:
-  // 1. capture poster positions BEFORE the state change (in setFilter below),
-  // 2. let React commit the new list,
-  // 3. Flip.from in a layout effect, using the captured state.
-  const flipState = useRef<ReturnType<typeof Flip.getState> | null>(null);
-
+  // Flip replay: positions were captured before the state change (setFilter
+  // and the location handlers); commit has happened, so play the transition.
   useLayoutEffect(() => {
     if (!flipState.current || !gridRef.current) return;
     const state = flipState.current;
@@ -110,7 +221,7 @@ export function EventsExplorer({
         gsap.fromTo(els, { opacity: 0, scale: 0.95 }, { opacity: 1, scale: 1, duration: 0.35 }),
       onLeave: (els) => gsap.to(els, { opacity: 0, scale: 0.95, duration: 0.25 }),
     });
-  }, [filtered]);
+  }, [ordered]);
 
   const setFilter = <K extends keyof Filters>(key: K, value: Filters[K]) => {
     // Capture positions of visible posters while they still sit where the
@@ -141,7 +252,7 @@ export function EventsExplorer({
     filters.categoryId !== "" ||
     filters.when !== "any";
 
-  const calendar = groupByDay(filtered);
+  const calendar = groupByDay(ordered);
 
   // Load choreography: the wall arrives. Guarded so the reduced page is the
   // finished page — nothing stays hidden waiting for an animation that will
@@ -221,21 +332,75 @@ export function EventsExplorer({
             <option value="week">{t("events.dateWeek")}</option>
             <option value="month">{t("events.dateMonth")}</option>
           </select>
+          <button
+            type="button"
+            onClick={() => {
+              captureFlip();
+              onNearMe();
+            }}
+            aria-pressed={locState === "on"}
+            className={`flex items-center gap-1.5 border-2 border-ink px-3.5 py-2 text-sm font-semibold transition-colors ${
+              locState === "on"
+                ? "bg-ink text-paper"
+                : "bg-paper text-ink hover:bg-accent-soft"
+            }`}
+            data-near
+          >
+            {/* Crosshair: drawn, never an emoji pin. */}
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 24 24"
+              className="h-4 w-4 shrink-0"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <circle cx="12" cy="12" r="7" />
+              <path d="M12 2v3M12 19v3M2 12h3M19 12h3" strokeLinecap="round" />
+              <circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none" />
+            </svg>
+            {t("events.nearMe")}
+          </button>
+          <select
+            className="input max-w-[13rem] rounded-none border-2 border-ink bg-paper"
+            aria-label={t("events.campusLabel")}
+            value={campusId}
+            onChange={(e) => {
+              captureFlip();
+              onCampus(e.target.value);
+            }}
+            data-campus
+          >
+            <option value="">{t("events.campusAll")}</option>
+            {CAMPUSES.map((c) => (
+              <option key={c.id} value={c.id}>{c.name}</option>
+            ))}
+          </select>
+          {locState === "denied" && (
+            <span className="text-sm font-semibold" role="status">
+              {t("events.locDenied")}
+            </span>
+          )}
           <div
             className="flex overflow-hidden border-2 border-ink sm:ms-auto"
             role="group"
             aria-label={t("events.viewLabel")}
           >
-            {(["grid", "calendar"] as const).map((v) => (
+            {(["grid", "calendar", "map"] as const).map((v) => (
               <button
                 key={v}
                 onClick={() => setFilter("view", v)}
                 aria-pressed={filters.view === v}
+                data-view={v}
                 className={`px-3.5 py-2 text-sm font-semibold transition-colors ${
                   filters.view === v ? "bg-ink text-paper" : "bg-paper text-ink hover:bg-accent-soft"
                 }`}
               >
-                {v === "grid" ? t("events.viewGrid") : t("events.viewCalendar")}
+                {v === "grid"
+                  ? t("events.viewGrid")
+                  : v === "calendar"
+                    ? t("events.viewCalendar")
+                    : t("events.viewMap")}
               </button>
             ))}
           </div>
@@ -276,11 +441,20 @@ export function EventsExplorer({
             ref={gridRef}
             className="grid grid-cols-1 items-start gap-3 pb-14 sm:grid-cols-2 lg:grid-cols-3"
           >
-            {filtered.map((e) => (
-              <EventCard key={e.id} event={e} dealIndex={slots.get(e.id) ?? 0} />
+            {ordered.map((e) => (
+              <EventCard
+                key={e.id}
+                event={e}
+                dealIndex={slots.get(e.id) ?? 0}
+                distance={
+                  locState === "on" && pos && e.lat !== null && e.lng !== null
+                    ? distanceKm(pos, { lat: e.lat, lng: e.lng })
+                    : undefined
+                }
+              />
             ))}
           </div>
-        ) : (
+        ) : filters.view === "calendar" ? (
           <div ref={gridRef} className="space-y-10 pb-14">
             {calendar.map(([day, evts]) => (
               <section key={day}>
@@ -291,11 +465,24 @@ export function EventsExplorer({
                       key={e.id}
                       event={e}
                       dealIndex={slots.get(e.id) ?? 0}
+                      distance={
+                        locState === "on" && pos && e.lat !== null && e.lng !== null
+                          ? distanceKm(pos, { lat: e.lat, lng: e.lng })
+                          : undefined
+                      }
                     />
                   ))}
                 </div>
               </section>
             ))}
+          </div>
+        ) : (
+          <div ref={gridRef}>
+            <EventsMap
+              events={ordered}
+              slots={slots}
+              pos={locState === "on" && pos ? pos : null}
+            />
           </div>
         )}
       </div>

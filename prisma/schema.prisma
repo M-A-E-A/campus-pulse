@@ -90,6 +90,11 @@ model Event {
   startsAt        DateTime // UTC
   endsAt          DateTime // UTC
   location        String
+  // Demo coordinates for the near-me / campus features (Phase 8). Null =
+  // venue unknown or "à confirmer" — such events claim no distance. The
+  // seed maps venue strings; a real organizer flow would use a picker.
+  lat             Float?
+  lng             Float?
   capacity        Int? // null = no limit
   status          EventStatus @default(DRAFT)
   rejectionReason String?
@@ -115,6 +120,9 @@ model Rsvp {
   status       RsvpStatus @default(CONFIRMED)
   ticketCode   String     @unique // random, unguessable; encoded in the QR
   checkedInAt  DateTime? // set once at the door; never counted twice
+  // Post-event loop: "would you attend again?" — null until answered.
+  attendAgain  Boolean?
+  feedbackAt   DateTime? // when the answer was recorded
   createdAt    DateTime   @default(now())
 
   user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)

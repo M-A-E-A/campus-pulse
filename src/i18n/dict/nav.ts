@@ -1,6 +1,7 @@
 /** Navigation chrome (desktop + mobile + language switcher). Owner: main agent. */
 export const en = {
   "nav.events": "Events",
+  "nav.clubs": "Clubs",
   "nav.myTickets": "My tickets",
   "nav.organizer": "Organizer",
   "nav.admin": "Admin",
@@ -14,6 +15,7 @@ export const en = {
 
 export const fr: Record<keyof typeof en, string> = {
   "nav.events": "Événements",
+  "nav.clubs": "Clubs",
   "nav.myTickets": "Mes billets",
   "nav.organizer": "Organisateur",
   "nav.admin": "Admin",
@@ -27,6 +29,7 @@ export const fr: Record<keyof typeof en, string> = {
 
 export const ar: Record<keyof typeof en, string> = {
   "nav.events": "الفعاليات",
+  "nav.clubs": "الأندية",
   "nav.myTickets": "تذاكري",
   "nav.organizer": "المنظم",
   "nav.admin": "المسؤول",

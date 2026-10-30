@@ -57,14 +57,22 @@ export default async function OrganizerDashboard() {
                 : t("org.noClub")}
             </p>
           </div>
-          {firstClubId && (
+          <div className="flex shrink-0 flex-wrap gap-3">
             <Link
-              href={`/organizer/events/new?clubId=${firstClubId}`}
-              className="btn btn-primary shrink-0"
+              href="/organizer/insights"
+              className="btn btn-secondary border-paper/40 text-paper hover:border-paper"
             >
-              {t("org.newEvent")}
+              {t("org.insights")}
             </Link>
-          )}
+            {firstClubId && (
+              <Link
+                href={`/organizer/events/new?clubId=${firstClubId}`}
+                className="btn btn-primary"
+              >
+                {t("org.newEvent")}
+              </Link>
+            )}
+          </div>
         </header>
       </div>
 

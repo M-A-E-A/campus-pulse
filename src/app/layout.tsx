@@ -46,6 +46,10 @@ export const viewport: Viewport = {
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getT();
   return {
+    // Share cards need absolute image URLs; without a base Next emits
+    // relative og:image refs that WhatsApp/Slack silently drop (or worse,
+    // resolve against localhost). Env-driven so prod never inherits dev.
+    metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3100"),
     title: t("meta.title"),
     description: t("meta.description"),
     // iOS ignores app/manifest.ts for home-screen chrome: it wants these meta

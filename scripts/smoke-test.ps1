@@ -22,6 +22,8 @@ try {
     $ev = Invoke-WebRequest -Uri "$base/events" -UseBasicParsing -TimeoutSec 30
     Check "Events page 200" ($ev.StatusCode -eq 200) "status $($ev.StatusCode)"
     Check "Events shows seeded event" ($ev.Content -match "Pitch de minuit") "seeded published event rendered"
+    Check "Near me toggle present" ($ev.Content -match "Near me") "location sort control in the rail"
+    Check "Campus filter present" ($ev.Content -match "All campuses") "campus select in the rail"
 } catch { Check "Events page 200" $false $_.Exception.Message }
 
 try {
@@ -29,7 +31,23 @@ try {
     Check "Event page 200" ($detail.StatusCode -eq 200) "status $($detail.StatusCode)"
     Check "Capacity indicator" ($detail.Content -match "spots taken") "capacity widget rendered"
     Check "RSVP pre-login state" ($detail.Content -match "Log in to RSVP") "anonymous sees login CTA"
+    # Share card: the file convention owns og:image (absolute, sized) and the
+    # twitter card asks for the full poster instead of a thumbnail.
+    Check "Head carries og:image poster" (
+        $detail.Content -match 'property="og:image"' -and
+        $detail.Content -match "opengraph-image" -and
+        $detail.Content -match 'content="summary_large_image"'
+    ) "og:image + summary_large_image meta present"
 } catch { Check "Event page 200" $false $_.Exception.Message }
+
+# 1b. The og:image route itself: a real PNG, not an error page dressed as one.
+try {
+    $og = Invoke-WebRequest -Uri "$base/events/seed-event-line-follower/opengraph-image" -UseBasicParsing -TimeoutSec 60
+    $ogType = [string]$og.Headers["Content-Type"]
+    Check "OG poster route serves PNG" (
+        $og.StatusCode -eq 200 -and $ogType -match "image/png" -and $og.RawContentLength -gt 10240
+    ) "status $($og.StatusCode), type $ogType, $($og.RawContentLength) bytes"
+} catch { Check "OG poster route serves PNG" $false $_.Exception.Message }
 
 # 2. Unauthenticated role gates redirect
 foreach ($route in @("/dashboard", "/organizer", "/admin")) {
@@ -224,6 +242,175 @@ foreach ($icon in @("/icons/icon-192.png", "/icons/icon-512.png", "/icons/icon-m
 Check "Head links manifest" ($landing.Content -match 'rel="manifest"') "manifest link in <head>"
 Check "Head links apple-touch-icon" ($landing.Content -match 'rel="apple-touch-icon"') "iOS icon link in <head>"
 Check "Head carries theme-color" ($landing.Content -match 'name="theme-color"') "theme-color meta in <head>"
+
+# 11. Poster engine: the shareable SVG handbill that leaves the site.
+try {
+    $p = Invoke-WebRequest -Uri "$base/api/events/seed-event-line-follower/poster" -UseBasicParsing -TimeoutSec 30
+    # PS 5.1 may hand back byte[] for image/svg+xml (unknown MIME) — decode.
+    $pt = if ($p.Content -is [byte[]]) { [System.Text.Encoding]::UTF8.GetString($p.Content) } else { [string]$p.Content }
+    Check "Poster SVG 200" ($p.StatusCode -eq 200) "status $($p.StatusCode)"
+    Check "Poster is a standalone SVG" (
+        [string]$p.Headers["Content-Type"] -match "image/svg\+xml" -and
+        $pt -match "<svg" -and $pt -match "</svg>" -and $pt -match "</title>"
+    ) "type=$($p.Headers['Content-Type'])"
+    Check "Poster embeds the real typeface" ($pt -match "data:font/woff2;base64") "woff2 data URIs, no external fetch"
+    Check "Poster carries brand + facts" (
+        $pt -match "CAMPUS PULSE" -and $pt -match "campus.ma|localhost" -and $pt -match "#ff4d00"
+    ) "wordmark, event URL and accent token present"
+} catch { Check "Poster SVG 200" $false $_.Exception.Message }
+
+# PS 5.1's -Headers drops a Cookie header silently (HttpWebRequest treats it
+# as a special header) — the cookie must ride a WebSession, same as the
+# signed-in sections above. This mirrors what the language switcher sends.
+$arSess = New-Object Microsoft.PowerShell.Commands.WebRequestSession
+$arSess.Cookies.Add([Uri]$base, (New-Object System.Net.Cookie("cp-locale", "ar", "/", "localhost")))
+try {
+    $pa = Invoke-WebRequest -Uri "$base/api/events/seed-event-line-follower/poster" -UseBasicParsing -TimeoutSec 30 -WebSession $arSess
+    $pat = if ($pa.Content -is [byte[]]) { [System.Text.Encoding]::UTF8.GetString($pa.Content) } else { [string]$pa.Content }
+    Check "Poster flips to RTL for Arabic" ($pat -match 'direction="rtl"') "direction attr present"
+} catch { Check "Poster flips to RTL for Arabic" $false $_.Exception.Message }
+
+# House pattern for expected non-2xx: $ErrorActionPreference=Stop means an
+# HTTP error terminates the script even with -ErrorAction SilentlyContinue.
+try {
+    Invoke-WebRequest -Uri "$base/api/events/seed-event-draft/poster" -UseBasicParsing -TimeoutSec 30 | Out-Null
+    Check "Draft events have no poster" $false "expected 404, got 200"
+} catch {
+    $code = $_.Exception.Response.StatusCode.value__
+    Check "Draft events have no poster" ($code -eq 404) "status $code"
+}
+
+try {
+    Invoke-WebRequest -Uri "$base/api/events/no-such-event-999/poster" -UseBasicParsing -TimeoutSec 30 | Out-Null
+    Check "Unknown event poster 404s" $false "expected 404, got 200"
+} catch {
+    $code = $_.Exception.Response.StatusCode.value__
+    Check "Unknown event poster 404s" ($code -eq 404) "status $code"
+}
+
+# 12. Live pulse: the door counter's SSE stream is organizer-only.
+try {
+    Invoke-WebRequest -Uri "$base/api/events/seed-event-line-follower/pulse" -UseBasicParsing -TimeoutSec 30 | Out-Null
+    Check "Pulse stream refuses anonymous" $false "expected 401, got 200"
+} catch {
+    $code = $_.Exception.Response.StatusCode.value__
+    Check "Pulse stream refuses anonymous" ($code -eq 401) "status $code"
+}
+
+# $s is still the student session from section 6 — a signed-in non-organizer
+# must get 403 (the stream is a door display, not a public counter).
+try {
+    Invoke-WebRequest -Uri "$base/api/events/seed-event-line-follower/pulse" -UseBasicParsing -TimeoutSec 30 -WebSession $s | Out-Null
+    Check "Pulse stream refuses a student" $false "expected 403, got 200"
+} catch {
+    $code = $_.Exception.Response.StatusCode.value__
+    Check "Pulse stream refuses a student" ($code -eq 403) "status $code"
+}
+
+# 13. Organizer insights: middleware gate + the analytics surface itself.
+try {
+    $ii = Invoke-WebRequest -Uri "$base/organizer/insights" -UseBasicParsing -TimeoutSec 30 -MaximumRedirection 0 -ErrorAction SilentlyContinue
+    Check "Anon /organizer/insights blocked" ($ii.StatusCode -in 301,302,303,307,308) "status $($ii.StatusCode)"
+} catch {
+    $code = $_.Exception.Response.StatusCode.value__
+    Check "Anon /organizer/insights blocked" ($code -in 301,302,303,307,308) "status $code"
+}
+
+# $s is still the student session — a signed-in non-organizer bounces to
+# /dashboard before the page's own club scoping ever runs.
+try {
+    $iis = Invoke-WebRequest -Uri "$base/organizer/insights" -WebSession $s -UseBasicParsing -TimeoutSec 30 -MaximumRedirection 0 -ErrorAction SilentlyContinue
+    Check "Student blocked from insights" ($iis.StatusCode -in 301,302,303,307,308) "status $($iis.StatusCode)"
+} catch {
+    $code = $_.Exception.Response.StatusCode.value__
+    Check "Student blocked from insights" ($code -in 301,302,303,307,308) "status $code"
+}
+
+# $so is the organizer session from section 7 — the page must render with
+# both the club-scoped heatmap and the three metric blocks.
+try {
+    $iio = Invoke-WebRequest -Uri "$base/organizer/insights" -WebSession $so -UseBasicParsing -TimeoutSec 30
+    Check "Organizer sees insights" ($iio.StatusCode -eq 200) "status $($iio.StatusCode)"
+    Check "Insights heatmap scoped" ($iio.Content -match "by weekday") "shared Insights block rendered"
+    Check "Insights metric blocks" ($iio.Content -match "Check-in velocity" -and $iio.Content -match "by week") "registration + velocity + no-show rendered"
+} catch { Check "Organizer sees insights" $false $_.Exception.Message }
+
+# 14. Post-event loop: the thank-you band's gates and the recommendations
+#     it feeds. Plain GETs take the default locale, so these assertions use
+#     the English copy (the CDP probes see the French side).
+try {
+    $th = Invoke-WebRequest -Uri "$base/events/seed-past-soldering" -WebSession $s -UseBasicParsing -TimeoutSec 30
+    Check "Thank-you on ended attended event" ($th.StatusCode -eq 200 -and $th.Content -match "Thanks for coming.") "attended copy rendered"
+    Check "Thank-you asks or has answered" ($th.Content -match "Would you attend again|Noted") "question or its answered state"
+} catch { Check "Thank-you on ended attended event" $false $_.Exception.Message }
+
+try {
+    $ns = Invoke-WebRequest -Uri "$base/events/seed-past-cleanup" -WebSession $s -UseBasicParsing -TimeoutSec 30
+    Check "No-show thank-you stays honest" ($ns.Content -match "Thanks for signing up.") "registered copy, never 'thanks for coming'"
+} catch { Check "No-show thank-you stays honest" $false $_.Exception.Message }
+
+try {
+    $fu = Invoke-WebRequest -Uri "$base/events/seed-event-line-follower" -WebSession $s -UseBasicParsing -TimeoutSec 30
+    Check "No band on a live event" ($fu.Content -notmatch 'data-post="thanks"') "band gated by endsAt"
+} catch { Check "No band on a live event" $false $_.Exception.Message }
+
+try {
+    $an = Invoke-WebRequest -Uri "$base/events/seed-past-soldering" -UseBasicParsing -TimeoutSec 30
+    Check "No band for anonymous" ($an.Content -notmatch 'data-post="thanks"') "thank-you requires the signed-in ticket"
+} catch { Check "No band for anonymous" $false $_.Exception.Message }
+
+try {
+    $rc = Invoke-WebRequest -Uri "$base/dashboard" -WebSession $s -UseBasicParsing -TimeoutSec 30
+    Check "Dashboard recommendations section" ($rc.Content -match "Because you liked") "recs section rendered"
+    Check "Seeded answer feeds a recommendation" ($rc.Content -match "ETH 2026") "a liked club recommends its next event"
+} catch { Check "Dashboard recommendations section" $false $_.Exception.Message }
+
+# 15. Clubs (Phase 12): the directory, a scraped profile, the 404 and the
+#     club link-preview PNG. Plain GETs take the default locale (EN copy);
+#     the club DATA (names, descriptions) is FR either way.
+$clubId = $null
+try {
+    $cl = Invoke-WebRequest -Uri "$base/clubs" -UseBasicParsing -TimeoutSec 30
+    Check "Clubs directory 200" ($cl.StatusCode -eq 200) "status $($cl.StatusCode)"
+    Check "Directory lists seeded club" ($cl.Content -match "Club Innovation EMSI") "seeded club rendered"
+    Check "Directory search input" ($cl.Content -match 'data-clubsearch') "search hook present"
+    Check "Nav links Clubs" ($landing.Content -match 'href="/clubs"') "nav entry in served HTML"
+    # Cards carry data-club="<cuid>" — pick Club Innovation's (the follow
+    # fixtures below depend on it), not whichever sorts first alphabetically.
+    $nameIdx = $cl.Content.IndexOf("Club Innovation EMSI")
+    $clubId = ""
+    if ($nameIdx -ge 0) {
+        $before = $cl.Content.Substring(0, $nameIdx)
+        $m = [regex]::Matches($before, 'data-club="([A-Za-z0-9_-]+)"') | Select-Object -Last 1
+        if ($m) { $clubId = $m.Groups[1].Value }
+    }
+    Check "Directory links a profile" ($clubId.Length -gt 10) "scraped club id: $clubId"
+} catch { Check "Clubs directory 200" $false $_.Exception.Message }
+
+if ($clubId) {
+    try {
+        $cp = Invoke-WebRequest -Uri "$base/clubs/$clubId" -UseBasicParsing -TimeoutSec 30
+        Check "Club profile 200" ($cp.StatusCode -eq 200) "status $($cp.StatusCode)"
+        Check "Profile shows description" ($cp.Content -match "robotique, hackathons") "seeded club body rendered"
+        Check "Profile stat boxes" ($cp.Content -match 'data-clubstats') "followers/upcoming/past rendered"
+        Check "Profile links upcoming events" ($cp.Content -match 'data-clubevents|data-clubeventsempty') "events section present"
+    } catch { Check "Club profile 200" $false $_.Exception.Message }
+
+    try {
+        $og = Invoke-WebRequest -Uri "$base/clubs/$clubId/opengraph-image" -UseBasicParsing -TimeoutSec 30
+        $ogLen = if ($og.Content -is [byte[]]) { $og.Content.Length } else { ([string]$og.Content).Length }
+        Check "Club OG serves PNG" ($og.StatusCode -eq 200 -and [string]$og.Headers["Content-Type"] -match "image/png") "status $($og.StatusCode), type $($og.Headers['Content-Type'])"
+        Check "Club OG is a real poster" ($ogLen -gt 10240) "$ogLen bytes"
+    } catch { Check "Club OG serves PNG" $false $_.Exception.Message }
+}
+
+try {
+    Invoke-WebRequest -Uri "$base/clubs/not-a-club-999" -UseBasicParsing -TimeoutSec 30 | Out-Null
+    Check "Bogus club id 404s" $false "expected 404, got 200"
+} catch {
+    $code = $_.Exception.Response.StatusCode.value__
+    Check "Bogus club id 404s" ($code -eq 404) "status $code"
+}
 
 # Report
 $pass = @($results | Where-Object Pass).Count

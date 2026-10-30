@@ -14,6 +14,8 @@ import * as qr from "./dict/qr";
 import * as calendar from "./dict/calendar";
 import * as insights from "./dict/insights";
 import * as notifications from "./dict/notifications";
+import * as tickets from "./dict/tickets";
+import * as clubs from "./dict/clubs";
 
 /**
  * One flat dictionary per language, merged from namespaces.
@@ -37,6 +39,8 @@ export const en = {
   ...calendar.en,
   ...insights.en,
   ...notifications.en,
+  ...tickets.en,
+  ...clubs.en,
 };
 
 export type DictKey = keyof typeof en;
@@ -61,6 +65,8 @@ export const fr: FullDict = {
   ...calendar.fr,
   ...insights.fr,
   ...notifications.fr,
+  ...tickets.fr,
+  ...clubs.fr,
 };
 
 export const ar: FullDict = {
@@ -79,4 +85,6 @@ export const ar: FullDict = {
   ...calendar.ar,
   ...insights.ar,
   ...notifications.ar,
+  ...tickets.ar,
+  ...clubs.ar,
 };

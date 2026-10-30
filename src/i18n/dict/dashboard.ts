@@ -19,6 +19,9 @@ export const en = {
   "dash.notCheckedIn": "Not checked in",
   "dash.follows": "Clubs you follow",
   "dash.loading": "Loading your tickets",
+  "dash.recs.title": "Because you liked…",
+  "dash.recs.empty":
+    "Answer the question after an event ends and your suggestions show up here.",
 } as const;
 
 export const fr: Record<keyof typeof en, string> = {
@@ -40,6 +43,9 @@ export const fr: Record<keyof typeof en, string> = {
   "dash.notCheckedIn": "Non enregistré",
   "dash.follows": "Clubs que vous suivez",
   "dash.loading": "Chargement de vos billets",
+  "dash.recs.title": "Parce que vous avez aimé…",
+  "dash.recs.empty":
+    "Répondez à la question après un événement terminé et vos suggestions apparaîtront ici.",
 };
 
 export const ar: Record<keyof typeof en, string> = {
@@ -59,4 +65,7 @@ export const ar: Record<keyof typeof en, string> = {
   "dash.notCheckedIn": "لم يُسجَّل الحضور",
   "dash.follows": "الأندية التي تتابعها",
   "dash.loading": "جارٍ تحميل تذكراتك",
+  "dash.recs.title": "بناءً على ما أعجبك…",
+  "dash.recs.empty":
+    "أجب على السؤال بعد انتهاء فعالية ليظهر اقتراحاتك هنا.",
 };

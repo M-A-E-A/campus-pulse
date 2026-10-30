@@ -88,6 +88,29 @@ export default async function StudentDashboard() {
     }),
   ]);
 
+  // Phase 7 — the post-event loop's other half: clubs the student said
+  // they'd attend again feed "Because you liked…". Only attendAgain = true
+  // counts (a "no" feeds nothing), and anything they already hold a ticket
+  // for is excluded — never recommend what's already in their pocket.
+  const likedRows = await prisma.rsvp.findMany({
+    where: { userId, attendAgain: true },
+    select: { event: { select: { clubId: true } } },
+  });
+  const likedClubIds = [...new Set(likedRows.map((r) => r.event.clubId))];
+  const recommended = likedClubIds.length
+    ? await prisma.event.findMany({
+        where: {
+          clubId: { in: likedClubIds },
+          status: "PUBLISHED",
+          endsAt: { gte: now },
+          rsvps: { none: { userId } },
+        },
+        orderBy: { startsAt: "asc" },
+        take: 4,
+        select: { id: true, title: true, startsAt: true, club: { select: { name: true } } },
+      })
+    : [];
+
   // Waitlist positions for the upcoming list: one tiny indexed COUNT per
   // waitlisted row. A student holds at most a handful of queue spots, so
   // this stays a few lookups — not a pathological N+1. (A single grouped
@@ -183,9 +206,51 @@ export default async function StudentDashboard() {
                         )}
                       </div>
                     </Link>
+                    {/* The wallet entry: the same ticket as a standalone
+                        full-screen page the service worker can serve when
+                        campus wifi dies at the door. */}
+                    <Link
+                      href={`/tickets/${r.id}`}
+                      className="mt-1.5 inline-block ps-20 text-sm font-semibold text-accent-dark hover:underline"
+                      data-fullscreen-ticket
+                    >
+                      {t("ticket.fullScreen")}
+                    </Link>
                   </li>
                 );
               })}
+            </ul>
+          )}
+        </section>
+
+        {/* Phase 7 — because you liked…: the loop's return leg. Compact
+            rows, not poster spines: a suggestion is not a ticket. It sits
+            full-width above the archive split, so the two-column balance
+            below stays exactly as designed. */}
+        <section className="mt-12" data-post="recs">
+          <h2 className="text-xl font-semibold">{t("dash.recs.title")}</h2>
+          {recommended.length === 0 ? (
+            <div className="mt-3 bg-surface px-4 py-5 text-muted">
+              {t("dash.recs.empty")}
+            </div>
+          ) : (
+            <ul className="mt-3 divide-y divide-line">
+              {recommended.map((e) => (
+                <li
+                  key={e.id}
+                  className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 py-2.5"
+                >
+                  <Link
+                    href={`/events/${e.id}`}
+                    className="font-medium hover:text-accent"
+                  >
+                    {e.title}
+                  </Link>
+                  <span className="text-sm text-muted">
+                    {formatDate(e.startsAt, locale)} · {e.club.name}
+                  </span>
+                </li>
+              ))}
             </ul>
           )}
         </section>
@@ -232,9 +297,15 @@ export default async function StudentDashboard() {
                 <h2 className="text-xl font-semibold">{t("dash.follows")}</h2>
                 <div className="mt-3 flex flex-wrap gap-2">
                   {follows.map((f) => (
-                    <span key={f.id} className="bg-surface px-3 py-1.5 text-sm font-medium">
+                    // The chip is the way to the club's profile now — the
+                    // dashboard names it, the profile carries the counts.
+                    <Link
+                      key={f.id}
+                      href={`/clubs/${f.club.id}`}
+                      className="bg-surface px-3 py-1.5 text-sm font-medium hover:text-accent"
+                    >
                       {f.club.name}
-                    </span>
+                    </Link>
                   ))}
                 </div>
               </section>

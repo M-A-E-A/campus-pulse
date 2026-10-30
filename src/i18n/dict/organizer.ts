@@ -15,6 +15,7 @@ export const en = {
   "org.noClub": "You don't belong to a club yet. Ask an admin to add you.",
   "org.newEvent": "+ New event",
   "org.empty": "No events yet. Create your first one.",
+  "org.insights": "Insights",
   "org.th.event": "Event",
   "org.th.date": "Date",
   "org.th.status": "Status",
@@ -91,7 +92,7 @@ export const en = {
   "org.checkin.header": "Check in",
   "org.checkin.sub":
     "{title}. Scanning the same ticket twice is safe — it won't count twice.",
-  "org.checkin.ok": "✓ {name} is in.",
+  "org.checkin.ok": "{name} is in.",
   "org.checkin.duplicate": "Already checked in: {name}.",
   "org.checkin.invalid": "✕ Not a valid ticket for this event.",
   "org.checkin.cancelled": "This RSVP was cancelled.",
@@ -110,6 +111,15 @@ export const en = {
   "org.checkin.unknown": "Unknown code",
   "org.checkin.cancelledRsvp": "Cancelled RSVP",
   "org.checkin.errorItem": "Error",
+  "org.checkin.pendingCard":
+    "Queued scans: {count}. They send automatically when the network returns.",
+  "org.checkin.pendingItem": "Queued",
+  "org.checkin.sync": "Sync now",
+  "org.checkin.syncing": "Syncing…",
+  "org.checkin.syncBlocked":
+    "Session expired — log in again. {count} scan(s) stay queued until you do.",
+  "org.checkin.queueFull":
+    "Local storage is full — this scan couldn't be kept. Wait for the network before more scans.",
 } as const;
 
 export const fr: Record<keyof typeof en, string> = {
@@ -124,6 +134,7 @@ export const fr: Record<keyof typeof en, string> = {
     "Vous n'êtes encore membre d'aucun club. Demandez à un admin de vous ajouter.",
   "org.newEvent": "+ Nouvel événement",
   "org.empty": "Aucun événement pour l'instant. Créez le premier.",
+  "org.insights": "Analyses",
   "org.th.event": "Événement",
   "org.th.date": "Date",
   "org.th.status": "Statut",
@@ -193,7 +204,7 @@ export const fr: Record<keyof typeof en, string> = {
   "org.checkin.header": "Check-in",
   "org.checkin.sub":
     "{title}. Scanner deux fois le même billet est sans risque — il ne sera pas compté deux fois.",
-  "org.checkin.ok": "✓ {name} est entré.",
+  "org.checkin.ok": "{name} est entré.",
   "org.checkin.duplicate": "Déjà enregistré : {name}.",
   "org.checkin.invalid": "✕ Ce billet n'est pas valide pour cet événement.",
   "org.checkin.cancelled": "Cette inscription a été annulée.",
@@ -212,6 +223,15 @@ export const fr: Record<keyof typeof en, string> = {
   "org.checkin.unknown": "Code inconnu",
   "org.checkin.cancelledRsvp": "Inscription annulée",
   "org.checkin.errorItem": "Erreur",
+  "org.checkin.pendingCard":
+    "Scans en attente : {count}. Ils partent automatiquement au retour du réseau.",
+  "org.checkin.pendingItem": "En attente",
+  "org.checkin.sync": "Synchroniser",
+  "org.checkin.syncing": "Synchronisation…",
+  "org.checkin.syncBlocked":
+    "Session expirée — reconnectez-vous. {count} scan(s) restent en file en attendant.",
+  "org.checkin.queueFull":
+    "Stockage local plein — ce scan n'a pas pu être conservé. Attendez le retour du réseau.",
 };
 
 export const ar: Record<keyof typeof en, string> = {
@@ -225,6 +245,7 @@ export const ar: Record<keyof typeof en, string> = {
   "org.noClub": "أنت لست عضواً في أي نادي حتى الآن. اطلب من المسؤول إضافتك.",
   "org.newEvent": "+ فعالية جديدة",
   "org.empty": "لا توجد فعاليات بعد. أنشئ فعاليتك الأولى.",
+  "org.insights": "إحصاءات",
   "org.th.event": "الفعالية",
   "org.th.date": "التاريخ",
   "org.th.status": "الحالة",
@@ -290,7 +311,7 @@ export const ar: Record<keyof typeof en, string> = {
 
   "org.checkin.header": "تسجيل الحضور",
   "org.checkin.sub": "{title}. مسح نفس التذكرة مرتين آمن — لن تُحتسب مرتين.",
-  "org.checkin.ok": "✓ {name} دخل.",
+  "org.checkin.ok": "{name} دخل.",
   "org.checkin.duplicate": "سُجّل حضوره مسبقاً: {name}.",
   "org.checkin.invalid": "✕ هذه التذكرة غير صالحة لهذه الفعالية.",
   "org.checkin.cancelled": "تم إلغاء هذا التسجيل.",
@@ -308,4 +329,12 @@ export const ar: Record<keyof typeof en, string> = {
   "org.checkin.unknown": "رمز غير معروف",
   "org.checkin.cancelledRsvp": "تسجيل ملغى",
   "org.checkin.errorItem": "خطأ",
+  "org.checkin.pendingCard": "عمليات المسح المعلّقة: {count}. تُرسل تلقائياً عند عودة الشبكة.",
+  "org.checkin.pendingItem": "قيد الانتظار",
+  "org.checkin.sync": "مزامنة الآن",
+  "org.checkin.syncing": "جارٍ المزامنة…",
+  "org.checkin.syncBlocked":
+    "انتهت الجلسة — سجّل الدخول مجدداً. {count} عملية مسح ستبقى معلّقة حتى ذلك الحين.",
+  "org.checkin.queueFull":
+    "امتلأت ذاكرة المتصفح — لم يتمكن هذا المسح من الحفظ. انتظر عودة الشبكة قبل مزيد من المسح.",
 };

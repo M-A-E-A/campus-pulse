@@ -2,8 +2,10 @@
 
 import { useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { toggleSaveAction, toggleFollowAction } from "@/lib/actions/rsvp";
+import { toggleSaveAction } from "@/lib/actions/rsvp";
+import { isOfflineError } from "@/lib/offline";
 import { useT } from "@/i18n/provider";
+import { FollowButton, toggleCls } from "../FollowButton";
 
 export function SaveFollowButtons({
   eventId,
@@ -20,7 +22,6 @@ export function SaveFollowButtons({
 }) {
   const t = useT();
   const [saved, setSaved] = useState(isSaved);
-  const [following, setFollowing] = useState(isFollowing);
   const [note, setNote] = useState<string | null>(null);
   const router = useRouter();
   const pathname = usePathname();
@@ -34,37 +35,34 @@ export function SaveFollowButtons({
       signInHere();
       return;
     }
-    setSaved((s) => !s);
-    await toggleSaveAction(eventId);
-  }
-
-  async function onFollow() {
-    if (!isAuthenticated) {
-      signInHere();
-      return;
+    const next = !saved;
+    setSaved(next); // optimistic — rolled back below if the action dies
+    setNote(null);
+    try {
+      await toggleSaveAction(eventId);
+    } catch (err) {
+      setSaved(!next);
+      if (isOfflineError(err)) {
+        setNote(t("errors.offline"));
+        return;
+      }
+      throw err;
     }
-    setFollowing((f) => !f);
-    await toggleFollowAction(clubId);
-    setNote(following ? t("detail.follow.unfollowedNote") : t("detail.follow.followedNote"));
   }
 
-  // min-h-11: 44px is the comfortable touch target on a phone; on lg the pair
-  // goes back to poster-compact. The pressed state is a real fill so the toggle
-  // reads as on/off rather than two identical buttons.
-  const cls = (on: boolean) =>
-    [
-      "btn btn-secondary min-h-11 border-2 border-ink py-1.5! text-sm! lg:min-h-0",
-      on ? "bg-ink text-paper hover:bg-ink" : "bg-paper text-ink hover:bg-line",
-    ].join(" ");
-
+  // Follow lives in FollowButton (shared with the club pages); its note
+  // comes back as a sibling inside this same flex row, so the pair still
+  // reads save · follow · status.
   return (
     <div className="flex flex-wrap items-center gap-2">
-      <button className={cls(saved)} onClick={onSave} aria-pressed={saved}>
+      <button className={toggleCls(saved)} onClick={onSave} aria-pressed={saved}>
         {saved ? t("detail.save.on") : t("detail.save.off")}
       </button>
-      <button className={cls(following)} onClick={onFollow} aria-pressed={following}>
-        {following ? t("detail.follow.on") : t("detail.follow.off")}
-      </button>
+      <FollowButton
+        clubId={clubId}
+        initialFollowing={isFollowing}
+        isAuthenticated={isAuthenticated}
+      />
       {note && <span className="text-xs font-semibold text-ink" role="status">{note}</span>}
     </div>
   );

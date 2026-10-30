@@ -9,7 +9,10 @@ import { getWaitlistRank } from "@/lib/rsvp-core";
 import { formatDate, formatEventRange, formatDateTime, isSameCampusDay } from "@/lib/tz";
 import { getT, getLocale } from "@/i18n/server";
 import { RsvpSection } from "@/components/events/RsvpSection";
+import { PostEventThanks } from "@/components/events/PostEventThanks";
+import { DistanceAway } from "@/components/events/DistanceAway";
 import { SaveFollowButtons } from "@/components/events/SaveFollowButtons";
+import { SharePosterButton } from "@/components/events/SharePosterButton";
 import { Entrance } from "@/components/Entrance";
 import type { TicketData } from "@/components/events/Ticket";
 
@@ -33,15 +36,20 @@ export async function generateMetadata({
   const { id } = await params;
   const [event, t] = await Promise.all([getEvent(id), getT()]);
   if (!event || event.status !== "PUBLISHED") return { title: t("detail.meta.notFound") };
+  const description =
+    event.description.length > 155
+      ? `${event.description.slice(0, 152)}…`
+      : event.description;
   return {
     title: `${event.title} — Campus Pulse`,
-    description:
-      event.description.length > 155
-        ? `${event.description.slice(0, 152)}…`
-        : event.description,
-    ...(event.coverImage
-      ? { openGraph: { title: event.title, images: [{ url: event.coverImage }] } }
-      : {}),
+    description,
+    // No openGraph.images here: the opengraph-image.tsx convention owns
+    // og:image (1200×630 poster with width/height/type). A cover-photo card
+    // and a poster card can't both be the first preview a stranger sees.
+    openGraph: { title: event.title, description },
+    // summary_large_image makes X/WhatsApp ask for the full poster instead
+    // of a thumbnail; Twitter falls back to og:image for the URL itself.
+    twitter: { card: "summary_large_image" },
   };
 }
 
@@ -65,6 +73,9 @@ export default async function EventPage({
   const spotsLeft = event.capacity !== null ? event.capacity - taken : null;
   const percent = event.capacity !== null ? Math.min(100, (taken / event.capacity) * 100) : 0;
   const isFull = event.capacity !== null && taken >= event.capacity;
+  // One cutoff drives the whole Phase 7 loop: the thank-you band, the
+  // feedback guards and the "next up" pick all ask whether it's over.
+  const hasEnded = end.getTime() < Date.now();
 
   // Waitlist size for the capacity line. Separate query on purpose: Prisma's
   // _count can carry only one filter per relation, and the shared getEvent
@@ -78,6 +89,11 @@ export default async function EventPage({
   let existingRsvp: TicketData | null = null;
   let isSaved = false;
   let isFollowing = false;
+  // The band exists only for an ENDED event the visitor holds a CONFIRMED
+  // ticket for; nextUp is that club's next published event, minus anything
+  // they're already booked on.
+  let postEvent: { attended: boolean; answer: boolean | null } | null = null;
+  let nextUp: { id: string; title: string; dateLabel: string } | null = null;
   if (session?.user) {
     const [rsvp, saved, follow] = await Promise.all([
       prisma.rsvp.findUnique({
@@ -122,6 +138,27 @@ export default async function EventPage({
     }
     isSaved = Boolean(saved);
     isFollowing = Boolean(follow);
+
+    // Post-event: only a ticket holder gets thanked, and only after the end.
+    // The recommendation skips events they already RSVP'd to — the loop must
+    // suggest something new, never what is already in their pocket.
+    if (rsvp && rsvp.status === "CONFIRMED" && hasEnded) {
+      postEvent = { attended: rsvp.checkedInAt !== null, answer: rsvp.attendAgain };
+      const next = await prisma.event.findFirst({
+        where: {
+          clubId: event.clubId,
+          status: "PUBLISHED",
+          endsAt: { gte: new Date() },
+          id: { not: event.id },
+          rsvps: { none: { userId: session.user.id } },
+        },
+        orderBy: { startsAt: "asc" },
+        select: { id: true, title: true, startsAt: true },
+      });
+      if (next) {
+        nextUp = { id: next.id, title: next.title, dateLabel: formatDate(next.startsAt, locale) };
+      }
+    }
   }
 
   return (
@@ -162,6 +199,11 @@ export default async function EventPage({
           {/* 20px: the venue is a fact on the rail. Set any smaller it reads as
               a label sitting above the next heading — the banned kicker. */}
           <span className="text-xl font-semibold text-balance">{event.location}</span>
+          {/* Distance renders ONLY when geolocation was already granted —
+              a page load never asks (DistanceAway's own rule). */}
+          {event.lat !== null && event.lng !== null && (
+            <DistanceAway lat={event.lat} lng={event.lng} />
+          )}
           {/* text-xl, not the inherited 16: at 16 this live fact reads as a
               small label sitting above the next heading — the banned kicker.
               The numeric fact is lg+ only: on phones the meter panel directly
@@ -186,6 +228,18 @@ export default async function EventPage({
           </div>
         </div>
       </div>
+
+      {/* Phase 7: the post-event loop — a closing cover for people who were
+          there, asking the one question that feeds recommendations. */}
+      {postEvent && (
+        <PostEventThanks
+          eventId={event.id}
+          clubName={event.club.name}
+          attended={postEvent.attended}
+          initialAnswer={postEvent.answer}
+          nextUp={nextUp}
+        />
+      )}
 
       {event.coverImage && (
         <div className="mx-auto max-w-6xl px-4 pt-8" data-rise>
@@ -263,6 +317,10 @@ export default async function EventPage({
             >
               {t("detail.addToCalendar")}
             </a>
+            {/* The poster is the event leaving the site: Web Share where the
+                browser supports sharing files, otherwise the poster document
+                opens — which is also the print path (vector, any size). */}
+            <SharePosterButton eventId={event.id} title={event.title} />
             {session?.user && (
               <Link
                 href="/dashboard"
@@ -293,7 +351,16 @@ export default async function EventPage({
               {event.club.name.charAt(0).toUpperCase()}
             </div>
             <div>
-              <p className="font-bold">{event.club.name}</p>
+              <p className="font-bold">
+                {/* The club name leads to its poster profile — the same
+                    entity the byline credits. */}
+                <Link
+                  href={`/clubs/${event.club.id}`}
+                  className="underline-offset-4 hover:text-accent hover:underline"
+                >
+                  {event.club.name}
+                </Link>
+              </p>
               <p className="mt-1 text-[length:var(--step-body)] text-ink/80">
                 {event.club.description}
               </p>

@@ -198,11 +198,35 @@ async function main() {
     clubId: string;
     categoryId: string;
   }) {
+    // Demo coordinates per venue string (district-level Casablanca
+    // approximations of the two campuses the demo uses). An unknown venue
+    // stays null — an event whose room is "à confirmer" must not claim a
+    // distance. Re-seeds refresh coords with the rest of the content.
+    const VENUE_COORDS: Record<string, { lat: number; lng: number }> = {
+      // EMSI Roudani cluster
+      "Smartilab EMSI — Hall B, Campus Roudani": { lat: 33.5735, lng: -7.5879 },
+      "Smartilab EMSI — Hall B": { lat: 33.5735, lng: -7.5879 },
+      "Amphi EMSI Roudani": { lat: 33.5731, lng: -7.5898 },
+      "Pelouse centrale — Campus Roudani": { lat: 33.5727, lng: -7.5903 },
+      "Espace Innovation — EMSI Roudani, Casablanca": { lat: 33.5738, lng: -7.5887 },
+      "Piste Smartilab — EMSI Roudani": { lat: 33.574, lng: -7.5874 },
+      "Salle polyvalente — EMSI Roudani": { lat: 33.5729, lng: -7.5906 },
+      "Salle info B2 — EMSI Roudani": { lat: 33.5733, lng: -7.5892 },
+      "Campus Roudani — extérieur": { lat: 33.5725, lng: -7.5901 },
+      // EMSI Maarif cluster
+      "Amphi EMSI — Salle Atlas, Campus Maarif": { lat: 33.5715, lng: -7.6138 },
+      "Salle des conférences — EMSI Maarif": { lat: 33.5717, lng: -7.6135 },
+      "Médiathèque — EMSI Maarif": { lat: 33.5723, lng: -7.6128 },
+      "Salle C1 — EMSI Maarif": { lat: 33.5714, lng: -7.6142 },
+      // Off-campus
+      "Complexe sportif — Casablanca": { lat: 33.5868, lng: -7.6054 },
+    };
+    const coords = VENUE_COORDS[data.location];
     const { id, ...content } = data;
     await prisma.event.upsert({
       where: { id },
-      update: content,
-      create: data,
+      update: { ...content, lat: coords?.lat ?? null, lng: coords?.lng ?? null },
+      create: { ...data, lat: coords?.lat ?? null, lng: coords?.lng ?? null },
     });
   }
 
@@ -241,7 +265,7 @@ async function main() {
       "Pitchs de cinq minutes, un vrai jury, de vrais prix. Équipes de trois au maximum.\n\nCet événement traverse minuit volontairement — vérifiez l'affichage des dates.",
     startsAt: daysFromNow(7, 22),
     endsAt: daysFromNow(8, 2), // crosses midnight: good timezone test
-    location: "Amphi EMSI Roudani",
+    location: "Amphi EMSI — Salle Atlas, Campus Maarif",
     capacity: 120,
     status: "PUBLISHED",
     clubId: clubs["Enactus EMSI"],
@@ -356,11 +380,12 @@ async function main() {
   ];
 
   for (const [i, e] of PAST_EVENTS.entries()) {
+    const startsAt = daysAgo(e.days, e.hourUtc, e.minute ?? 0);
     await upsertEvent({
       id: e.id,
       title: e.title,
       description: e.description,
-      startsAt: daysAgo(e.days, e.hourUtc, e.minute ?? 0),
+      startsAt,
       endsAt: daysAgo(e.days, e.hourUtc, (e.minute ?? 0) + e.hours * 60),
       location: e.location,
       capacity: e.capacity,
@@ -371,21 +396,46 @@ async function main() {
 
     // Attendance history: everyone RSVPs; a deterministic slice no-shows.
     const attendees = [admin, organizer, student];
+    // Minutes from start to door scan, per (event, attendee) — spread across
+    // every velocity bucket the insights chart reads (early → 60+ late).
+    const SCAN_OFFSETS = [-12, 4, 15, 28, 47, 75];
     for (const [j, user] of attendees.entries()) {
       const attended = (i + j) % 4 !== 0; // ~75% show-up rate
+      // People register in the days before the event — never at seed time.
+      // Registration-over-time (organizer insights) and the attendees'
+      // "RSVP date" column both read createdAt, so the dates have to sit
+      // before startsAt: lead = 1..6 days ahead of the doors.
+      const lead = 1 + ((i + j) % 6);
+      const signupAt = new Date(startsAt.getTime() - lead * 24 * 60 * 60 * 1000);
+      // checkedInAt rides in `update` too: upsertEvent refreshes startsAt
+      // every run, and a stale check-in would drift before its event — the
+      // organizers' velocity buckets read the difference.
+      const checkInAt = attended
+        ? new Date(startsAt.getTime() + SCAN_OFFSETS[(i + j) % 6] * 60_000)
+        : null;
       await prisma.rsvp.upsert({
         where: { userId_eventId: { userId: user.id, eventId: e.id } },
-        update: {},
+        update: { createdAt: signupAt, checkedInAt: checkInAt },
         create: {
           userId: user.id,
           eventId: e.id,
           status: "CONFIRMED",
           ticketCode: `demo-past-${i + 1}-${j + 1}`,
-          checkedInAt: attended ? daysAgo(e.days, e.hourUtc, 15) : null,
+          createdAt: signupAt,
+          checkedInAt: checkInAt,
         },
       });
     }
   }
+
+  // Post-event loop demo: the student already answered "yes, I'd go again"
+  // to the soldering workshop she ATTENDED — so the dashboard's
+  // recommendations are live from the first boot, while every other past
+  // event stays unanswered and the thank-you screen still has its question.
+  await prisma.rsvp.update({
+    where: { userId_eventId: { userId: student.id, eventId: "seed-past-soldering" } },
+    data: { attendAgain: true, feedbackAt: daysAgo(43, 12) },
+  });
 
   // ---- Cleanup ----
   // Drop legacy generic categories once nothing references them (events above

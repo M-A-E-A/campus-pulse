@@ -41,6 +41,9 @@ export const en = {
   "detail.spotsLeftOne": "{n} spot left",
   "detail.noSpotsLeft": "No spots left",
   "detail.addToCalendar": "Add to calendar",
+  "detail.sharePoster": "Share poster",
+  "detail.distance": "{km} from you",
+  "detail.sharePosterBusy": "Preparing poster…",
   "detail.seeTickets": "See all your tickets →",
 
   // RSVP panel (client)
@@ -69,11 +72,24 @@ export const en = {
   // Save / follow (client)
   "detail.save.on": "Saved",
   "detail.save.off": "Save",
-  "detail.follow.on": "✓ Following club",
+  "detail.follow.on": "Following club",
   "detail.follow.off": "+ Follow club",
   "detail.follow.unfollowedNote": "Unfollowed club",
   "detail.follow.followedNote":
     "Following club — their events will show first on your dashboard",
+
+  // Post-event thank-you screen (client)
+  "detail.post.thanksAttended": "Thanks for coming.",
+  "detail.post.thanksRegistered": "Thanks for signing up.",
+  "detail.post.question": "Would you attend again?",
+  "detail.post.yes": "Yes, I'd go again",
+  "detail.post.no": "No, not really",
+  "detail.post.answered": "Noted — thank you!",
+  "detail.post.change": "Change my answer",
+  "detail.post.next": "Next up from {club}:",
+  "detail.post.tooEarly": "This event hasn't ended yet.",
+  "detail.post.noTicket": "Only ticket holders can answer this.",
+  "detail.post.loginFirst": "Sign in first.",
 } as const;
 
 export const fr: Record<keyof typeof en, string> = {
@@ -106,6 +122,9 @@ export const fr: Record<keyof typeof en, string> = {
   "detail.spotsLeftOne": "{n} place restante",
   "detail.noSpotsLeft": "Plus aucune place",
   "detail.addToCalendar": "Ajouter au calendrier",
+  "detail.sharePoster": "Partager l'affiche",
+  "detail.distance": "à {km} de vous",
+  "detail.sharePosterBusy": "Préparation de l'affiche…",
   "detail.seeTickets": "Voir tous vos billets →",
 
   "detail.rsvp.wantToGo": "Vous voulez y aller ?",
@@ -131,11 +150,24 @@ export const fr: Record<keyof typeof en, string> = {
 
   "detail.save.on": "Enregistré",
   "detail.save.off": "Enregistrer",
-  "detail.follow.on": "✓ Club suivi",
+  "detail.follow.on": "Club suivi",
   "detail.follow.off": "+ Suivre le club",
   "detail.follow.unfollowedNote": "Club non suivi",
   "detail.follow.followedNote":
     "Club suivi — leurs événements apparaîtront en premier sur votre tableau de bord",
+
+  // Post-event thank-you screen (client)
+  "detail.post.thanksAttended": "Merci pour votre présence.",
+  "detail.post.thanksRegistered": "Merci pour votre inscription.",
+  "detail.post.question": "Y retourneriez-vous ?",
+  "detail.post.yes": "Oui, j'y retournerais",
+  "detail.post.no": "Non, pas vraiment",
+  "detail.post.answered": "C'est noté, merci !",
+  "detail.post.change": "Modifier ma réponse",
+  "detail.post.next": "À venir chez {club} :",
+  "detail.post.tooEarly": "Cet événement n'est pas encore terminé.",
+  "detail.post.noTicket": "Seules les personnes avec un billet peuvent répondre.",
+  "detail.post.loginFirst": "Connectez-vous d'abord.",
 };
 
 export const ar: Record<keyof typeof en, string> = {
@@ -168,6 +200,9 @@ export const ar: Record<keyof typeof en, string> = {
   "detail.spotsLeftOne": "بقيت {n} مكان واحد",
   "detail.noSpotsLeft": "لا توجد أماكن متاحة",
   "detail.addToCalendar": "إضافة إلى التقويم",
+  "detail.sharePoster": "مشاركة الملصق",
+  "detail.distance": "يبعد {km} عنك",
+  "detail.sharePosterBusy": "جارٍ تحضير الملصق…",
   "detail.seeTickets": "عرض كل تذاكرك ←",
 
   "detail.rsvp.wantToGo": "هل تريد الحضور؟",
@@ -192,9 +227,22 @@ export const ar: Record<keyof typeof en, string> = {
 
   "detail.save.on": "محفوظ",
   "detail.save.off": "حفظ",
-  "detail.follow.on": "✓ تتابع النادي",
+  "detail.follow.on": "تتابع النادي",
   "detail.follow.off": "+ متابعة النادي",
   "detail.follow.unfollowedNote": "تم إلغاء متابعة النادي",
   "detail.follow.followedNote":
     "تتابع النادي — ستظهر فعالياته أولاً في لوحة التحكم الخاصة بك",
+
+  // Post-event thank-you screen (client)
+  "detail.post.thanksAttended": "شكراً لحضورك.",
+  "detail.post.thanksRegistered": "شكراً لتسجيلك.",
+  "detail.post.question": "هل ستحضر مجدداً؟",
+  "detail.post.yes": "نعم، سأعود",
+  "detail.post.no": "لا، ليس كذلك",
+  "detail.post.answered": "تمّ تسجيل ذلك، شكراً!",
+  "detail.post.change": "تعديل إجابتي",
+  "detail.post.next": "التالي من {club}:",
+  "detail.post.tooEarly": "لم تنتهِ هذه الفعالية بعد.",
+  "detail.post.noTicket": "يمكن لأصحاب التذاكر فقط الإجابة.",
+  "detail.post.loginFirst": "سجّل الدخول أولاً.",
 };

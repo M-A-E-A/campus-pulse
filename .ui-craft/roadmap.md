@@ -100,23 +100,576 @@ are generated locally (no external account needed), unlike 1b.
   runs on BOTH sides of this phase — capture-timing race on pre-existing
   0.15s transitions, no CSS added here.
 
-## Phase 3 — Poster engine
-`GET /api/events/[id]/poster` → SVG rendered with the approved design tokens
-(ink/paper/orange, Cabinet Grotesk), share via Web Share API, print-sized
-export. The redesign's poster-wall metaphor becomes a distribution loop.
+## Phase 3 — Poster engine ✅ DONE (verified)
+`GET /api/events/[id]/poster` → the shareable handbill, public like /calendar
+(PUBLISHED only, 404 else), trilingual via `cp-locale`, `Cache-Control:
+no-store` (the rail prints live counts), `Content-Disposition: inline;
+filename="campus-pulse-<slug>.svg"`. Pure `src/lib/poster.ts` builds a
+1200×1600 SVG: ink field, title auto-fitted 120→56px until the stack clears
+the rail with air, category chip + club credits below it (truncated, and the
+club drops to its own row when the chip would crowd it off-canvas), the
+pulse beat re-plotted full-bleed running INTO the orange facts rail (dip
+plunges into the band), footer rule + mark + wordmark + event URL — the
+whole composition mirrored for RTL. SVG's `text-anchor` flips under
+`direction="rtl"` ("start" pins the RIGHT edge there); one helper owns all
+alignment, and every run carries its own direction so Latin lines inside an
+Arabic poster (club, URL, time range) anchor as LTR instead of spilling.
+Fonts are base64-embedded woff2 — Cabinet Grotesk 400/500/800 + IBM Plex
+Sans Arabic 400/500/700 (arabic subset, copied from the build output into
+`public/fonts/`), memoised per process, URL fallback if fs fails — so the
+travelled FILE keeps its typeface on another device. Share:
+`SharePosterButton` is a real `<a href>` (works pre-hydration, middle-click,
+no popup blocker) enhanced to `navigator.share({files:[svg]})`; AbortError
+= the share sheet was closed, not a failure; capability gap →
+`window.open`. The same SVG IS the print export — vector, any DPI. New i18n
+`detail.sharePoster`/`detail.sharePosterBusy` ×3 locales.
+Verification: tsc/eslint/build 0 · smoke 53/53 (7 poster checks: 200 +
+standalone SVG shape, embedded woff2, brand/facts/accent token, RTL via a
+WebSession cookie — PS 5.1 silently drops `Cookie` from `-Headers`, draft
+404, unknown 404) · probe-poster 8/8 (fr+ar render as top-level documents,
+zero-width text 0/11 + 0/12, Cabinet + Plex really load, dir=rtl, 1200×1600
+print canvas) · visual review of both renders caught and fixed 4 real
+defects: the beat drew at the canvas top (missing translate — dead void
+mid-poster), credits overflow (long category pushed the club off-canvas →
+truncate + stack), ALL RTL text clipped off-margin (the anchor flip above),
+title over-shrunk (advance estimates recalibrated 0.62/0.56/0.54 →
+0.57/0.55/0.52, measured ~0.44–0.50) · inspector 0 FAIL, no new findings vs
+the `inspect-p3` baseline (the `off-centre` warn disappeared).
 
-## Phase 4 — Live pulse
+## Phase 4 — Live pulse ✅ DONE (verified; shipped in fd3abbb, never gated)
 SSE endpoint so the organizer's attendance counter ticks during the door rush.
+`GET /api/events/[id]/pulse` is organizer/admin gated server-side, pushes a
+change-only snapshot every 2.5s, heartbeats every 15s, and cleans up on
+disconnect. `PulseScreen.tsx` is the projector door display: initial props
+seed zeros, the first SSE frame paints the real totals (the "N confirmations"
+line only appears once total > 0 — the stream's visible receipt), the count-up
+/ progress fill / recent-row entrance fire per scan and snap under
+prefers-reduced-motion. It is a documented exception to the dashboards-
+animation-free lock: a presentation surface held on a projector for hours
+stays still until the door moves, then the event is the motion. Trilingual
+`pulse.*` dict; the attendees page links to it.
+Verification: tsc/eslint/build 0 · smoke 55/55 (section 12: the stream
+refuses anonymous 401 and refuses a signed-in student 403) · probe-pulse
+7/7 door-rush E2E, fully re-runnable via `scripts/reset-checkins.ts` (door
+starts closed, demo state ends back at the seed's 1 check-in): student
+ticket from the real API → organizer session → projector opens → snapshot
+paints totals from 0 → raw code typed into the check-in manual box (the
+camera-free path) with a trusted CDP mouse click → green banner → counter
+animates 0 → 1 on the SAME page, href untouched, no reconnect label.
+House login pattern: node-side jar → Auth.js credentials callback →
+Network.setCookie (clicking the React login form from CDP fires the POST
+but the redirect never lands); seeded organizer email is `organiser@campus.ma`
+(French spelling). Visual review of pulse-before/pulse-after + desktop/mobile
+folds: centered stage, nothing clipped, hierarchy holds at 390px ·
+inspector `inspect-pulse` 0 FAIL / 4 defended WARN with the sanctioned
+`--allow still-page`: micro-label = tracked micro-caps are the locked
+badge/label convention; palette-cream fires on #faf7f2 — that IS the locked
+paper token (same defense as every page baseline); hero-void +
+unused-canvas = the symmetric margins of a deliberately centered projector
+stage, the detector merging the full-bleed section's left edge with the
+header's inner right edge.
 
-## Phase 5 — Organizer analytics
+## Phase 5 — Organizer analytics ✅ DONE (verified)
 Per-organizer version of `/admin/insights` (registration over time, no-show
 rate, check-in velocity). Mostly re-skins existing components.
+`/organizer/insights` reuses `<Insights>` VERBATIM — same stat row + heatmap
++ peak/legend, fed club-scoped data (session gate, middleware 307s anon and
+non-organizers, scoping mirrors the dashboard: `clubMember` → clubId in
+[...], admins see all). `campusBucket` moved from the admin page into
+`src/lib/heat.ts` so both views bucket campus time identically (admin page
+refactored to import it — byte-equivalent behavior). Beneath it, new client
+`OrgInsights` renders the three roadmap metrics as div-bars (no canvas:
+RTL flows for free, reduced-motion a non-issue, each bar carries its full
+sentence as a native tooltip): registrations by week (18 zero-filled campus
+Mondays over the same 120-day window, labels computed server-side per
+request locale), check-in velocity (before / 0–15 / 15–30 / 30–60 / 60+
+minutes from startsAt), and no-show rows per finished event (presence bar +
+`w-28` nowrap rate). `oins.*` keys en/fr/ar in insights.ts, `org.insights`
+link key in organizer.ts, dashboard header secondary button — paper outline
+on the ink band via the documented @layer components → utilities override.
+Seed: past-event RSVPs now backdate createdAt (1–6 days before start, both
+branches) and checkedInAt rides the upsert's `update` with varied scan
+offsets (−12/+4/+15/+28/+47/+75 min) so all five velocity buckets have demo
+data — verification CAUGHT the first version leaving stale checkedInAt while
+`upsertEvent` refreshed startsAt (every check-in sat −5745 min before its
+event → bogus "before start: 5"); re-seeds now stay internally consistent.
+Empty state (`oins.empty`) when no finished events; peak captions hide when
+the data is empty instead of faking a sentence. Gates: tsc/eslint/build 0 ·
+smoke 60/60 (section 13: anon 307, student 307, organizer 200 + heatmap
+block + all three metric blocks) · inspector `inspect-insights` 0 FAIL /
+1 defended WARN (palette-cream = the locked #faf7f2 paper token) with the
+sanctioned `--allow still-page` (data surface, animation-free lock) ·
+visual review desktop fold + 2 screens and mobile fold + 2 screens: charts
+show the exact DB numbers (weekly 3/2/1 bars, peak "7 sept. · 3", velocity
+1/1/0/1/2, ERC 33% / soudure 0% no-show), craft fixes landed for wrapped
+rate text and mobile label truncation.
 
-## Phase 6 — Search
+## Phase 6 — Search ✅ DONE (verified)
 Full-text search across title / club / category / location, Arabic-aware.
+Lives in `src/lib/search.ts`: `normalizeSearch` (lowercase, tashkeel +
+tatweel strip, alef variants → ا, maqsura → ي, ta marbuta → ه, hamza carriers
+ؤ/ئ → و/ي, bidi marks strip, Arabic-Indic + Extended digits → Latin,
+whitespace collapse) runs on BOTH query and haystack, so decorated and bare
+spellings meet in the middle; `searchMatches(fields, query)` treats an empty
+query as match-all. `EventsExplorer.matchesFilters` now feeds it
+`${title} ${location} ${club.name} ${category.name}` — the old matcher
+silently missed category. Data fetching untouched (still client-side over
+the shared 60s cached wall; `/events` 13.3 → 13.4 kB).
+`scripts/probe-search.mjs` (run via `node --import tsx`) = 17 checks: 9 unit
+checks importing the SHIPPED module (Arabic side can't be exercised by the
+Latin-only seed: alef fold, tashkeel/tatweel, ta-marbuta ↔ maqsura pair,
+hamza carriers, Arabic-Indic digits, bidi marks, symmetric decoration-proof
+match, false-positive refusal) + 8 browser checks driving the real filter —
+wall 5 cards; `minuit` → 1/5 (title), `innovation` → 3/5 (club),
+`automatisme` → 2/5 (category — the field the old matcher missed; it would
+return 0), `casablanca` → 1/5 (location); `miُnuit` (damma inside the word)
+lands on the exact same card as `minuit`; garbage query → 0 cards +
+`.empty`; clearing restores 5/5. Screenshot `.taste-skill/search-cover.jpg`.
+Verification CAUGHT three of its own wrong assumptions before the run: (a)
+three unit expectations forgot the ة→ه mapping ("قاعه"/"روضه", and the
+maqsura pair must not mix a definite article); (b) `soudure`/`génie` exist
+ONLY on the draft event — `getPublishedEvents` is `PUBLISHED && endsAt >=
+now`, so browser strings were re-derived from the 5-card wall (`minuit`,
+`automatisme`); (c) cdp.mjs `eval(fnOrExpr, arg)` inlines the arg only on
+the FUNCTION branch — passing a string drops it silently (first run: all
+five browser checks no-op'd at 5/5); fixed by passing a real function.
+Gates: tsc 0 / eslint 0 / build 0 · smoke **60/60** · probe **17/17** ·
+inspector public path (`skills/.../inspect.mjs --allow few-pictures`)
+**0 FAIL / 4 WARN — all four defended**: palette-cream = locked #faf7f2
+paper token; no-footage = typographic-poster direction (`realPictures: 0`
+by design); off-centre 160/176 @1440 and 16/32 @768 = exactly 16px =
+classic scrollbar gutter, `max-w-6xl mx-auto` content symmetric; still-page
+(8 moved) = motion is interaction-driven (filter Flip + debounce), sanctioned
+still-page class. Fold scored ≈9/10: print-spread registers, alternating
+ink/accent/paper card deck, honest capacity copy (midnight-crossing range
+printed in full, unlimited = "Ouvert à tous"). Ops note: postgres died
+mid-verification and a stale `postmaster.pid` blocked start-db.mjs — cleared
+the single lock file (pid confirmed gone first), DB re-booted, app recovered
+untouched; smoke + probe re-ran green afterwards.
 
-## Phase 7 — Post-event loop
-Thank-you screen + "would attend again?" that feeds recommendations.
+## Phase 7 — Post-event loop ✅ DONE (verified)
+Thank-you screen + "would attend again?" that feeds recommendations. The
+return leg of the campus loop: an events platform that ends at the door is a
+bulletin board with better typography.
+
+- [x] **Storage** — `attendAgain Boolean?` + `feedbackAt DateTime?` on `Rsvp`:
+      feedback is 1:1 with the row that already is (userId, eventId), so no
+      new table and no duplicate surface. Migration
+      `20261028151213_post_event_feedback` applied, client regenerated.
+- [x] **Band** — `PostEventThanks.tsx`, full-bleed ink band on the event
+      detail page directly after the facts rail (the poster gains a closing
+      cover, not a sidebar footnote), rendered ONLY for `hasEnded && session
+      && own CONFIRMED RSVP`. Greeting splits on `checkedInAt`: "Merci pour
+      votre présence." vs the no-show's honest "Merci pour votre
+      inscription." — presence is claimed, never assumed. Question is yes/no
+      + "Modifier ma réponse" (one question, two honest outcomes, reversible);
+      a yes surfaces `detail.post.next` = that club's next published event,
+      server-formatted in the page locale. `.detail-page .display-chapter`
+      keeps the band heading under the event title at every width.
+- [x] **Action** — `src/lib/actions/feedback.ts` `feedbackAction(eventId,
+      attendAgain)` guards all four axes the UI shows (session, typeof
+      boolean, event ended, own CONFIRMED rsvp — edge errors reuse the
+      existing `detail.rsvp.*` keys), upserts both columns, revalidates the
+      event page + dashboard.
+- [x] **Dashboard** — `dash.recs.*` ("Because you liked…" / "Parce que vous
+      avez aimé…" / "بناءً على ما أعجبك…") renders ALWAYS for signed-in
+      students, full-width above the untouched two-column archive split,
+      compact divider rows (a suggestion is not a ticket — no poster spines).
+      Query: clubs from `attendAgain: true` rows → `endsAt >= now`,
+      `rsvps: none: { userId }` (never recommend what's already in their
+      pocket), `take: 4`; `.empty`-style copy teaches the loop.
+- [x] **Seed** — soldering workshop (attended) pre-answered yes with
+      `feedbackAt: daysAgo(43, 12)` so recommendations are live from first
+      boot while every other past event stays unanswered (the question stays
+      demonstrable).
+- [x] **Emoji FAIL fixed** — the inspector's one FAIL was the `✓` character
+      (follow button's on-state; the same latent hit lived in the check-in
+      success banner and the calendar "copied" toast). Glyphs stripped from
+      3 dicts × 3 locales, replaced by drawn SVG checks (`M20 6 9 17l-5-5`,
+      currentColor) in `SaveFollowButtons` / `CheckInScanner` /
+      `CalendarSubscribe` — `.btn`'s inline-flex + gap lays them out with no
+      other CSS.
+- **Probe** — `scripts/probe-feedback.mjs` = 14 checks, UI-driven and
+  CONVERGENT from any stored state (reaches each state through "change my
+  answer"; never touches the DB): anonymous sees no band; attended greeting;
+  yes → answered + next-up that skips the ticketed event (scoped assertion);
+  change reopens; no → no pick; dashboard empty state while nothing is liked;
+  yes again → pick returns; recs list ETH + ERC while excluding the ticketed
+  line-follower (scoped innerText); no-show greeted honestly and never shown
+  a next-up; live event shows no band. Trusted CDP clicks (scrollIntoView →
+  sleep(150) → mouse events); `data-post` hooks for structure, FR copy for
+  wording (Chromium Accept-Language=fr; plain GETs render default EN — smoke
+  section 14 asserts English, the probe asserts French).
+- Verification: tsc 0 · eslint 0 · build 0 (`/events/[id]` 3.64 → 4.25 →
+  4.29 kB, dashboard 1.44 → 1.57 kB) · smoke **67/67** (7 new: attended
+  thank-you, state-aware band, no-show honesty, no band on live/anonymous,
+  recs section, seeded ETH recommendation) · probe-feedback **14/14** first
+  run · probe-pulse **7/7** re-run (door banner carries the new SVG check) ·
+  inspector `inspect-thanks` **0 FAIL / 4 defended WARN** (palette-cream =
+  locked #faf7f2 paper token; heavy-borders = drawn ink panel borders are
+  the poster aesthetic; app-title-size = consumer event-poster page, the
+  display title IS the design; colour-sprawl 13% = the accent facts rail,
+  the signature band) · `inspect-dashboard` 0 FAIL / 1 defended WARN (same
+  paper token) · screenshots scored: question ≈9/10, answered ≈9/10,
+  dashboard ≈9/10, post-fix fold ≈9/10 (deductions: the live-capacity meter
+  still renders on ended events — pre-existing surface, not this phase;
+  next-up line is dense at 390px but holds two lines, no overflow).
+- Flags, deliberately NOT touched: `rsvp-core.ts` has no `endsAt` guard (an
+  RSVP to an already-ended event is possible — out of the RSVP-transaction
+  scope); FR `dash.notCheckedIn` = "Non enregistré" is factually wrong (the
+  row exists BECAUSE of her RSVP; EN "Not checked in" and AR "لم يُسجَّل
+  الحضور" are correct — one-word fix "Non présenté" pending approval).
+
+## Defect fix — offline mutations ✅ DONE (verified)
+Offline login used to render the error boundary's "Quelque chose a cassé" —
+an expected connectivity STATE wearing a crash costume (user-reported). Every
+server-action surface now answers honestly instead of throwing into
+`error.tsx`.
+
+- [x] **Helper** — `src/lib/offline.ts` `isOfflineError(err)`:
+      `navigator.onLine === false` OR a TypeError matching
+      /fetch|network|load failed/ (Chrome "Failed to fetch", Safari "Load
+      failed", Node "fetch failed").
+- [x] **Copy** — `errors.offline` ×3 locales ("You're offline — reconnect,
+      then try again." / "Vous êtes hors connexion — reconnectez-vous, puis
+      réessayez." / "أنت غير متصل — أعد الاتصال ثم حاول مجدداً.").
+- [x] **Auth forms** — LoginForm/RegisterForm wrap their server action
+      inside `useActionState` (browser-side try/catch): offline returns
+      `{ error: t("errors.offline") }` into the form's own `role="alert"`;
+      genuine errors still rethrow to the boundary.
+- [x] **Click surfaces** — RsvpSection (rsvp + cancel → inline message),
+      SaveFollowButtons (optimistic toggle ROLLS BACK + note),
+      PostEventThanks (`respond()` → band error slot), CheckInScanner
+      (offline banner under the latest result; the manual box stays live —
+      venue Wi-Fi dying must not kill the door).
+- **Probe** — `scripts/probe-offline.mjs` = 7 checks via
+      `Network.emulateNetworkConditions`: offline login → inline FR copy,
+      no boundary, stays on /login; back online → retyped submit lands the
+      session cookie (asserted with CDP `Network.getCookies`, not the
+      redirect — probe-feedback's known CDP-redirect flake; React 19
+      auto-resets an uncontrolled form after any action, so the retry
+      retypes as a visitor would); offline feedback answer → honest band
+      message, no boundary; online retry → converges to probe-feedback's
+      end state (soldering = yes + next-up). Verify-and-retry band clicks
+      (measure after the scroll settles).
+- Verification: tsc 0 · eslint 0 · build 0 · probe-offline **7/7** ·
+  probe-feedback **14/14** re-run (shared convergent end state) ·
+  smoke 68/68.
+
+## Phase 8 — Location-aware events ✅ DONE (verified)
+"Events based on the user location", scoped BOTH ways: geolocation drives
+nearest-first ordering with km on every card, and the first grant auto-picks
+the visitor's campus (persisted, overridable). Geolocation is NEVER requested
+on load — only by the "Near me" click; the detail chip renders only when
+permission was already granted.
+
+- [x] **Schema** — `Event.lat Float?` / `Event.lng Float?` (null = venue
+      unknown / "à confirmer" → claims no distance). Migration
+      `event_coords` applied (6 total), client regenerated.
+- [x] **Seed** — venue-string → `VENUE_COORDS` map inside `upsertEvent`
+      (district-level Casablanca approximations of the two campuses the demo
+      data actually uses: EMSI Roudani cluster, EMSI Maarif cluster, Complexe
+      sportif; unknown strings stay null). Midnight-pitch moved to "Amphi
+      EMSI — Salle Atlas, Campus Maarif" so the 5-card wall carries one
+      Maarif event and the campus flip is demonstrable (probe-search ratios
+      unchanged — checked by hand).
+- [x] **Geo lib** — `src/lib/geo.ts`: `CAMPUSES` (Roudani 33.5731,-7.5898 ·
+      Maarif 33.5719,-7.6133 — district-level, never claimed
+      survey-accurate), haversine `distanceKm`, `nearestCampus`, `formatKm`
+      (Intl decimal per locale: 1,2 km / 1.2 km).
+- [x] **Wall** — `EventsExplorer`: "Near me" toggle (drawn crosshair SVG,
+      `aria-pressed`, no emoji) requests geolocation ON CLICK → strict
+      distance order + `· X km` on every card with coords (venue-unknown
+      events keep date order at the end, Infinity distance). First grant
+      auto-picks the nearest campus → `localStorage["cp-campus"]`; the
+      campus select (All / Roudani / Maarif) overrides or clears it;
+      layered stable sorts tie-break on the server's list index so dealt
+      poster slots never re-deal; Flip capture added to the location
+      handlers (`flipState` ref hoisted above them), layout-effect dep
+      `[filtered]` → `[ordered]`. Denied → honest "Localisation
+      indisponible" hint, wall untouched.
+- [x] **Detail** — `DistanceAway` chip "à X km de vous" under the venue —
+      renders ONLY when `navigator.permissions` reports geolocation already
+      GRANTED (a load never prompts; no grant = no chip at all).
+- [x] **Data** — `getPublishedEvents` maps lat/lng; `EventCardData` gained
+      lat/lng + the `distance` prop renders the label; dicts
+      `events.nearMe / locDenied / campusLabel / campusAll` +
+      `detail.distance` ×3 locales; smoke +2 (rail controls present).
+- **Probe** — `scripts/probe-geo.mjs` = 10 checks
+      (`Browser.grantPermissions` + `Emulation.setGeolocationOverride` at
+      Smartilab Hall B): controls render; near-me → km on 5/5 cards;
+      nearest-first (line-follower first); campus auto-picked + persisted;
+      toggle-off removes labels; select maarif → Pitch de minuit first;
+      selection survives reload; clearing restores date order + drops
+      storage; detail chip renders when granted (its own target needs its
+      own override — Emulation is per-renderer); permission reset → honest
+      denied hint with `aria-pressed=false`.
+- Verification: tsc 0 · eslint 0 · build 0 · smoke **68/68** (+2 here,
+  both confirmed in output; file is additions-only vs HEAD, +124/−0) ·
+  probe-geo **10/10** · probe-offline **7/7** · probe-feedback **14/14** ·
+  probe-pulse **7/7** (scanner now carries the offline guard) · inspector
+  public `/events` **0 FAIL / 4 defended WARN** (palette-cream = locked
+  #faf7f2 paper token; no-footage = a poster wall with no honest clip —
+  the wall IS the picture; off-centre 160/176 = the 16px scrollbar gutter,
+  not a layout seam; still-page = load motion is the data-rise entrances,
+  and reordering is interaction-driven Flip — deliberately not more load
+  animation) · screenshots scored: desktop fold ≈9/10, mobile fold ≈9/10
+  (nits: the rail wraps the campus select onto a second row at 1440, reads
+  intentional with the view group opposite; the category select truncates
+  at 390px — native behavior, pre-existing).
+- Flags: the detail chip is straight-line distance to a district-level
+  seed coordinate (demo data — honest label, not survey GPS); a real
+  organizer flow would pick the venue on a map (seed maps strings today).
+
+## Phase 9 — OG share posters ✅ DONE (verified)
+Share previews for event links: a generated 1200×630 typographic poster
+(no photos) served from `src/app/events/[id]/opengraph-image.tsx` via
+`ImageResponse` (`next/og`). Poster system: ink `#14130f` field, paper
+`#faf7f2` type, one accent `#ff4d00`, PulseMark glyph, FR dates (event data
+language). Generic campuspulse card when the event is missing or not
+PUBLISHED (never leaks a draft title — the card only prints data the detail
+page already shows). Deliberately no live counts: scrapers cache these for
+days, so a spot count would be lying by Tuesday. Layout:
+`metadataBase` (env-driven — `NEXT_PUBLIC_SITE_URL`, falls back to the dev
+origin); event `generateMetadata`: dropped the `coverImage` og:image branch
+(the convention owns og:image), added
+`twitter: { card: "summary_large_image" }`.
+- Discovery: satori parses fonts with opentype.js, which **rejects woff2**
+  (`Unsupported OpenType signature wOF2` — the route 500'd and killed the
+  response pipe). Browsers take woff2, the renderer doesn't. Fix: wrote TTF
+  twins (`src/fonts/cabinet-grotesk-{400,500,800}.ttf`, ~63KB each,
+  `00 01 00 00` signature) with `wawoff2` from a Temp install — no new
+  repo dependency; the site itself keeps loading the woff2 files.
+- Discovery: the category chip (a full degree-track name) wrapped to two
+  lines and collided with the wordmark — capped at 26 chars with an honest
+  ellipsis + `whiteSpace: nowrap`.
+- Verification: tsc 0 · eslint 0 · build 0 · smoke **70/70** (+2, both
+  confirmed in output: `Head carries og:image poster` and
+  `OG poster route serves PNG` — status 200, image/png, 50,988 bytes) ·
+  probe-search **17/17** · probe-poster **8/8** · probe-feedback **14/14** ·
+  probe-offline **7/7** · probe-geo **10/10** · probe-pulse **7/7** ·
+  inspector event detail **0 FAIL / 2 defended WARN** (palette-cream =
+  locked #faf7f2 paper token; no-footage = a poster wall with no honest
+  clip) · og:image meta confirmed **absolute** (`http://localhost:3100/…`
+  with width/height/type/alt, `twitter:card=summary_large_image`) · both
+  PNGs fetched and scored: event card ≈9/10 (single-line chip, hierarchy
+  title→club→rail), generic card clean and leak-free. Detail page
+  screenshot unchanged (head-only edit), ≈9/10.
+
+## Phase 10 — Campus map view ✅
+Third view in the existing `EventsExplorer` group (`Filters.view:
+"grid" | "calendar" | "map"`), new `src/components/events/EventsMap.tsx`.
+Hand-drawn SVG, no tiles and no keys: a padded bounding box over
+`CAMPUSES` + every event coordinate, cos(lat) corrected (a degree of
+longitude is ~83 % of a degree of latitude at Casablanca — skipping it
+squashes the whole field), fitted to a fixed internal 1000×700 grid. The
+SVG stretches with `preserveAspectRatio="none"` while pins are real HTML
+`<button>`s positioned at the identical normalised coordinates, so the
+frame can distort but a pin can never drift off its venue — and buttons
+keep the focus ring and the translated `aria-label` an SVG `<a>` would
+have to reinvent. Pins are accent diamonds (rotated 45°, ink border),
+selected = ink + accent ring, `aria-pressed`; events sharing one venue
+fan out on a small arc (`FAN_R = 20px`) so each stays clickable.
+Decoration: 2 px ink frame, accent-soft campus zones with the centre
+marked at its true projection (the block never claims to be a surveyed
+boundary), a dashed arc between campuses labelled with the real
+haversine distance (2,2 km), north arrow, scale bar (largest round km
+≤ 28 % of the field, so it reads at every zoom). Selected pin → that
+event's `EventCard` reusing the wall's `slots`/`dealIndex`; honest hint
+when nothing is picked. The `mapNoVenue` list under the map keeps
+coordinate-less events visible — nothing is silently dropped.
+- RTL decision: the page mirrors, the **map stays north-up and
+  unmirrored** — mirroring a geographic field is a lie. Campus names are
+  Latin proper nouns and render LTR.
+- Three defects found and fixed during verification, all in the final
+  build: (1) at 358 px the campus caption wrapped and the pins drew over
+  it — the caption now caps its zone from above (positioned by `bottom`,
+  so it stays glued to the box whatever the line height) and anchors
+  right when the zone was nudged back from the frame edge; (2) bidi —
+  the distance and scale chips printed `km 2.2` on the Arabic page, fixed
+  with `dir="ltr"` on both; (3) probe-only, the app was correct: Chrome's
+  `innerText` returns text **after** CSS `text-transform`, so the probe's
+  literal `"Hors carte"` could never match rendered `"HORS CARTE"` —
+  matched case-insensitively.
+- Verification: tsc 0 · eslint 0 · build 0 · smoke **70/70** ·
+  probe-geo **10/10** · probe-search **17/17** · probe-map **11/11**
+  (view group carries the third control; wall picks up a temp
+  coordinate-less event — `getPublishedEvents` is
+  `unstable_cache(revalidate: 60)`, so the probe polls; map + 5 pins; the
+  off-map list keeps that event; honest hint; pin → card with
+  aria-pressed; re-click releases; search narrows to 1 pin; you-are-here
+  gated behind consent; Arabic dir=rtl with all pins and a `خريطة
+  الحرم` label; mobile 390 px no overflow, 5 pins) · screenshots scored
+  (desktop, selected, consent, mobile, Arabic — meter is the floor).
+  New test hooks: `data-view`, `data-map`, `data-pin`, `data-maphere` —
+  locale-independent, since aria-labels translate.
+
+## Phase 11 — Offline ticket wallet ✅
+Standalone `/tickets/[rsvpId]` server page: the QR ticket gets its own
+route so the door can open it with the network dead. Entry points:
+`data-fullscreen-ticket` on each upcoming dashboard row plus the
+full-screen link in `RsvpSection`. Owner-gated on the server
+(`rsvp.userId === session.user.id`), and a foreign or absent id answers
+**404, never 403** — a ticket is a credential, and a 403 would confirm that
+somebody else's id exists. Three branches carry state honestly:
+`WAITLISTED` → queue panel (no QR — a waitlist seat is not a ticket),
+`CANCELLED` / non-`PUBLISHED` event → cancelled panel (no QR),
+`CONFIRMED` → `TicketFull`.
+- **The SW exception, and why it is safe**: `public/sw.js` allows exactly
+  one cached-page route, `/tickets/*` → `cp-ticket-v1`, **network-first** —
+  online always wins with a fresh authorized render, and the cache is only
+  touched when the network fails. `res.ok` caches; `401/403/404` deletes
+  the stale copy (a revoked ticket cannot linger behind a dead network);
+  `5xx` keeps it (a server blip must not cost someone the door).
+  `activate` preserves `cp-ticket-v1` so a deploy can't strand a ticket
+  already saved — the network-first refresh re-hydrates it. Purged by
+  sign-out (desktop `LogoutButton` in Nav, MobileNav item —
+  `logoutAction` itself untouched) and by the "Forget this device" button:
+  `purgeTicketCache` never throws and runs on click, before the round-trip.
+  The cache name is necessarily duplicated in `src/lib/ticket-cache.ts`
+  and `public/sw.js` (public JS cannot import from `src/`) — each carries
+  a comment pointing at its twin.
+- **QR offline is inherited, not reinvented**: `useTicketQr(rsvpId,
+  ticketCode)` extracted and shared by `Ticket.tsx` and `TicketFull.tsx`
+  so the two renders cannot drift; mint failure → the raw code
+  (`checkin.ts` already accepts raw codes via its `includes("|")` gate);
+  the anti-screenshot hint hides itself when `degraded` — claiming
+  rotation over a static code would be a lie.
+- **Wake lock is opt-in** (`WakeLock.tsx`): toggle defaults OFF (an
+  unnoticed lock is a battery drain), feature-detected (`"wakeLock" in
+  navigator`), re-acquires on `visibilitychange`, and tells all three
+  truths — off = what it does, on+held = doing it, on+denied = can't.
+- Dead copy removed: `ticket.owner` and `ticket.savedHere` deleted from
+  en/fr/ar (unused). New `src/i18n/dict/tickets.ts` namespace ×3 locales.
+- Locale-proof probe hooks (aria-labels translate): `data-ticket`,
+  `data-ticketstate`, `data-fullticket`, `data-qr`, `data-code`,
+  `data-wake`, `data-ticketoffline`, `data-forget`,
+  `data-fullscreen-ticket`, `data-logout`.
+- Probe hardening found during verification: the sign-out click landed
+  **before hydration** — React owns that submit handler and the form has
+  no native action to fall back on, so three consecutive clicks died
+  silently (read like an app bug; it was timing). The probe now waits for
+  React props on the form before the first click.
+- Verification: tsc 0 · eslint 0 · build 0 · smoke **70/70** ·
+  probe-wallet **15/15 ×3 consecutive** (login cookie · dashboard link
+  `href=/tickets/…` · SW registered + controlling · `data-ticket=confirmed`
+  · QR + legible code · wake switch · hint visible online · `cp-ticket-v1`
+  cached · bogus id → **404** · offline: ticket opens from cache, code
+  legible, honest banner, QR degrades with the hint suppressed · sign-out
+  → `/` · cache gone) · inspector `inspect-auth` **0 FAIL / 4 defended
+  WARN** with sanctioned `--allow still-page`: micro-label = the locked
+  tracked micro-caps club line; palette-cream = locked #faf7f2 paper
+  token; hero-void = the bilateral margins of the deliberately centered
+  ticket object (card measured 512/512 at 1440); unused-canvas = the
+  detector's `-1` left edge is the **sr-only skip link** ("Aller au
+  contenu") clip rect and its `160` right edge is the header's inner edge,
+  mirrored by the logo's own 160px margin — the frame is symmetric;
+  still-page = animation-free utility lock (same class as the dashboard):
+  the one mover measured is the mint spinner (`motion-reduce:animate-none`)
+  — the surface must paint complete and scannable at the door. Screenshots
+  scored: probe dashboard/online/offline + inspector desktop/tablet/mobile
+  folds (≈9/10, meter is the floor); the offline render carries the amber
+  "hors ligne" banner with the rotation hint suppressed.
+
+## Phase 12 ✅ — Clubs directory + pages
+`/clubs` = ink header + orange search rail + paper ClubCard grid
+(monogram-stamp poster idiom; the header block is the link, FollowButton
+sits in the footer strip; 250ms debounced search reusing `searchMatches`
+over name+description). `/clubs/[id]` = ink band (RTL-safe back link,
+accent monogram, display title) → orange action rail (FollowButton +
+hint) → 3 ink-ruled stat boxes → À propos chapter → upcoming EventCard
+wall (`data-rise` per card) or empty state; bogus id → `notFound()`.
+Shared OG pipeline extracted to `src/lib/og.tsx` (event OG refactored
+onto it; club OG = monogram + name + first description sentence on an
+accent rail, static "CLUB" chip, no live numbers). `FollowButton`
+extracted as a fragment with exported `toggleCls`; the follow action
+revalidates `CLUBS_TAG` + `/clubs` + the profile path. EventCard and
+ClubCard now declare `"use client"` — EventCard used hooks only
+transitively, which 500'd the profile until fixed.
+- Inspector: directory **0 FAIL / 5 WARN**, profile **0 FAIL / 8 WARN**,
+  every WARN defended in writing (palette-cream = locked brand paper;
+  few-pictures defended via `--allow` — the club data model has no
+  photographs, the monogram stamp is the sanctioned poster idiom, and
+  rendering 9 dynamic satori OG PNGs in a directory would tank
+  performance — per-club OG posters still exist at
+  `/clubs/[id]/opengraph-image` for shares; off-centre scrollbar gutter;
+  ragged-edges/ragged-row editorial heights; heavy-borders poster
+  idiom; app-title-size display-title; panel-void on the events wall;
+  colour-sprawl ink+orange bands at tablet). still-page FAIL fixed by
+  moving `data-rise` off the profile header onto its children and onto
+  per-card wrappers (7 → 10 movers).
+- Gates: tsc 0 · eslint 0 · build 0 · smoke **82/82** · probe-clubs
+  **24/24** (search/empty/clear, profile counts, anon → login redirect,
+  Salma's seeded follow round-trip N → N−1 → N proving revalidation,
+  dashboard/nav/byline cross-links, RTL mirror, mobile no-overflow, OG
+  served as real PNG, bogus id 404). Full probe matrix re-verified on
+  touched surfaces: search 17/17, feedback 14/14, poster 8/8, wallet
+  15/15 ×3, offline 7/7 ×2, geo 10/10, pulse 7/7, map 11/11. Screenshots
+  scored (desktop/tablet/mobile folds both pages, AR mirror, profile).
+- Probe hardening discovered en route: after an offline cut this Chrome
+  build silently drops `Input.dispatchMouseEvent` — hit tests pass but
+  zero native clicks reach the document. probe-wallet's sign-out loop
+  and probe-offline's `click()` now verify delivery and fall back to a
+  DOM `.click()`; assertions unchanged.
+- Environment repair: the restart killed postgres mid-write and a Temp
+  cleanup deleted relation files from `base/16384` (58P01 on every
+  catalog read; `prisma db push --force-reset` couldn't even DROP
+  SCHEMA). Cluster rebuilt from scratch in `Temp\opencode\pg-data-fresh`
+  — the corrupted dir was never touched — then `db push` + seed;
+  `start-db.mjs` DATA_DIR points at the fresh cluster with a comment.
+
+## Phase 13 ✅ — Offline check-in queue
+The door screen no longer loses a scan when venue Wi-Fi dies. A failed
+(offline) scan is queued in `localStorage` (`src/lib/checkin-queue.ts`)
+and re-sent on the page's `online` event, on the next scanner open, or
+via the manual **Synchroniser** button — sequential sends (door Wi-Fi),
+deduped by `(eventId, code)` so a QR held on a live camera queues once,
+per-event so a scanner never flies another event's codes. No SW
+Background Sync: localStorage drain covers reload-survival (same store
+every load reads) and the service worker stays ticket-cache-only.
+- Safety is the server's idempotency (`performCheckIn` fires only while
+  `checkedInAt IS NULL`): replays answer honestly, so a mid-outage
+  conflict — someone else checked the person in — drains to a real
+  `duplicate` row, never a double count; a typo'd queued code drains to
+  `invalid`. Auth death mid-drain stops the loop and KEEPS the queue with
+  an honest "session expirée" alert (burning it into unauthorized rows
+  would bury real people); storage refusal shows the red "scan was lost"
+  alert instead of pretending. 6 new keys ×3 locales (`org.checkin.
+  pendingCard/pendingItem/sync/syncing/syncBlocked/queueFull`; an
+  unused `queuedBanner` was cut before it could become dead copy).
+- Nav regression found by the inspector (Phase 12's Clubs link tipping
+  the organizer's row 15px past 768): desktop link row and MobileNav
+  switch `md → lg` (hamburger covers tablet for every role); the door h1
+  goes `text-2xl sm:text-3xl` (phone title in the 20–24px app band).
+- New `scripts/probe-door.mjs` **12/12**: online scan → ok; offline scan
+  → queued card + count + "En attente" row (no crash screen); re-scan
+  dedupes; storage holds the exact entry over a 3s outage window;
+  back-online auto-drain (`drain=auto` — the `online` event fires under
+  CDP emulation, Sync button kept as belt-and-braces); rescan of the
+  drained code → `duplicate` = landed exactly once; mid-outage conflict
+  → `duplicate`; queued garbage → honest `invalid` + "Code inconnu";
+  storage empty after drains; mobile 390 load: no phantom queue, 0px
+  overflow. Fixture is node-side and idempotent (Salma's ticket reset,
+  Omar gets a fixed RSVP) so runs start from the same door state.
+- Gates: tsc 0 · eslint 0 · build 0 · smoke **82/82** · probe-door
+  **12/12** · probe-clubs **24/24** (Nav touched — cross-link assertion
+  re-run) · inspector on the door screen **0 FAIL / 3 WARN** with
+  sanctioned `--allow still-page` (written defense: animation-free door
+  utility, same class as dashboard/ticket — the screen paints complete
+  and feedback between scan and banner is instant by design) and the 3
+  WARNs defended: palette-cream = locked brand paper; hero-void = the
+  deliberate margins of the narrow focused door column (same family as
+  the ticket page's centered-object defense); unused-canvas = the
+  mirrored 160px nav gutter, identical measurement to the defended club
+  profile. Screenshots scored: desktop fold, mobile fold, and the
+  queued-state shot (green check banner → amber queue card with count +
+  Sync — the whole contract legible in one glance).
+
+## Next — agreed order
+Quick win 2 (wallet-pass export) → Phase 14 camera QR scanner →
+quick win 5 ("who's going") → Phase 15 CI + rate limiting + audit log.
+Endgame after: SVG logo pick → `npx ui-craft-detect ./src` →
+`/finalize` → honest UICraftScore + Lighthouse mobile ≥ 70 per page.
 
 ## Throughout — credibility layer
 E2E on the critical path (RSVP transaction, waitlist promotion, QR check-in),

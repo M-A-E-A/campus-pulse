@@ -4,10 +4,22 @@ import { useActionState } from "react";
 import Link from "next/link";
 import { useT } from "@/i18n/provider";
 import { registerAction, type FormState } from "@/lib/actions/auth";
+import { isOfflineError } from "@/lib/offline";
 
 export function RegisterForm() {
   const t = useT();
-  const [state, formAction, pending] = useActionState<FormState, FormData>(registerAction, null);
+  const [state, formAction, pending] = useActionState<FormState, FormData>(
+    // Same offline guard as /login — no network is a state, not a crash.
+    async (prev, formData) => {
+      try {
+        return await registerAction(prev, formData);
+      } catch (err) {
+        if (isOfflineError(err)) return { error: t("errors.offline") };
+        throw err;
+      }
+    },
+    null
+  );
 
   return (
     <div className="relative">

@@ -4,10 +4,25 @@ import { useActionState } from "react";
 import Link from "next/link";
 import { useT } from "@/i18n/provider";
 import { loginAction, type FormState } from "@/lib/actions/auth";
+import { isOfflineError } from "@/lib/offline";
 
 export function LoginForm({ from }: { from?: string }) {
   const t = useT();
-  const [state, formAction, pending] = useActionState<FormState, FormData>(loginAction, null);
+  const [state, formAction, pending] = useActionState<FormState, FormData>(
+    // This wrapper runs in the browser: a server action with no network
+    // rejects with TypeError — an offline STATE, not a crash. Honest copy
+    // in the form's own alert slot, instead of the error boundary's
+    // "Something broke" (what offline login used to show).
+    async (prev, formData) => {
+      try {
+        return await loginAction(prev, formData);
+      } catch (err) {
+        if (isOfflineError(err)) return { error: t("errors.offline") };
+        throw err;
+      }
+    },
+    null
+  );
 
   return (
     <div className="relative">

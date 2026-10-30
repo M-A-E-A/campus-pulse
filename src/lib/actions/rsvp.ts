@@ -4,7 +4,7 @@ import { revalidatePath, revalidateTag } from "next/cache";
 import { after } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
-import { EVENTS_TAG } from "@/lib/queries";
+import { EVENTS_TAG, CLUBS_TAG } from "@/lib/queries";
 import { getT } from "@/i18n/server";
 import { performRsvp, performCancelRsvp } from "@/lib/rsvp-core";
 import { dispatchPushes } from "@/lib/push";
@@ -82,4 +82,10 @@ export async function toggleFollowAction(clubId: string) {
     });
   }
   revalidatePath("/dashboard");
+  // Phase 12: the directory and the profile both print follow state and
+  // follower counts from the tagged cache — refresh both, or the number
+  // stays where it was until the 60s window rolls over.
+  revalidateTag(CLUBS_TAG);
+  revalidatePath("/clubs");
+  revalidatePath(`/clubs/${clubId}`);
 }

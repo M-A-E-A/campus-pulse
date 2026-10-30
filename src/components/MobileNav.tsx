@@ -4,11 +4,14 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useT } from "@/i18n/provider";
+import { purgeTicketCache } from "@/lib/ticket-cache";
 
 export type MobileNavItem = { href: string; label: string };
 
 /**
- * Compact menu for small screens (the desktop link row is hidden under md).
+ * Compact menu for small screens (the desktop link row is hidden under lg —
+ * md was too early: an organizer's row — events, clubs, tickets, management,
+ * logout — overflowed the tablet viewport by 15px).
  * Closes itself on navigation and on Escape.
  */
 export function MobileNav({
@@ -43,7 +46,7 @@ export function MobileNav({
   }, [open]);
 
   return (
-    <div className="md:hidden">
+    <div className="lg:hidden">
       <button
         ref={toggleRef}
         className="rounded-md p-3 text-ink hover:bg-line/50"
@@ -88,8 +91,16 @@ export function MobileNav({
             })}
             {onLogout && (
               <li>
+                {/* Same purge as the desktop LogoutButton: sign-out is what
+                    a shared machine's next student will hit, so the saved
+                    ticket cache has to die here too. */}
                 <form action={onLogout}>
-                  <button className="w-full rounded-md px-3 py-2 text-start text-muted hover:bg-line/50 hover:text-ink">
+                  <button
+                    type="submit"
+                    data-logout
+                    className="w-full rounded-md px-3 py-2 text-start text-muted hover:bg-line/50 hover:text-ink"
+                    onClick={() => void purgeTicketCache()}
+                  >
                     {t("nav.logout")}
                   </button>
                 </form>

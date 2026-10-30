@@ -2,7 +2,10 @@
 // Usage: node scripts/start-db.mjs
 import EmbeddedPostgres from "embedded-postgres";
 
-const DATA_DIR = "C:\\Users\\Hp\\AppData\\Local\\Temp\\opencode\\pg-data";
+// NOTE: the original pg-data dir lost relation files to a Temp cleanup while postgres was
+// running (58P01 "could not open file" on every catalog read). The cluster was rebuilt from
+// scratch here on 2026-10-30; prisma db push + seed restored the demo world.
+const DATA_DIR = "C:\\Users\\Hp\\AppData\\Local\\Temp\\opencode\\pg-data-fresh";
 
 const pg = new EmbeddedPostgres({
   databaseDir: DATA_DIR,

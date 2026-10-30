@@ -5,6 +5,7 @@ import { getT } from "@/i18n/server";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { ActiveLink } from "./ActiveLink";
 import { MobileNav, type MobileNavItem } from "./MobileNav";
+import { LogoutButton } from "./LogoutButton";
 import { PulseMark } from "./Logo";
 import { NotificationBell } from "./notifications/NotificationBell";
 
@@ -14,6 +15,7 @@ export async function Nav() {
 
   const mobileItems: MobileNavItem[] = [
     { href: "/events", label: t("nav.events") },
+    { href: "/clubs", label: t("nav.clubs") },
     ...(user
       ? [
           { href: "/dashboard", label: t("nav.myTickets") },
@@ -42,8 +44,9 @@ export async function Nav() {
         <div className="flex items-center gap-2 md:gap-1">
           <LanguageSwitcher />
 
-          <nav className="hidden items-center gap-1 text-sm font-medium md:flex">
+          <nav className="hidden items-center gap-1 text-sm font-medium lg:flex">
             <ActiveLink href="/events">{t("nav.events")}</ActiveLink>
+            <ActiveLink href="/clubs">{t("nav.clubs")}</ActiveLink>
             {user ? (
               <>
                 <ActiveLink href="/dashboard">{t("nav.myTickets")}</ActiveLink>
@@ -53,11 +56,7 @@ export async function Nav() {
                 {user.role === "ADMIN" && (
                   <ActiveLink href="/admin">{t("nav.admin")}</ActiveLink>
                 )}
-                <form action={logoutAction}>
-                  <button className="px-3 py-1.5 text-muted hover:bg-line/60 hover:text-ink">
-                    {t("nav.logout")}
-                  </button>
-                </form>
+                <LogoutButton className="px-3 py-1.5 text-muted hover:bg-line/60 hover:text-ink" />
               </>
             ) : (
               <>
