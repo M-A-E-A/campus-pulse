@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { performCheckIn } from "@/lib/rsvp-core";
 import { verifyQrPayload } from "@/lib/ticket-sign";
+import { recordAudit } from "@/lib/audit";
 
 type CoreCheckInResult = import("@/lib/rsvp-core").CheckInResult;
 
@@ -41,7 +42,7 @@ export async function checkInAction(
 
   const event = await prisma.event.findUnique({
     where: { id: eventId },
-    select: { clubId: true },
+    select: { clubId: true, title: true },
   });
   if (!event) return { status: "invalid" };
 
@@ -65,6 +66,19 @@ export async function checkInAction(
   const result = await performCheckIn(eventId, code);
   if (result.status === "ok" || result.status === "duplicate") {
     revalidatePath(`/organizer/events/${eventId}/attendees`);
+  }
+  // Real arrivals only — a duplicate is an attempt, not a state change.
+  // The ticket code stays OUT of the row (it's a bearer secret); the event
+  // title snapshot is what makes the row readable later.
+  if (result.status === "ok") {
+    await recordAudit({
+      actorId: session.user.id,
+      actorName: session.user.name ?? session.user.email ?? "unknown",
+      action: "rsvp.checked_in",
+      targetType: "event",
+      targetId: eventId,
+      targetLabel: event.title,
+    });
   }
   return result;
 }

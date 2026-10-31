@@ -9,6 +9,7 @@ export const en = {
   "admin.nav.clubs": "Clubs",
   "admin.nav.categories": "Categories",
   "admin.nav.insights": "Campus insights",
+  "admin.nav.audit": "Audit log",
 
   // Approval queue
   "admin.queue.header": "Waiting for approval ({n})",
@@ -57,6 +58,32 @@ export const en = {
   "admin.categories.ph": "e.g. Sports",
   "admin.categories.adding": "Adding…",
   "admin.categories.add": "Add",
+
+  // Audit log (src/lib/audit.ts). Actions are stored as facts and
+  // translated HERE — the admin page maps `admin.audit.action.<action>`
+  // and falls back to the raw string for an action this dict hasn't
+  // caught up with (the probe asserts every wired action has a label).
+  "admin.audit.header": "Audit log",
+  "admin.audit.lead": "Who did what, newest first — the last 200 entries.",
+  "admin.audit.th.when": "When",
+  "admin.audit.th.who": "Who",
+  "admin.audit.th.what": "What",
+  "admin.audit.th.target": "Target",
+  "admin.audit.empty": "Nothing recorded yet.",
+  "admin.audit.action.rsvp.created": "RSVP registered",
+  "admin.audit.action.rsvp.cancelled": "RSVP cancelled",
+  "admin.audit.action.rsvp.checked_in": "Checked in at the door",
+  "admin.audit.action.event.created": "Event created",
+  "admin.audit.action.event.updated": "Event edited",
+  "admin.audit.action.event.submitted": "Sent for approval",
+  "admin.audit.action.event.cancelled": "Event cancelled",
+  "admin.audit.action.event.published": "Approved & published",
+  "admin.audit.action.event.rejected": "Rejected",
+  "admin.audit.action.category.created": "Category created",
+  "admin.audit.action.category.deleted": "Category deleted",
+  "admin.audit.action.club.created": "Club created",
+  "admin.audit.action.user.promoted_organizer": "Promoted to organizer",
+  "admin.audit.action.auth.rate_limited": "Login locked (too many attempts)",
 } as const;
 
 export const fr: Record<keyof typeof en, string> = {
@@ -65,6 +92,7 @@ export const fr: Record<keyof typeof en, string> = {
   "admin.nav.clubs": "Clubs",
   "admin.nav.categories": "Catégories",
   "admin.nav.insights": "Analyses du campus",
+  "admin.nav.audit": "Journal d'audit",
 
   "admin.queue.header": "En attente de validation ({n})",
   "admin.queue.empty": "La file est vide. Rien à valider.",
@@ -109,6 +137,28 @@ export const fr: Record<keyof typeof en, string> = {
   "admin.categories.ph": "ex. Sport",
   "admin.categories.adding": "Ajout en cours…",
   "admin.categories.add": "Ajouter",
+
+  "admin.audit.header": "Journal d'audit",
+  "admin.audit.lead": "Qui a fait quoi, du plus récent au plus ancien — les 200 dernières entrées.",
+  "admin.audit.th.when": "Quand",
+  "admin.audit.th.who": "Qui",
+  "admin.audit.th.what": "Quoi",
+  "admin.audit.th.target": "Cible",
+  "admin.audit.empty": "Rien d'enregistré pour l'instant.",
+  "admin.audit.action.rsvp.created": "Inscription enregistrée",
+  "admin.audit.action.rsvp.cancelled": "Inscription annulée",
+  "admin.audit.action.rsvp.checked_in": "Enregistré à l'entrée",
+  "admin.audit.action.event.created": "Événement créé",
+  "admin.audit.action.event.updated": "Événement modifié",
+  "admin.audit.action.event.submitted": "Envoyé pour validation",
+  "admin.audit.action.event.cancelled": "Événement annulé",
+  "admin.audit.action.event.published": "Approuvé & publié",
+  "admin.audit.action.event.rejected": "Rejeté",
+  "admin.audit.action.category.created": "Catégorie créée",
+  "admin.audit.action.category.deleted": "Catégorie supprimée",
+  "admin.audit.action.club.created": "Club créé",
+  "admin.audit.action.user.promoted_organizer": "Promu organisateur",
+  "admin.audit.action.auth.rate_limited": "Connexion verrouillée (trop de tentatives)",
 };
 
 export const ar: Record<keyof typeof en, string> = {
@@ -117,6 +167,7 @@ export const ar: Record<keyof typeof en, string> = {
   "admin.nav.clubs": "الأندية",
   "admin.nav.categories": "الفئات",
   "admin.nav.insights": "إحصاءات الحرم",
+  "admin.nav.audit": "سجل التدقيق",
 
   "admin.queue.header": "في انتظار المصادقة ({n})",
   "admin.queue.empty": "القائمة فارغة. لا شيء للمراجعة.",
@@ -158,4 +209,26 @@ export const ar: Record<keyof typeof en, string> = {
   "admin.categories.ph": "مثال: رياضة",
   "admin.categories.adding": "جارٍ الإضافة…",
   "admin.categories.add": "إضافة",
+
+  "admin.audit.header": "سجل التدقيق",
+  "admin.audit.lead": "من فعل ماذا، الأحدث أولاً — آخر 200 سجل.",
+  "admin.audit.th.when": "الوقت",
+  "admin.audit.th.who": "المنفّذ",
+  "admin.audit.th.what": "الإجراء",
+  "admin.audit.th.target": "الهدف",
+  "admin.audit.empty": "لا شيء مسجّل حتى الآن.",
+  "admin.audit.action.rsvp.created": "تم تسجيل الحضور",
+  "admin.audit.action.rsvp.cancelled": "تم إلغاء التسجيل",
+  "admin.audit.action.rsvp.checked_in": "تم تسجيل الدخول",
+  "admin.audit.action.event.created": "تم إنشاء الفعالية",
+  "admin.audit.action.event.updated": "تم تعديل الفعالية",
+  "admin.audit.action.event.submitted": "أُرسلت للمصادقة",
+  "admin.audit.action.event.cancelled": "تم إلغاء الفعالية",
+  "admin.audit.action.event.published": "مصادق عليها ونُشرت",
+  "admin.audit.action.event.rejected": "تم رفضها",
+  "admin.audit.action.category.created": "تم إنشاء الفئة",
+  "admin.audit.action.category.deleted": "تم حذف الفئة",
+  "admin.audit.action.club.created": "تم إنشاء النادي",
+  "admin.audit.action.user.promoted_organizer": "ترقية إلى منظم",
+  "admin.audit.action.auth.rate_limited": "قفل الدخول (محاولات كثيرة)",
 };

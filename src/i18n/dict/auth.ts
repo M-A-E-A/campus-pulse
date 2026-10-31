@@ -22,6 +22,9 @@ export const en = {
 
   "auth.error.emailTaken": "An account with this email already exists.",
   "auth.error.invalidCredentials": "Invalid email or password.",
+  // Rate limit (rate-limit.ts): shown honestly AFTER the lockout; the raw
+  // credential callback stays indistinguishable from a wrong password.
+  "auth.error.tooManyAttempts": "Too many attempts. Try again in a few minutes.",
 } as const;
 
 export const fr: Record<keyof typeof en, string> = {
@@ -45,6 +48,7 @@ export const fr: Record<keyof typeof en, string> = {
 
   "auth.error.emailTaken": "Un compte avec cet e-mail existe déjà.",
   "auth.error.invalidCredentials": "E-mail ou mot de passe invalide.",
+  "auth.error.tooManyAttempts": "Trop de tentatives. Réessayez dans quelques minutes.",
 };
 
 export const ar: Record<keyof typeof en, string> = {
@@ -67,4 +71,5 @@ export const ar: Record<keyof typeof en, string> = {
 
   "auth.error.emailTaken": "يوجد حساب بهذا البريد الإلكتروني مسبقاً.",
   "auth.error.invalidCredentials": "البريد الإلكتروني أو كلمة المرور غير صحيحة.",
+  "auth.error.tooManyAttempts": "محاولات كثيرة جداً. حاول مجدداً بعد دقائق.",
 };

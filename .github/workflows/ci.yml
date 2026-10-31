@@ -1,0 +1,93 @@
+# CI — the credibility layer's first half (Phase 15).
+#
+# What runs here: typecheck, lint, both unit gates (rate limiter, pkpass
+# structure), a production build, and the 82-check smoke suite against a
+# freshly migrated + seeded Postgres.
+#
+# What does NOT run here, honestly: the browser probes (probe-*.mjs). They
+# import the CDP harness from `.agents/`, which is gitignored — the probes
+# are a local quality gate, not a repo artifact. (Playwright chromium on CI
+# is a follow-up: the harness would need to be vendored into `scripts/`.)
+# The pkpass test cross-verifies with openssl, which ships on ubuntu
+# runners on PATH — the Windows Git-install fallback never fires.
+
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: campus
+          POSTGRES_PASSWORD: campus
+          POSTGRES_DB: campus_pulse
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      # DIRECT_URL mirrors DATABASE_URL: no pgbouncer between them here.
+      DATABASE_URL: postgresql://campus:campus@localhost:5432/campus_pulse
+      DIRECT_URL: postgresql://campus:campus@localhost:5432/campus_pulse
+      AUTH_SECRET: ci-only-not-a-production-secret
+      CRON_SECRET: ci-cron-secret
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      # migrate deploy (not db push): CI proves the migration FILES —
+      # including the hand-authored audit_log one — build a real schema.
+      - name: Migrate + seed
+        run: |
+          npx prisma migrate deploy
+          npm run db:seed
+
+      - name: Typecheck
+        run: npx tsc --noEmit
+
+      - name: Lint
+        run: npx eslint .
+
+      - name: Unit — rate limiter
+        run: npx tsx scripts/test-rate-limit.ts
+
+      - name: Unit — pkpass structure
+        run: npx tsx scripts/test-pkpass.ts
+
+      - name: Build
+        run: npm run build
+
+      - name: Start the production server
+        run: |
+          nohup npm start > server.log 2>&1 &
+          for i in $(seq 1 60); do
+            if curl -sf http://localhost:3100/events > /dev/null; then exit 0; fi
+            sleep 1
+          done
+          echo "server never came up" >&2
+          exit 1
+
+      - name: Smoke (82 checks)
+        run: pwsh scripts/smoke-test.ps1
+
+      - name: Server log on failure
+        if: failure()
+        run: cat server.log || true

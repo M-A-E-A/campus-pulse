@@ -48,6 +48,7 @@ model User {
   follows        Follow[]
   notifications  Notification[]
   pushSubscriptions PushSubscription[]
+  auditLogs      AuditLog[]
 }
 
 model Club {
@@ -131,6 +132,31 @@ model Rsvp {
   // Nobody can RSVP to the same event twice, even across status changes.
   @@unique([userId, eventId])
   @@index([eventId, status])
+}
+
+// Audit trail: who did what, readable after the fact. Actor and target are
+// denormalized snapshots (name + label) so the row survives user/event
+// deletion — the Notification table uses the same keep-history-legible
+// reasoning. `action` stores the FACT, never a rendered sentence: the app is
+// trilingual, so the admin page translates it at read time
+// (`admin.audit.action.<action>`).
+model AuditLog {
+  id          String   @id @default(cuid())
+  actorId     String? // null = system (rate limiter, cron)
+  actorName   String // snapshot at write time
+  action      String // "rsvp.created", "event.published", "auth.rate_limited"…
+  targetType  String // event | rsvp | auth | club | category | user
+  targetId    String
+  targetLabel String? // snapshot (event title, email…)
+  meta        String? // small JSON for the odd extra fact
+  createdAt   DateTime @default(now())
+
+  actor User? @relation(fields: [actorId], references: [id], onDelete: SetNull)
+
+  // The admin page reads newest-first; the second index answers "show me the
+  // history of this one event/user".
+  @@index([createdAt])
+  @@index([targetType, targetId])
 }
 
 model SavedEvent {

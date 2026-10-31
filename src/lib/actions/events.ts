@@ -12,6 +12,7 @@ import { uploadImage } from "@/lib/storage";
 import { getT, firstZodMessage } from "@/i18n/server";
 import { notifyEventCancelled } from "@/lib/notifications-core";
 import { dispatchPushes } from "@/lib/push";
+import { recordAudit } from "@/lib/audit";
 
 export type EventFormState = { error?: string; values?: Record<string, string> } | null;
 
@@ -58,8 +59,9 @@ export async function createEventAction(
   }
 
   const clubId = String(formData.get("clubId") ?? "");
+  let actor: { id: string; name?: string | null; email?: string | null };
   try {
-    await requireOrganizerOf(clubId);
+    actor = await requireOrganizerOf(clubId);
   } catch {
     return { error: t("org.action.ownClubOnly") };
   }
@@ -68,7 +70,7 @@ export async function createEventAction(
   const coverImage = image && image.size > 0 ? await uploadImage(image, "events") : undefined;
 
   const { capacity, startsAt, endsAt, ...rest } = parsed.data;
-  await prisma.event.create({
+  const created = await prisma.event.create({
     data: {
       ...rest,
       clubId,
@@ -78,6 +80,14 @@ export async function createEventAction(
       endsAt: fromLocalInputValue(endsAt),
       status: "DRAFT",
     },
+  });
+  await recordAudit({
+    actorId: actor.id,
+    actorName: actor.name ?? actor.email ?? "unknown",
+    action: "event.created",
+    targetType: "event",
+    targetId: created.id,
+    targetLabel: created.title,
   });
 
   revalidatePath("/organizer");
@@ -98,8 +108,9 @@ export async function updateEventAction(
   const existing = await prisma.event.findUnique({ where: { id: eventId } });
   if (!existing) return { error: t("org.action.notFound") };
 
+  let actor: { id: string; name?: string | null; email?: string | null };
   try {
-    await requireOrganizerOf(existing.clubId);
+    actor = await requireOrganizerOf(existing.clubId);
   } catch {
     return { error: t("org.action.editOwnOnly") };
   }
@@ -125,6 +136,14 @@ export async function updateEventAction(
       endsAt: fromLocalInputValue(endsAt),
     },
   });
+  await recordAudit({
+    actorId: actor.id,
+    actorName: actor.name ?? actor.email ?? "unknown",
+    action: "event.updated",
+    targetType: "event",
+    targetId: eventId,
+    targetLabel: existing.title,
+  });
 
   revalidatePath("/organizer");
   redirect("/organizer");
@@ -136,8 +155,9 @@ export async function submitEventAction(formData: FormData) {
   const existing = await prisma.event.findUnique({ where: { id: eventId } });
   if (!existing) return;
 
+  let actor: { id: string; name?: string | null; email?: string | null };
   try {
-    await requireOrganizerOf(existing.clubId);
+    actor = await requireOrganizerOf(existing.clubId);
   } catch {
     return;
   }
@@ -148,6 +168,14 @@ export async function submitEventAction(formData: FormData) {
     where: { id: eventId },
     data: { status: "PENDING", rejectionReason: null },
   });
+  await recordAudit({
+    actorId: actor.id,
+    actorName: actor.name ?? actor.email ?? "unknown",
+    action: "event.submitted",
+    targetType: "event",
+    targetId: eventId,
+    targetLabel: existing.title,
+  });
   revalidatePath("/organizer");
 }
 
@@ -156,8 +184,9 @@ export async function cancelEventAction(formData: FormData) {
   const existing = await prisma.event.findUnique({ where: { id: eventId } });
   if (!existing) return;
 
+  let actor: { id: string; name?: string | null; email?: string | null };
   try {
-    await requireOrganizerOf(existing.clubId);
+    actor = await requireOrganizerOf(existing.clubId);
   } catch {
     return;
   }
@@ -167,6 +196,16 @@ export async function cancelEventAction(formData: FormData) {
     where: { id: eventId },
     data: { status: "CANCELLED" },
   });
+  if (!wasAlreadyCancelled) {
+    await recordAudit({
+      actorId: actor.id,
+      actorName: actor.name ?? actor.email ?? "unknown",
+      action: "event.cancelled",
+      targetType: "event",
+      targetId: eventId,
+      targetLabel: existing.title,
+    });
+  }
 
   // Tell every attendee their plan is gone — but not on a repeat click of an
   // event that was already cancelled (the dedupe key would swallow it anyway;

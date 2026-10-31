@@ -4,6 +4,8 @@ import bcrypt from "bcryptjs";
 import { AuthError } from "next-auth";
 import { signIn, signOut } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { loginLimiter, loginKey, LOGIN_LIMIT } from "@/lib/rate-limit";
+import { recordAudit } from "@/lib/audit";
 import { registerSchema } from "@/lib/validation";
 import { getT, firstZodMessage } from "@/i18n/server";
 
@@ -70,6 +72,14 @@ export async function registerAction(_prev: FormState, formData: FormData): Prom
 export async function loginAction(_prev: FormState, formData: FormData): Promise<FormState> {
   try {
     const email = String(formData.get("email") ?? "");
+    const key = loginKey(email);
+    // Pre-check: past the limit, don't even attempt — the honest message,
+    // no extra bcrypt work, and (via authorize) the raw callback path is
+    // denied the same way without it.
+    if (loginLimiter.exceeded(key, LOGIN_LIMIT.limit)) {
+      const lockedT = await getT();
+      return { error: lockedT("auth.error.tooManyAttempts") };
+    }
     // The role has to be read *before* signing in: `signIn` ends in a redirect,
     // so nothing after it runs. It is only acted on once the password checks
     // out — a wrong one throws first — so it tells an attacker nothing about
@@ -87,6 +97,24 @@ export async function loginAction(_prev: FormState, formData: FormData): Promise
     return null;
   } catch (error) {
     if (error instanceof AuthError) {
+      // Every failed sign-in counts toward the lockout. `justLocked` fires
+      // once per window — one audit row per lockout, not one per spam hit.
+      const email = String(formData.get("email") ?? "");
+      const { justLocked } = loginLimiter.record(
+        loginKey(email),
+        LOGIN_LIMIT.limit,
+        LOGIN_LIMIT.windowMs
+      );
+      if (justLocked) {
+        await recordAudit({
+          actorId: null,
+          actorName: email.trim().toLowerCase(), // normalized snapshot
+          action: "auth.rate_limited",
+          targetType: "auth",
+          targetId: email,
+          meta: { limit: LOGIN_LIMIT.limit, windowMinutes: LOGIN_LIMIT.windowMs / 60_000 },
+        });
+      }
       const t = await getT();
       return { error: t("auth.error.invalidCredentials") };
     }

@@ -31,6 +31,8 @@ export const en = {
   "detail.rsvp.onWaitlist": "{n} on the waitlist",
   "detail.rsvp.joinWaitlist": "Join the waitlist",
   "detail.rsvp.leaveWaitlist": "Leave the waitlist",
+  // Rate limit (rate-limit.ts): 10 RSVP/cancel attempts per user per minute.
+  "detail.rsvp.tooMany": "You're clicking fast — wait a moment and try again.",
 
   // Page chrome
   "detail.meta.notFound": "Event not found",
@@ -45,6 +47,15 @@ export const en = {
   "detail.distance": "{km} from you",
   "detail.sharePosterBusy": "Preparing poster…",
   "detail.seeTickets": "See all your tickets →",
+
+  // "Who's going" — social proof under the description (upcoming events
+  // with at least one CONFIRMED RSVP). First names only.
+  "detail.going.chapter": "Who's going",
+  "detail.going.one": "{a} is going",
+  "detail.going.two": "{a} and {b} are going",
+  "detail.going.three": "{a}, {b} and {c} are going",
+  "detail.going.moreOne": "{a}, {b} and 1 other are going",
+  "detail.going.more": "{a}, {b} and {n} others are going",
 
   // RSVP panel (client)
   "detail.rsvp.wantToGo": "Want to go?",
@@ -113,6 +124,7 @@ export const fr: Record<keyof typeof en, string> = {
   "detail.rsvp.onWaitlist": "{n} en liste d'attente",
   "detail.rsvp.joinWaitlist": "Rejoindre la liste d'attente",
   "detail.rsvp.leaveWaitlist": "Quitter la liste d'attente",
+  "detail.rsvp.tooMany": "Vous cliquez trop vite — patientez un instant puis réessayez.",
 
   "detail.meta.notFound": "Événement introuvable",
   "detail.about": "À propos",
@@ -126,6 +138,13 @@ export const fr: Record<keyof typeof en, string> = {
   "detail.distance": "à {km} de vous",
   "detail.sharePosterBusy": "Préparation de l'affiche…",
   "detail.seeTickets": "Voir tous vos billets →",
+
+  "detail.going.chapter": "Qui y va ?",
+  "detail.going.one": "{a} y va",
+  "detail.going.two": "{a} et {b} y vont",
+  "detail.going.three": "{a}, {b} et {c} y vont",
+  "detail.going.moreOne": "{a}, {b} et 1 autre y vont",
+  "detail.going.more": "{a}, {b} et {n} autres y vont",
 
   "detail.rsvp.wantToGo": "Vous voulez y aller ?",
   "detail.rsvp.loginPrompt": "Connectez-vous pour vous inscrire et récupérer votre billet.",
@@ -191,6 +210,7 @@ export const ar: Record<keyof typeof en, string> = {
   "detail.rsvp.onWaitlist": "{n} في قائمة الانتظار",
   "detail.rsvp.joinWaitlist": "الانضمام إلى قائمة الانتظار",
   "detail.rsvp.leaveWaitlist": "مغادرة قائمة الانتظار",
+  "detail.rsvp.tooMany": "تضغط بسرعة كبيرة — انتظر لحظة ثم حاول مجدداً.",
 
   "detail.meta.notFound": "الفعالية غير موجودة",
   "detail.about": "نبذة",
@@ -204,6 +224,13 @@ export const ar: Record<keyof typeof en, string> = {
   "detail.distance": "يبعد {km} عنك",
   "detail.sharePosterBusy": "جارٍ تحضير الملصق…",
   "detail.seeTickets": "عرض كل تذاكرك ←",
+
+  "detail.going.chapter": "من سيحضر؟",
+  "detail.going.one": "{a} سيحضر",
+  "detail.going.two": "{a} و{b} سيحضرون",
+  "detail.going.three": "{a} و{b} و{c} سيحضرون",
+  "detail.going.moreOne": "{a} و{b} وواحد آخر سيحضرون",
+  "detail.going.more": "{a} و{b} و{n} آخرون سيحضرون",
 
   "detail.rsvp.wantToGo": "هل تريد الحضور؟",
   "detail.rsvp.loginPrompt": "سجّل الدخول للتسجيل واحصل على تذكرتك.",

@@ -5,6 +5,7 @@ import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { loginSchema } from "@/lib/validation";
 import { authConfig } from "@/auth.config";
+import { loginLimiter, loginKey, LOGIN_LIMIT } from "@/lib/rate-limit";
 import type { Role } from "@prisma/client";
 
 // Full config for the server: real credentials check against the database.
@@ -22,6 +23,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const parsed = loginSchema.safeParse(credentials);
         if (!parsed.success) return null;
 
+        // Locked accounts fail exactly like wrong passwords — returning the
+        // same null keeps a locked email indistinguishable from a bad one
+        // on this raw callback path (the UI shows the honest message).
+        const key = loginKey(parsed.data.email);
+        if (loginLimiter.exceeded(key, LOGIN_LIMIT.limit)) return null;
+
         const user = await prisma.user.findUnique({
           where: { email: parsed.data.email },
         });
@@ -30,6 +37,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const valid = await bcrypt.compare(parsed.data.password, user.passwordHash);
         if (!valid) return null;
 
+        // Success forgives the failures behind them.
+        loginLimiter.clear(key);
         return { id: user.id, name: user.name, email: user.email, role: user.role };
       },
     }),

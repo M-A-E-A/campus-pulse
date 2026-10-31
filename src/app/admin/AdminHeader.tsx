@@ -17,6 +17,7 @@ const SECTIONS: { href: string; key: DictKey }[] = [
   { href: "/admin/clubs", key: "admin.nav.clubs" },
   { href: "/admin/categories", key: "admin.nav.categories" },
   { href: "/admin/insights", key: "admin.nav.insights" },
+  { href: "/admin/audit", key: "admin.nav.audit" },
 ];
 
 export async function AdminHeader({

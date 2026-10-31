@@ -9,6 +9,7 @@ import { getWaitlistRank } from "@/lib/rsvp-core";
 import { formatDate, formatEventRange, formatDateTime, isSameCampusDay } from "@/lib/tz";
 import { getT, getLocale } from "@/i18n/server";
 import { RsvpSection } from "@/components/events/RsvpSection";
+import { AttendeeGrid } from "@/components/events/AttendeeGrid";
 import { PostEventThanks } from "@/components/events/PostEventThanks";
 import { DistanceAway } from "@/components/events/DistanceAway";
 import { SaveFollowButtons } from "@/components/events/SaveFollowButtons";
@@ -84,6 +85,20 @@ export default async function EventPage({
     event.capacity !== null
       ? await prisma.rsvp.count({ where: { eventId: event.id, status: "WAITLISTED" } })
       : 0;
+
+  // "Who's going": first names of the EARLIEST confirmed RSVPs, capped at
+  // 12 (AttendeeGrid owns the disclosure rule — first names only). Upcoming
+  // events only: an ended event has the post-event band, and "going" over a
+  // past event would be a lie. Waitlisted RSVPs aren't seats, never shown.
+  const going =
+    !hasEnded && taken > 0
+      ? await prisma.rsvp.findMany({
+          where: { eventId: event.id, status: "CONFIRMED" },
+          orderBy: { createdAt: "asc" },
+          take: 12,
+          select: { user: { select: { name: true } } },
+        })
+      : [];
 
   // The signed-in user's own RSVP + saved/follow state, for the client bits.
   let existingRsvp: TicketData | null = null;
@@ -342,6 +357,13 @@ export default async function EventPage({
           >
             {event.description}
           </p>
+
+          {going.length > 0 && (
+            <AttendeeGrid
+              firstNames={going.map((r) => r.user.name.trim().split(/\s+/)[0])}
+              total={taken}
+            />
+          )}
 
           <h2 className="display-chapter mt-14" data-rise>
             {t("detail.organizer")}

@@ -8,6 +8,8 @@ import { EVENTS_TAG, CLUBS_TAG } from "@/lib/queries";
 import { getT } from "@/i18n/server";
 import { performRsvp, performCancelRsvp } from "@/lib/rsvp-core";
 import { dispatchPushes } from "@/lib/push";
+import { rsvpLimiter, RSVP_LIMIT } from "@/lib/rate-limit";
+import { recordAudit } from "@/lib/audit";
 
 /** What the client sees: the dictionary key already rendered to a sentence. */
 export type RsvpResult = { ok: boolean; message: string };
@@ -19,6 +21,14 @@ export async function rsvpAction(eventId: string): Promise<RsvpResult> {
     return { ok: false, message: t("detail.rsvp.loginAction") };
   }
 
+  // One bucket per user covers RSVP + cancel: rapid TOGGLING is the abuse
+  // pattern, not either action alone. Attempt-counted, 10 per minute.
+  const bucket = `rsvp:${session.user.id}`;
+  if (rsvpLimiter.exceeded(bucket, RSVP_LIMIT.limit)) {
+    return { ok: false, message: t("detail.rsvp.tooMany") };
+  }
+  rsvpLimiter.record(bucket, RSVP_LIMIT.limit, RSVP_LIMIT.windowMs);
+
   const result = await performRsvp(session.user.id, eventId);
 
   if (result.ok) {
@@ -26,6 +36,20 @@ export async function rsvpAction(eventId: string): Promise<RsvpResult> {
     revalidatePath("/dashboard");
     // Public counts changed — refresh the cached catalogue.
     revalidateTag(EVENTS_TAG);
+    // Audit after the state change, with the title snapshotted now so the
+    // row still reads if the event is ever deleted.
+    const event = await prisma.event.findUnique({
+      where: { id: eventId },
+      select: { title: true },
+    });
+    await recordAudit({
+      actorId: session.user.id,
+      actorName: session.user.name ?? session.user.email ?? "unknown",
+      action: "rsvp.created",
+      targetType: "event",
+      targetId: eventId,
+      targetLabel: event?.title,
+    });
   }
   return { ok: result.ok, message: t(result.messageKey) };
 }
@@ -34,10 +58,33 @@ export async function cancelRsvpAction(eventId: string): Promise<RsvpResult> {
   const [session, t] = await Promise.all([auth(), getT()]);
   if (!session?.user) return { ok: false, message: t("detail.rsvp.loginFirst") };
 
+  const bucket = `rsvp:${session.user.id}`;
+  if (rsvpLimiter.exceeded(bucket, RSVP_LIMIT.limit)) {
+    return { ok: false, message: t("detail.rsvp.tooMany") };
+  }
+  rsvpLimiter.record(bucket, RSVP_LIMIT.limit, RSVP_LIMIT.windowMs);
+
   const result = await performCancelRsvp(session.user.id, eventId);
   revalidatePath(`/events/${eventId}`);
   revalidatePath("/dashboard");
   revalidateTag(EVENTS_TAG); // the spot returns to the pool
+
+  if (result.ok) {
+    const event = await prisma.event.findUnique({
+      where: { id: eventId },
+      select: { title: true },
+    });
+    await recordAudit({
+      actorId: session.user.id,
+      actorName: session.user.name ?? session.user.email ?? "unknown",
+      action: "rsvp.cancelled",
+      targetType: "event",
+      targetId: eventId,
+      targetLabel: event?.title,
+      // The loudest side effect of a cancel — worth a row of its own meta.
+      ...(result.promotedUserId ? { meta: { promotedFromWaitlist: true } } : {}),
+    });
+  }
 
   // A seat handed to someone on the waitlist is the loudest thing that
   // happens in this app — push it. `after()` runs post-response, so the

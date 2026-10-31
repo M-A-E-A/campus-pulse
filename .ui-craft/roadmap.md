@@ -789,9 +789,153 @@ Two exports on `/tickets/[rsvpId]` (agreed scope: "idea 1 and 2"):
   foreign QR with a red inline alert while the camera keeps running,
   and holds at 390.
 
+## Quick win 5 ✅ — "who's going" attendee grid
+- The social-proof chapter on the event detail page, between About and
+  Organizer: 40px ink initial tiles (paper ring separation, logical `-ms`
+  overlap so RTL reverses the stack — letters never mirror), 12 max plus
+  a dashed "+N" ghost (reads as "truncated", not "one more person"), and
+  a count line naming the first two RSVPs. All five plural line shapes
+  live in the dict keys ×3 locales, so the component holds no locale
+  logic.
+- Disclosure contract (written into `AttendeeGrid`): FIRST NAMES ONLY —
+  the public page stays at hallway-poster level; full names/emails stay
+  behind the organizer door. CONFIRMED only (a waitlisted seat is not a
+  going person), upcoming events only (an ended event has the post-event
+  band — "y vont" over a past event would be a lie), zero-going shows
+  nothing (no sad empty chapter). Anonymous and signed-in see the SAME
+  block — no auth-conditional hiding.
+- Phone guard found by the probe itself: 13 tiles = 424px, a 390px
+  column overflowed by 50px → the stack now wraps into a small grid
+  (`flex-wrap` + `gap-y-1`), desktop stays one row. Re-run: 0px.
+- `scripts/probe-going.mjs` **10/10** with a self-cleaning fixture (two
+  probe-owned events + 15 users, deleted at the end so smoke counts
+  stay pristine): count attr, 12 letters + "+2", exact FR line,
+  waitlisted rider absent, seeded three-name line computed from live DB
+  order, ended + zero-going chapters hidden, Arabic heading/line exact
+  (fresh browser → Accept-Language), mobile 0px overflow, signed-in
+  parity. One atomic eval per state read.
+- Gates: tsc 0 · eslint 0 · build 0 (`/events/[id]` 5.27 kB) · smoke
+  **82/82** · probe-going **10/10** · regressions probe-poster **8/8**
+  (the detail dict is the poster's copy source) · probe-feedback
+  **14/14** · probe-scan **5/5** · probe-wallet **15/15** · inspector on
+  the event page **0 FAIL / 4 defended WARN** — the exact Phase-7
+  defended family (palette-cream = locked paper token; heavy-borders =
+  drawn ink panels; app-title-size = the event-poster display title IS
+  the design; colour-sprawl = the orange facts rail).
+- Screenshots scored: desktop — the chapter lands in the poster rhythm
+  (tiles echo the club initial card); AR — stack runs right-to-left,
+  letters stay LTR, bidi line correct; mobile — clean two-row grid, no
+  sideways scroll.
+
+## Phase 15 ✅ — CI + rate limiting + audit log
+All three remaining "credibility layer" items.
+
+- **Rate limiting** — `src/lib/rate-limit.ts`: in-memory fixed window with
+  an injectable clock (`createRateLimiter(now)`), three ops — `exceeded`
+  (read-only peek, never extends a window), `record` → `{locked,
+  justLocked}`, `clear` — and a prune bound (>1000 buckets sweep expired)
+  so key-cycling cannot grow memory. Instances live on globalThis for the
+  same reason the Prisma client does: `authorize` is in the route bundle,
+  `loginAction` in the page bundle — separate module graphs, one shared
+  counter. KEYING DECISION: login is keyed by EMAIL, not IP — hundreds of
+  students share one campus NAT, so an IP cap would lock the whole school
+  out while a per-account cap locks out exactly the attacker.
+  `LOGIN_LIMIT` = 8 failures/10 min/email: authorize checks the lock
+  (returns null → raw callback path is indistinguishable from a wrong
+  password) and `clear`s on success (a correct password forgives);
+  `loginAction` pre-checks for the honest `auth.error.tooManyAttempts`
+  and records on every AuthError. RSVP + cancel share ONE per-user
+  bucket (`RSVP_LIMIT` 10/min — toggling is the abuse pattern) answering
+  `detail.rsvp.tooMany` in the existing status slot. Register deliberately
+  has NO IP cap (same NAT reason; still guarded by email-taken + zod —
+  email verification remains the real fix, flagged).
+- **Audit log** — `AuditLog`: `actorId` (SetNull) + `actorName` /
+  `targetLabel` snapshots so rows survive deletions (the Notification
+  keep-history-legible reasoning); `action` stores the FACT, never a
+  rendered sentence — the admin page translates
+  `admin.audit.action.<action>` at read time (trilingual app), and an
+  unknown action renders raw mono rather than hiding. `recordAudit`
+  NEVER throws (a failed audit write must not undo the action it
+  describes — it lands in the server log). 14 wired mutations:
+  rsvp.created/cancelled (meta `promotedFromWaitlist`)/checked_in (ok
+  only — duplicates are attempts, not state changes), event
+  created/updated/submitted/cancelled/published/rejected (count===1
+  guards), category.created/deleted, club.created,
+  user.promoted_organizer, auth.rate_limited (`justLocked` fires once
+  per window → ONE row per lockout, not one per spammed request).
+  Ticket codes stay OUT of rows (bearer secrets).
+- **Schema migration without a reset**: `pg-data-fresh` was db-push-built
+  with no `prisma_migrations` history, and `migrate dev` demanded a
+  destructive reset — NEVER reset. Applied via `db push` + hand-authored
+  `20261031090000_audit_log/migration.sql` generated EXACTLY by
+  `prisma migrate diff --from-migrations --to-schema-datamodel` against a
+  scratch shadow DB — the diff contained only the audit delta, proving
+  the migration files stayed in sync with the schema.
+- **CI** — `.github/workflows/ci.yml`: ubuntu + postgres:16 service →
+  `npm ci` → `prisma migrate deploy` (not db push — CI proves the
+  migration FILES build a real schema) → seed → tsc → eslint →
+  test-rate-limit → test-pkpass (openssl is on PATH on runners) → build →
+  nohup start + curl wait → `pwsh scripts/smoke-test.ps1` → server.log
+  on failure. HONEST BOUNDARY: the browser probes do NOT run in CI —
+  they import the gitignored `.agents/` CDP harness; vendoring it into
+  `scripts/` for Playwright-on-CI is the follow-up. CI's riskiest step
+  was rehearsed locally: fresh scratch DB → migrate deploy applied all 7
+  migrations incl. audit_log → seed → dropped.
+- **Unit** — `scripts/test-rate-limit.ts` **8/8** on a fake clock (no
+  sleeps): peek read-only, `justLocked` exactly once, clear, window
+  expiry, prune under key-spam, `loginKey` trim+lowercase (both call
+  sites MUST derive the same key or a reset never reaches the lock that
+  blocked the account), shipped limits pinned.
+- **Probe** — `scripts/probe-audit.mjs` **11/11**: 8 wrong-password
+  attempts then the 9th shows the exact FR lockout copy in the existing
+  `p[role="alert"]` slot; per-email keying (Salma's correct login lands
+  immediately after the brute-force lockout); DB count = exactly ONE
+  `auth.rate_limited` row; Salma's real RSVP writes `rsvp.created` with
+  actor + event title; student bounces to `/` (page guard) and anon to
+  `/login` (middleware gate) — both asserted; admin sees both rows with
+  FR labels, zero raw-key leak (visible-text TreeWalker — raw
+  `body.textContent` includes the inline i18n script payload, which was
+  the first run's false positive); nav entry; both screenshots. Unique
+  brute email per run: the limiter is in-memory, so a fixed email would
+  start pre-locked inside the window and correctly write no second row.
+- Probe lessons this phase added: a login helper must CLEAR THE JAR
+  FIRST — a leftover session cookie satisfies the cookie wait before the
+  new sign-in lands (the first run's "admin" was really the student,
+  bounced to `/`); a form loop started without `page.goto` surfaced as
+  "Illegal invocation" (native value setter on null) — `fillInput` now
+  throws `no element: <sel>` instead.
+- Gates: tsc 0 · eslint 0 (caught the vestigial `windowMs` on the peek —
+  the read-only API honestly shrank to `exceeded(key, limit)`) · build 0
+  (`/admin/audit` 175 B, dynamic) · smoke **82/82** · test-rate-limit
+  **8/8** · test-pkpass **15/15** · probe-audit **11/11** · regressions
+  probe-door **12/12** · probe-wallet **15/15** · probe-going **10/10** ·
+  inspector `/admin/audit` **0 FAIL / 0 WARN** with sanctioned
+  `--allow still-page,palette-cream` (both with written defenses:
+  animation-free utility lock — same class as dashboard/ticket — and the
+  locked #faf7f2 brand paper token) · CI fresh-DB rehearsal passed.
+  Screenshots scored: the lockout state is the honest danger line in the
+  form's own alert slot with no layout change; audit desktop ≈9/10
+  (ink band nav with the orange active entry, four-column rhythm, muted
+  targets); mobile ≈8/10 (the table scrolls inside its own container —
+  the attendees-table idiom, zero page overflow; the full date column is
+  chunky at 390 but consistent with the family rather than forking one
+  table into cards).
+- Evidence the writer works in the wild: tonight's door-probe run left
+  two real `rsvp.checked_in` rows (actor snapshot "Omar Organisateur",
+  real event title) visible in the inspected render — fixtures were not
+  the only rows on the page.
+- Flags: limiter is per-process — correct for today's single
+  `next start`; horizontal scale would need a shared store, and
+  `createRateLimiter` is the seam. The RSVP half is unit-proven, not
+  e2e-triggered (10 real form actions/minute would add brittleness for
+  no behavior the unit does not already prove). `auth.rate_limited`
+  rows from probe runs persist in the dev DB — they are history, not
+  fixture state (smoke counts unaffected). CI is authored and its
+  migration path rehearsed, but its first real run happens on first
+  push. Email verification still absent.
+
 ## Next — agreed order
-Quick win 5 ("who's going") → Phase 15 CI + rate limiting + audit log.
-Endgame after: SVG logo pick → `npx ui-craft-detect ./src` →
+Endgame: SVG logo pick → `npx ui-craft-detect ./src` →
 `/finalize` → honest UICraftScore + Lighthouse mobile ≥ 70 per page.
 
 ## Throughout — credibility layer
