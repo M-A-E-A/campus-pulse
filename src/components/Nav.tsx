@@ -19,6 +19,7 @@ export async function Nav() {
     ...(user
       ? [
           { href: "/dashboard", label: t("nav.myTickets") },
+          { href: "/scan", label: t("nav.scan") },
           ...((user.role === "ORGANIZER" || user.role === "ADMIN")
             ? [{ href: "/organizer", label: t("nav.organizer") }]
             : []),
@@ -50,6 +51,7 @@ export async function Nav() {
             {user ? (
               <>
                 <ActiveLink href="/dashboard">{t("nav.myTickets")}</ActiveLink>
+                <ActiveLink href="/scan">{t("nav.scan")}</ActiveLink>
                 {(user.role === "ORGANIZER" || user.role === "ADMIN") && (
                   <ActiveLink href="/organizer">{t("nav.organizer")}</ActiveLink>
                 )}

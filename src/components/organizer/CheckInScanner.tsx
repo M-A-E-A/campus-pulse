@@ -1,10 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { Html5Qrcode } from "html5-qrcode";
 import { checkInAction, type CheckInResult } from "@/lib/actions/checkin";
 import { useT } from "@/i18n/provider";
 import { isOfflineError } from "@/lib/offline";
+import { CameraError, startQrCamera, type QrCamera, type QrCameraMode } from "@/lib/qr-camera";
 import {
   enqueueScan,
   queueForEvent,
@@ -24,9 +24,15 @@ function shortCode(code: string): string {
 }
 
 /**
- * Door screen. Camera scanner on top, manual code entry underneath
- * (cameras fail on http:// and in some browsers — the manual box is the
- * fallback that saves the demo).
+ * Door screen. Camera scanner on top (native BarcodeDetector first, the
+ * html5-qrcode fallback behind it — see qr-camera.ts), manual code entry
+ * underneath: cameras fail on http://LAN opens and in some browsers, and
+ * the manual box is the fallback that saves the demo.
+ *
+ * A camera QR decodes ~10 times a second while it's held in view, so
+ * camera scans carry a per-code cooldown (manual entry deliberately
+ * doesn't — retyping the same code IS the signal). The insecure origin
+ * is caught BEFORE getUserMedia ever runs and said in words.
  *
  * Offline contract: a scan that can't reach the server is QUEUED locally
  * (see checkin-queue.ts) — never dropped — and re-sent automatically.
@@ -48,8 +54,11 @@ export function CheckInScanner({
   const [syncing, setSyncing] = useState(false);
   const [syncBlockedCount, setSyncBlockedCount] = useState<number | null>(null);
   const [queueError, setQueueError] = useState(false);
-  const scannerRef = useRef<Html5Qrcode | null>(null);
+  const [cameraMode, setCameraMode] = useState<QrCameraMode | null>(null);
+  const cameraRef = useRef<QrCamera | null>(null);
+  const readerRef = useRef<HTMLDivElement>(null);
   const busyRef = useRef(false); // ignore frames while one is in flight
+  const lastCameraScan = useRef({ text: "", at: 0 }); // camera cooldown
   const syncingRef = useRef(false);
   const t = useT();
 
@@ -121,50 +130,51 @@ export function CheckInScanner({
     busyRef.current = false;
   }
 
+  /** Camera decode callback: busyRef only covers the in-flight window, so a
+   *  QR held in view for the ten seconds it takes to answer would pile up
+   *  "duplicate" rows the moment the first response lands. The cooldown is
+   *  what holds that flood back — a DIFFERENT code scans instantly. Manual
+   *  entry bypasses it on purpose: retyping the same code is a signal. */
+  function onCameraText(text: string) {
+    const now = Date.now();
+    if (text === lastCameraScan.current.text && now - lastCameraScan.current.at < 3000) {
+      return;
+    }
+    lastCameraScan.current = { text, at: now };
+    if (!busyRef.current) void submitCode(text);
+  }
+
   async function startScanner() {
+    const container = readerRef.current;
+    if (!container) return;
     setCameraError(null);
     try {
-      // ~109 kB library, loaded only when the camera is actually started.
-      const { Html5Qrcode } = await import("html5-qrcode");
-      const scanner = new Html5Qrcode("qr-reader");
-      scannerRef.current = scanner;
-      await scanner.start(
-        { facingMode: "environment" },
-        { fps: 10, qrbox: { width: 220, height: 220 } },
-        (text) => {
-          if (!busyRef.current) void submitCode(text);
-        },
-        () => {} // per-frame decode failures are normal; ignore
-      );
+      const camera = await startQrCamera({ container, onText: onCameraText });
+      cameraRef.current = camera;
+      setCameraMode(camera.mode);
       setScanning(true);
-    } catch {
+    } catch (err) {
+      console.error("Camera start failed:", err);
       setCameraError(
-        t("org.checkin.cameraError")
+        err instanceof CameraError
+          ? t("common.cameraInsecure")
+          : t("org.checkin.cameraError")
       );
       setScanning(false);
     }
   }
 
   async function stopScanner() {
-    if (scannerRef.current) {
-      try {
-        await scannerRef.current.stop();
-        scannerRef.current.clear();
-      } catch {
-        // Already stopped.
-      }
-      scannerRef.current = null;
-    }
+    await cameraRef.current?.stop();
+    cameraRef.current = null;
+    setCameraMode(null);
     setScanning(false);
   }
 
   // Never leave the camera running when the component unmounts.
   useEffect(() => {
     return () => {
-      if (scannerRef.current) {
-        scannerRef.current.stop().catch(() => {});
-        scannerRef.current.clear();
-      }
+      void cameraRef.current?.stop();
     };
   }, []);
 
@@ -277,22 +287,27 @@ export function CheckInScanner({
         </div>
       )}
 
-      {/* Camera */}
-      <div className="card mt-6 overflow-hidden">
-        <div id="qr-reader" className="min-h-64 bg-ink/90 [&_video]:!h-auto [&_video]:!w-full" />
+      {/* Camera — the card wears data-scanmode so a probe can tell which
+          decoder (native / legacy) is actually driving this browser. */}
+      <div className="card mt-6 overflow-hidden" data-scancard data-scanmode={cameraMode ?? undefined}>
+        <div
+          ref={readerRef}
+          id="qr-reader"
+          className="min-h-64 bg-ink/90 [&_video]:!h-auto [&_video]:!w-full"
+        />
         {!scanning && (
           <div className="flex flex-col items-center gap-3 p-6">
-            <p className="text-sm text-muted">
+            <p className="text-sm text-muted" data-cameramsg>
               {cameraError ?? t("org.checkin.cameraHint")}
             </p>
-            <button className="btn btn-primary" onClick={startScanner}>
+            <button className="btn btn-primary" data-startcamera onClick={startScanner}>
               {t("org.checkin.startCamera")}
             </button>
           </div>
         )}
         {scanning && (
           <div className="flex justify-center p-4">
-            <button className="btn btn-secondary" onClick={stopScanner}>{t("org.checkin.stopCamera")}</button>
+            <button className="btn btn-secondary" data-stopcamera onClick={stopScanner}>{t("org.checkin.stopCamera")}</button>
           </div>
         )}
       </div>
@@ -337,7 +352,7 @@ export function CheckInScanner({
               </li>
             ))}
             {history.map((h, i) => (
-              <li key={i} className="flex items-center justify-between py-2 text-sm">
+              <li key={i} data-historyrow className="flex items-center justify-between py-2 text-sm">
                 <span>
                   {h.result.status === "ok" && h.result.name}
                   {h.result.status === "duplicate" && t("org.checkin.again", { name: h.result.name })}

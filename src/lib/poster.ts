@@ -15,15 +15,24 @@
  * Layout, top to bottom — the detail page's header frozen into one frame:
  *   ink field · title (800, auto-fitted) · category chip + club credits
  *   (stacked when a row can't hold both) · the pulse beat running full-bleed
- *   into the orange facts rail (date / venue / capacity) · footer rule,
- *   mark, wordmark, event URL — the whole composition mirrored for RTL.
+ *   into the orange facts rail (date / venue / capacity) with the event URL
+ *   as a scannable QR card on the rail's far side · footer rule, mark,
+ *   wordmark, event URL — the whole composition mirrored for RTL.
  * No photo: the wall this poster joins is typographic, and an external
  * <image> would break the moment the file travels off-site.
+ *
+ * The QR is VECTOR (one merged <path> of module runs, generated from the
+ * same URL the footer prints): resolution-independent like the rest of the
+ * file, ~1 kB of path data, and it survives being scaled to A3 or shown on
+ * a phone — the poster → /scan loop's other half. Its POSITION mirrors for
+ * RTL; the pattern itself never does — a mirrored QR is a QR nobody scans.
  *
  * SVG's text-anchor FLIPS under direction="rtl": "start" pins the RIGHT
  * edge of a run there, the LEFT edge here. Every alignment in this file
  * therefore goes through textAttrs() — the one place that knows.
  */
+
+import { create as createQr } from "qrcode";
 
 export type PosterInput = {
   title: string;
@@ -50,6 +59,12 @@ const FOOTER_H = 140;
 const INK = "#14130f";
 const PAPER = "#faf7f2";
 const ACCENT = "#ff4d00";
+
+// The scannable corner: a white card on the rail's far side carrying the
+// event URL as vector modules. The card size is fixed (it's composition);
+// the module grid inside adapts to the URL's QR version.
+const QR_CARD = 208;
+const QR_QUIET = 24; // ≥4 modules of quiet zone at every URL length
 
 const FONT_STACK = "Cabinet Grotesk, 'Helvetica Neue', Helvetica, Arial, sans-serif";
 // Site parity: Arabic swaps the whole stack; Plex's arabic subset carries no
@@ -150,6 +165,40 @@ function textAttrs(line: string, x: number, align: "left" | "right" | "center"):
   return `x="${x}" text-anchor="${anchor}" direction="${dir}"${family}`;
 }
 
+/**
+ * The event URL as ONE merged <path> of module runs, centered in a card at
+ * (x, y): dark runs drawn horizontally so a version-4 matrix (33×33) costs
+ * a few hundred path segments, not a thousand <rect>s. Returns null when
+ * the URL can't be encoded — a poster must still print without its QR.
+ */
+function qrModulesPath(url: string, x: number, y: number): string | null {
+  try {
+    const qr = createQr(url, { errorCorrectionLevel: "M" });
+    const size = qr.modules.size;
+    const data = qr.modules.data;
+    const inner = QR_CARD - QR_QUIET * 2;
+    const mod = Math.floor(inner / size);
+    const drawn = mod * size;
+    const ox = x + QR_QUIET + Math.floor((inner - drawn) / 2);
+    const oy = y + QR_QUIET + Math.floor((inner - drawn) / 2);
+    let d = "";
+    for (let row = 0; row < size; row++) {
+      let run = 0;
+      for (let col = 0; col <= size; col++) {
+        const dark = col < size && Boolean(data[row * size + col]);
+        if (dark) run += 1;
+        else if (run > 0) {
+          d += `M${ox + (col - run) * mod} ${oy + row * mod}h${run * mod}v${mod}h${-run * mod}z`;
+          run = 0;
+        }
+      }
+    }
+    return d ? `<path d="${d}" fill="${INK}"/>` : null;
+  } catch {
+    return null;
+  }
+}
+
 export function renderPoster(input: PosterInput): string {
   const rtl = input.dir === "rtl";
   const xRight = W - PAD;
@@ -160,11 +209,19 @@ export function renderPoster(input: PosterInput): string {
     : ({ main: "left", far: "right" } as const);
 
   // Facts rail first: its height decides how much room the title may claim.
-  const dateLines = wrap(input.dateLabel, 52, 800, maxWidth, 2);
-  const locLines = wrap(input.location, 34, 500, maxWidth, 2);
-  const factsLines = wrap(input.factsLine, 30, 500, maxWidth, 1);
+  // The QR card is a FIXED block on the rail's far side, so the facts text
+  // wraps in whatever width the card leaves — the card never moves, the
+  // lines yield (and their count feeds railH exactly as before).
+  const qrX = rtl ? xLeft : W - PAD - QR_CARD;
+  const railTextMax = maxWidth - QR_CARD - 40;
+  const dateLines = wrap(input.dateLabel, 52, 800, railTextMax, 2);
+  const locLines = wrap(input.location, 34, 500, railTextMax, 2);
+  const factsLines = wrap(input.factsLine, 30, 500, railTextMax, 1);
   const railH = 44 + dateLines.length * 55 + 20 + locLines.length * 36 + 16 + 32 + 44;
   const railTop = H - FOOTER_H - railH;
+  // The rail's floor (one line of everything) is 247px > QR_CARD, so the
+  // centered card always lands inside the orange band.
+  const qrY = railTop + Math.floor((railH - QR_CARD) / 2);
 
   // Credits: orange category chip + club, the same row the detail page
   // prints under its headline (below the title — never as a kicker above
@@ -268,6 +325,19 @@ export function renderPoster(input: PosterInput): string {
         `<text ${textAttrs(line, tx, align.main)} y="${y}" font-size="30" font-weight="500" fill="${INK}" opacity="0.72">${esc(line)}</text>`
       );
       y += 32;
+    }
+  }
+
+  // The QR card: white on orange, modules in ink, vertically centered on
+  // the rail's far side. Its POSITION mirrors for RTL — the pattern never
+  // does (see the file header).
+  {
+    const qrPath = qrModulesPath(input.url, qrX, qrY);
+    if (qrPath) {
+      parts.push(
+        `<rect x="${qrX}" y="${qrY}" width="${QR_CARD}" height="${QR_CARD}" fill="#ffffff"/>`,
+        qrPath
+      );
     }
   }
 

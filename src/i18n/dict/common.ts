@@ -6,6 +6,10 @@ export const en = {
   "common.skipToContent": "Skip to content",
   "common.loading": "Loading…",
   "common.spotsLeft": "{n} spots left",
+  // getUserMedia is blocked on plain http:// anywhere but localhost — the
+  // venue demo runs off a LAN IP, which is exactly where cameras die.
+  "common.cameraInsecure":
+    "Camera unavailable: this page must be opened over HTTPS or localhost.",
 
   // Zod issue messages: the issue `message` IS one of these keys.
   "common.valid.nameMin2": "Name must be at least 2 characters",
@@ -32,6 +36,8 @@ export const fr: Record<keyof typeof en, string> = {
   "common.skipToContent": "Aller au contenu",
   "common.loading": "Chargement…",
   "common.spotsLeft": "{n} places restantes",
+  "common.cameraInsecure":
+    "Caméra indisponible : la page doit être ouverte en HTTPS ou sur localhost.",
 
   "common.valid.nameMin2": "Le nom doit contenir au moins 2 caractères",
   "common.valid.email": "Saisissez un e-mail valide",
@@ -57,6 +63,8 @@ export const ar: Record<keyof typeof en, string> = {
   "common.skipToContent": "الانتقال إلى المحتوى",
   "common.loading": "جارٍ التحميل…",
   "common.spotsLeft": "بقيت {n} أماكن",
+  "common.cameraInsecure":
+    "الكاميرا غير متاحة: يجب فتح الصفحة عبر HTTPS أو localhost.",
 
   "common.valid.nameMin2": "يجب أن يتكون الاسم من حرفين على الأقل",
   "common.valid.email": "أدخل بريداً إلكترونياً صالحاً",

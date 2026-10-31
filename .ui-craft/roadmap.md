@@ -732,9 +732,65 @@ Two exports on `/tickets/[rsvpId]` (agreed scope: "idea 1 and 2"):
   desktop screen keeps one accent CTA over the honest note, and the
   mobile fold holds at 390.
 
+## Phase 14 — camera QR scanner (harden the door path · poster → scan loop · native-first decode)
+- `src/lib/qr-camera.ts` — one engine for both surfaces: native
+  `BarcodeDetector` first, html5-qrcode (lazy import) fallback on ANY
+  native start failure; typed `CameraError("insecure")` from
+  `window.isSecureContext` read at start time (never on load, never a
+  prompt before the tap); `stop()` idempotent — ends every track and
+  clears the container. Failures land in
+  `console.error("Camera start failed:", err)` so probes can assert
+  them.
+- Door scanner (`CheckInScanner`): same-QR camera cooldown 3s (manual
+  entry deliberately bypasses it); hooks `data-scancard` / `scanmode` /
+  `startcamera` / `stopcamera` / `cameramsg` / `historyrow`; an
+  insecure context gets the shared honest `common.cameraInsecure`
+  (the generic `org.checkin.cameraError` stays the non-insecure
+  fallback).
+- Student `/scan` (new page + `ScanScanner`): signed-in only
+  (anon → /login); accepts only same-origin `/events/<id>` URLs
+  (`new URL(text, location.origin)`); a foreign QR → honest inline
+  `data-unknown` refusal and the camera KEEPS RUNNING; "Scanner" nav
+  entry (`nav.scan`) for every signed-in user, desktop + mobile,
+  after Mes billets.
+- Poster: 208px white QR card on the orange rail's far side, vertically
+  centered; vector modules (single merged `<path>` of horizontal runs
+  from `QRCode.create` — no canvas dependency); the facts column
+  reserves the card width and wraps clear of it; position mirrors for
+  RTL, the pattern never does; no caption (the footer URL remains the
+  human label); an encode failure never breaks the print. No new
+  route — the QR rides the existing `input.url`.
+- Probe lessons kept: this Chromium (`chromium-1248`) ships NO
+  `BarcodeDetector` → the probe auto-asserts native mode when the
+  browser has the API and SKIPs it honestly otherwise; `isSecureContext`
+  is an OWN property here (restore sabotage with
+  `defineProperty({value:true})` — a bare `delete` leaves it
+  undefined→false); html5-qrcode's own check is
+  `"BarcodeDetector" in window` (strip with pure `delete`); CDP eval
+  returning `window` throws "Object reference chain is too long";
+  probe state reads must be ONE atomic eval (React commits land
+  between two evals); parallel inspector runs share
+  `.taste-skill/inspect-auth` and crash — run sequentially with
+  separate `--out` dirs.
+- Gates: tsc 0 · eslint 0 · build 0 (`/scan` 1.98 kB) · smoke
+  **82/82** · probe-camera **8/8** (native SKIP honest in this
+  Chromium) · probe-scan **5/5 ×2 runs** (poster QR asserted
+  structurally: 561 modules match the event-URL matrix, mod=4) ·
+  regressions probe-door **12/12** · probe-poster **8/8** ·
+  probe-clubs **24/24** · inspectors `/scan` + door check-in
+  **0 FAIL / 3 WARN each** (sanctioned `--allow still-page`; the
+  defended trio: palette-cream = brand paper, hero-void +
+  unused-canvas = the capped max-w-lg working column). Screenshots
+  scored: poster FR/AR — the QR card reads as a deliberate block on
+  the rail's far side and RTL mirrors the position, not the pattern;
+  the door shows the full loop (green "Salma Student est entré."
+  banner over the viewfinder's qrbox corners, manual fallback below);
+  /scan lands on the event page after a live decode, refuses a
+  foreign QR with a red inline alert while the camera keeps running,
+  and holds at 390.
+
 ## Next — agreed order
-Phase 14 camera QR scanner → quick win 5 ("who's going") →
-Phase 15 CI + rate limiting + audit log.
+Quick win 5 ("who's going") → Phase 15 CI + rate limiting + audit log.
 Endgame after: SVG logo pick → `npx ui-craft-detect ./src` →
 `/finalize` → honest UICraftScore + Lighthouse mobile ≥ 70 per page.
 
