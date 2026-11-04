@@ -934,9 +934,221 @@ All three remaining "credibility layer" items.
   migration path rehearsed, but its first real run happens on first
   push. Email verification still absent.
 
+## Endgame — step 1: SVG logo pick ✅ DONE (verified)
+Four compositions of the established PulseMark (tile ground × stroke
+colour) rendered at real tab sizes (16–48px) in light + dark tab-strip
+context — evidence sheet `.taste-skill/logo-pick-sheet.jpg`. Pick = **A:
+ink tile + accent stroke**, the shipped favicon in vector form. B (accent
+tile) is the loudest but the favicon isn't a CTA — orange is the app's
+action colour and spending it on chrome dilutes it; C (paper tile)
+vanishes on the light tab strip (its most common context); D (bare
+stroke) is thinnest at 16px and abandons the established tile.
+Continuity beat novelty at the finish line.
+
+- `src/app/icon.svg` (32×32, ink rect + accent stroke at the same 68%
+  mark scale) is written BY `scripts/gen-pwa-icons.mjs` — one script
+  owns every icon, so the SVG can never drift from Logo.tsx or the
+  PNGs. Re-rendering the set produced **zero byte churn** in all five
+  PNGs (deterministic pipeline proven).
+- Next 15.5 constraint found the hard way: the `icon.*` file convention
+  can only yield ONE icon — `next-app-loader`'s `metadataResolver`
+  stops at the first extension that exists (`!result` guard), so
+  `app/icon.svg` got its ROUTE (200 image/svg+xml) but no `<link>`.
+  The SVG-first / PNG-fallback pair is therefore declared explicitly in
+  `layout.tsx` `metadata.icons`: SVG for every modern browser, PNG for
+  Safari (no SVG favicon support); `app/favicon.ico` still auto-prepends
+  as the legacy 16px entry and all four file routes keep serving — the
+  block only replaces the head tags. Verified head order:
+  favicon.ico → icon.svg → icon.png → apple-icon.png.
+- Manifest keeps its PNG set (already vector-derived; iOS home screen
+  ignores SVG regardless) — no manifest change.
+- Smoke +2: `Icon /icon.svg` (200, image/svg+xml, accent bytes present)
+  and `Head links SVG favicon` (asserts the ORDER — svg before the png
+  fallback; the fallback only works that way).
+
+Gates: tsc 0 · build 0 · smoke **84/84** (82 + the two favicon checks).
+
+## Endgame — step 2: `npx ui-craft-detect ./src` ✅ DONE
+npm v0.13.0 over all155 files → 40 flagged (9 errors / 48 warnings).
+Triaged every finding; **fixed the 9 genuine ones**:
+- form labels + autocomplete (CategoryForm, ClubForms — `aria-label`
+  via dict keys ×3 locales, house pattern; the email example-address
+  placeholder could not serve as its own label),
+- two-step delete on /admin/categories (new `DeleteCategoryButton` +
+  extracted `useConfirm` — the RejectForm pattern; the confirm button
+  names the row; cancel disarms; opener never mutates),
+- `transition-all` removed from the capacity bar (dead or layout-anim
+  on a data readout — either way not shipped motion),
+- two ALL-CAPS headings de-capped (CheckInScanner, EventsMap — the
+  house rule is already written in globals.css: "uppercase tracked
+  headers are the mark of the generated dashboard").
+
+The other **48 findings defended in writing** (the detector is per-file
+and state-blind; every defense is provable):
+- 31 hover-without-focus-visible → the global `:focus-visible` ring
+  (globals.css:67) covers every element in the app;
+- 5 mixed px/rem → px hairline borders + rem layout is the detector's
+  OWN recommended split (clamp() constants in the fifth);
+- 3 tables → `overflow-x-auto` already present on all three; sticky
+  thead cannot coexist with that scrollport (CSS forces overflow-y to
+  auto, so page-level sticky never engages) without redesigning into a
+  max-height scroll region — a design change, not a lint fix;
+- 5 data-fetch-no-states → every one has explicit catch branches with
+  probe-covered fallbacks (useTicketQr degraded→raw code + retry,
+  TicketFull walletError→inline error + print fallback, PushToggle
+  honest "off", RsvpSection translated messages incl. offline,
+  SharePosterButton anchor-href + open-in-tab fallback);
+- em-dash flood → all 12 em dashes in EventsExplorer.tsx are `//`
+  comments (the detector quoted its own comment-extraction artifact);
+  zero in visible copy;
+- rounded-none×14 in the skeleton → skeletons mirror the real page's
+  square-frame radius language (globals.css documents it);
+- PulseScreen eyebrow → a status BADGE ("LIVE" pill), not a section
+  eyebrow; transition-[width] → the signature live-pulse motion (700ms
+  pill; scaleX would corrupt the rounded caps), globally killed under
+  `prefers-reduced-motion` (globals.css:402 `transition: none`).
+
+Re-run after the fixes: **156 files, 37 flagged (1 critical / 47)** —
+the single critical is the defended pulse transition. New permanent
+probe `scripts/probe-categories.mjs` **9/9** (create → arm → cancel →
+re-arm → confirm-delete; self-cleaning).
+
+## Endgame — step 3: `/finalize` ✅ DONE (findings-only run)
+Gate state at run: tsc 0 · eslint 0 · build 0 · smoke 84/84 ·
+probe-going 10/10 · probe-scan 5/5 · probe-audit 11/11 ·
+probe-categories 9/9 · detector 156 files / 37 flagged (1 crit / 47 warn,
+all triaged).
+
+- **Verdict: NOT READY — one Major** (zero Critical after the documented
+  downgrades): **Arabic inherits Latin letter-spacing.** `h1–h3`
+  (-0.02em), `.display-hero` (-0.035em), chapter/detail titles
+  (-0.03em) all apply to RTL text — the Arabic block (globals.css:52)
+  swaps font-family and weight but never resets tracking — and
+  PulseScreen adds `tracking-[0.2/0.3/0.35em]` on dict strings that
+  render Arabic in AR. Violates finish-bar Pass 2 ("never adjust
+  Arabic spacing") and brief principle 4. Fix = one RTL letter-spacing
+  neutralization guard (+ scope the pulse labels); not applied —
+  finalize is findings-only.
+- Detector's 1 critical (`transition-[width]` on the live pulse)
+  downgraded to **Deferred per brief** — serves principle 3 ("Alive or
+  silent"), motion knob 9; scaleX would corrupt the rounded caps;
+  killed under prefers-reduced-motion (globals.css:402).
+- Minors accepted in writing: `color-scheme` never declared (one-line
+  viewport fix; auto-dark risk on Android); org.empty / oins.empty
+  offer no next step where one exists; motion/space/z ride Tailwind
+  defaults (recommend `/tokens` named eases for a MOTION-9 surface);
+  47 detector warnings all defended (see step 2 entry).
+- Passes otherwise green: hierarchy, surface stack (semantic names,
+  dark deferred per brief §5), spacing rhythm, iconography (no emoji,
+  one stroke family), microcopy (dict-owned, no generic CTAs), pixel
+  honesty (role-based radii, hairline/structural border pairing),
+  data formatting (tabular-nums ×19, locale-aware dates).
+
+## Endgame — step 4: Major fixed (RTL letter-spacing) ✅ DONE
+One unlayered guard in `globals.css` (after `.display-figure`): branches
+for `h1/h2/h3` + `.display-hero`/`.display-chapter`/`.display-title`
+(equal specificity, placed later → they win **in RTL only**) plus a `*`
+branch that beats Tailwind's `tracking-*` utilities — unlayered rules
+win over `@layer utilities` regardless of specificity (the same
+precedence the component layer above depends on). `.display-figure` is
+deliberately excluded: it renders Latin tabular numerals, whose tight
+display tracking is numeral typography, not an Arabic adjustment. The
+`*` branch also future-proofs: no new `tracking-[…]` on a dict string
+can reach Arabic again. OG cards stay French-only by design
+(`og.tsx` hardcodes `fr["meta.description"]`) — no Arabic in images.
+
+- Verification (temp CDP script, deleted after the run): 8/8 — LTR
+  keeps `-4.0656px` hero / `-1px` utility; AR flips `dir=rtl` and
+  computes `normal` on `.display-hero`, `.display-chapter` and the
+  `tracking-tight` utility; `.display-figure` still `-11.776px` in AR.
+- Gates: tsc 0 · eslint 0 · build 0 · smoke 84/84 · probe-going 10/10
+  (incl. its own Arabic flip) · probe-pulse 7/7 · detector re-run
+  156 files / 37 flagged — **identical** to the defended step-2 count
+  (same 1 crit = the Deferred `transition-[width]`), zero new findings
+  from the guard.
+- **Verdict change: NOT READY → no Critical/Major outstanding** (Minors
+  accepted in writing at step 3; detector's 1 critical remains Deferred
+  per brief). Remaining endgame: honest UICraftScore + Lighthouse
+  mobile ≥ 70 per page.
+
+## Endgame — step 5: Lighthouse mobile ≥ 70 per page ✅ DONE
+First pass put `/events` **below gate (perf 64)**; the other four
+cleared (landing 78 · detail 82 · clubs 94 · login 90). Diagnosis +
+fix:
+
+- **Root cause (LCP 3777ms vs FCP 1076ms):** EventsExplorer's mount
+  `gsap.from(bands, {opacity: 0})` re-hid the SSR-painted ink header
+  only after hydration — on a throttled phone the LCP headline
+  re-qualified only when the tween showed it again. **Fix:** the band
+  entrance moved to CSS (`cp-band-rise` keyframes + `[data-band]`,
+  globals.css) so it plays from the FIRST paint — same choreography
+  (y40 → 0, opacity 0 → 1, 0.55s, stagger via inline delays 0.05s /
+  0.12s), `backwards` fill holds the start state, the global
+  reduced-motion block collapses it, and fill reverts leaving no
+  transform for Flip to read. The poster tween keeps gsap but now
+  **skips elements already inside the viewport** (nothing the user has
+  seen may blink out). LCP observer traces: unthrottled LCP
+  3777 → **1048ms**; residual throttled LCP (≈3.2s) is the font swap
+  (woff2 lands ≈1.6s under 1.6Mbps) — recorded as headroom, not
+  gating. Note: `landing`, whose LCP = FCP, proves the pattern.
+- **Smoke blip investigated, not a regression:** "No band on a live
+  event" failed after the seed aged out — `seed-event-line-follower`
+  was seeded Oct 30 (`daysFromNow(3)`) and its window ended Nov 2,
+  between gate runs. `npm run db:seed` refreshed the relative windows
+  → 84/84 restored.
+- Gates after the change: tsc 0 · eslint 0 · build 0 · smoke 84/84 ·
+  probe-map 11/11 · probe-search 17/17 (both drive EventsExplorer,
+  incl. the Flip filter path) · detector **156 / 37 — unchanged**
+  (same 1 deferred crit).
+- **Lighthouse mobile, two passes (all categories ≥ 70 both times):**
+
+  | page | pass 1 | pass 2 | a11y | bp | seo |
+  |---|---|---|---|---|---|
+  | landing | 95 | 85 | 100 | 100 | 100 |
+  | events | 83 | 85 | 98 | 100 | 100 |
+  | event-detail | 91 | 76 | 100 | 100 | 90 |
+  | clubs | 95 | 92 | 100 | 100 | 100 |
+  | login | 89 | 97 | 100 | 100 | 100 |
+
+- Known follow-up (passes, not gating): event-detail's LCP swings
+  896 ↔ 3211ms — `Entrance.tsx` has the same post-paint `gsap.from`
+  re-hide; the seen-elements rule from EventsExplorer would stabilize
+  it. Also: `/events` a11y 98 = `heading-order` (h1 → h3, cards skip
+  h2).
+
+## Endgame — step 6: honest score ✅ DONE (judged — deterministic tool absent)
+The deterministic UICraftScore tooling is **not installed in this
+environment** (`eval.mjs` / `score_ui` / `evals/quality/score.mjs` —
+none present; only `ui-craft-detect` ships here). Reported honestly
+rather than fabricated: ran the documented judged companion
+(`heuristic` skill, rubric `references/heuristics.md`, labeled
+**(judged)** — never gates CI).
+
+- **UsabilityScore: 70 / C (judged)** — Nielsen mean 4.0 (all ten at
+  4) → base 75 − 5 (one failed law) = 70.
+- **Design laws: 5 PASS / 1 FAIL** — Fitts FAIL: map pins are 16px
+  touch targets (EventsMap `h-4 w-4` span, no hit-area expansion)
+  vs the 44px mobile floor; mitigations: map is a secondary view,
+  full-size cards in grid, pins carry aria-label + aria-pressed.
+- **Top findings (ranked):** (1) Fitts — 16px map pins (adds-friction);
+  (2) filter/view state not in the URL — Back from a detail resets
+  the events wall (adds-friction); (3) `Entrance.tsx` post-paint
+  re-hide on detail/clubs — content blinks after paint, LCP swings
+  896↔3211ms (reduces-trust; fix pattern proven on `/events`).
+- Deterministic counterpart can replace this the moment the ui-craft
+  eval package is installed (`node scripts/eval.mjs <path> --json`);
+  the two are never averaged.
+
+## Endgame — COMPLETE
+All six steps done: logo ✅ · detector ✅ · finalize ✅ (NOT READY →
+Major fixed) · RTL guard ✅ · Lighthouse mobile ≥70/page ✅ (two
+passes) · honest score ✅ (70/C judged). Standing next: commit on
+explicit instruction; CI runs on first push.
+
 ## Next — agreed order
-Endgame: SVG logo pick → `npx ui-craft-detect ./src` →
-`/finalize` → honest UICraftScore + Lighthouse mobile ≥ 70 per page.
+Endgame: ~~SVG logo pick~~ ✅ → ~~`npx ui-craft-detect ./src`~~ ✅ →
+~~`/finalize`~~ ✅ (NOT READY — 1 Major: RTL letter-spacing) →
+~~fix the Major~~ ✅ → honest UICraftScore + Lighthouse mobile ≥ 70 per page.
 
 ## Throughout — credibility layer
 E2E on the critical path (RSVP transaction, waitlist promotion, QR check-in),

@@ -265,16 +265,19 @@ export function EventsExplorer({
   useGSAP(
     () => {
       if (reduced.current || !root.current) return;
-      const bands = root.current.querySelectorAll("[data-band]");
-      const posters = gridRef.current?.querySelectorAll("[data-flip-id]") ?? [];
-      gsap.from(bands, {
-        y: 40,
-        opacity: 0,
-        duration: 0.55,
-        ease: "power3.out",
-        stagger: 0.07,
-        delay: 0.05,
-      });
+      // The bands (ink header, filter rail) rise from first paint via the
+      // [data-band] CSS animation in globals.css — a gsap.from here would
+      // re-hide the SSR-painted h1 only after hydration, and the LCP
+      // headline would not re-qualify until the tween showed it again
+      // (measured: LCP 3.8s vs FCP 1.1s on a throttled phone). Posters
+      // still rise in JS, but only the ones outside the viewport: anything
+      // this user can already see was painted by the server and must not
+      // blink out from under the paint.
+      const vh = window.innerHeight;
+      const posters = [
+        ...(gridRef.current?.querySelectorAll("[data-flip-id]") ?? []),
+      ].filter((el) => el.getBoundingClientRect().top >= vh);
+      if (!posters.length) return;
       gsap.from(posters, {
         y: 28,
         opacity: 0,
@@ -290,7 +293,7 @@ export function EventsExplorer({
   return (
     <div ref={root} className="field-paper min-h-screen">
       {/* Header: an ink band, cropped by the fold, the words carrying it. */}
-      <header className="field-ink" data-band>
+      <header className="field-ink" data-band style={{ animationDelay: "0.05s" }}>
         <div className="mx-auto max-w-6xl px-4 pb-10 pt-12 sm:pt-16">
           <h1 className="display-hero">{t("events.title")}</h1>
           <p className="mt-3 max-w-[46ch] text-[length:var(--step-lead)]">
@@ -300,7 +303,7 @@ export function EventsExplorer({
       </header>
 
       {/* Filter rail: a flat orange band butted against the ink header. */}
-      <div className="field-orange" data-band>
+      <div className="field-orange" data-band style={{ animationDelay: "0.12s" }}>
         <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-3 px-4 py-4">
           <input
             className="input max-w-xs rounded-none border-2 border-ink bg-ink text-paper placeholder:text-paper/60"

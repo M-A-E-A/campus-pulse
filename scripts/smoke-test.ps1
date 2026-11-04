@@ -237,10 +237,23 @@ foreach ($icon in @("/icons/icon-192.png", "/icons/icon-512.png", "/icons/icon-m
     } catch { Check "Icon $icon" $false $_.Exception.Message }
 }
 
+# The vector favicon (endgame "logo pick", A: ink tile + accent stroke):
+# same bytes the generator writes, so it can never drift from the PNGs.
+try {
+    $svgi = Invoke-WebRequest -Uri "$base/icon.svg" -UseBasicParsing -TimeoutSec 30
+    $svgType = [string]$svgi.Headers["Content-Type"]
+    Check "Icon /icon.svg" ($svgi.StatusCode -eq 200 -and $svgType -match "image/svg\+xml" -and $svgi.Content -match "ff4d00") "status $($svgi.StatusCode), type $svgType, accent present"
+} catch { Check "Icon /icon.svg" $false $_.Exception.Message }
+
 # Head wiring: the browser only installs when these tags are actually in the
 # served HTML, not just present on disk.
 Check "Head links manifest" ($landing.Content -match 'rel="manifest"') "manifest link in <head>"
 Check "Head links apple-touch-icon" ($landing.Content -match 'rel="apple-touch-icon"') "iOS icon link in <head>"
+Check "Head links SVG favicon" (
+    $landing.Content.IndexOf("/icon.svg", [StringComparison]::Ordinal) -ge 0 -and
+    $landing.Content.IndexOf("/icon.png", [StringComparison]::Ordinal) -ge 0 -and
+    $landing.Content.IndexOf("/icon.svg", [StringComparison]::Ordinal) -lt $landing.Content.IndexOf("/icon.png", [StringComparison]::Ordinal)
+) "svg link before png fallback in <head>"
 Check "Head carries theme-color" ($landing.Content -match 'name="theme-color"') "theme-color meta in <head>"
 
 # 11. Poster engine: the shareable SVG handbill that leaves the site.

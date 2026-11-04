@@ -1,10 +1,10 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { deleteCategoryAction } from "@/lib/actions/admin";
 import { getT } from "@/i18n/server";
 import { AdminHeader } from "../AdminHeader";
 import { CategoryForm } from "./CategoryForm";
+import { DeleteCategoryButton } from "./DeleteCategoryButton";
 
 export default async function AdminCategoriesPage() {
   const session = await auth();
@@ -32,13 +32,10 @@ export default async function AdminCategoriesPage() {
           {categories.map((c) => (
             <li key={c.id} className="flex items-center justify-between py-3">
               <span className="font-medium">{c.name}</span>
-              <div className="flex items-center gap-3">
+              <div className="flex flex-wrap items-center gap-3">
                 <span className="text-sm text-muted">{t("admin.categories.count", { n: c._count.events })}</span>
                 {c._count.events === 0 && (
-                  <form action={deleteCategoryAction}>
-                    <input type="hidden" name="categoryId" value={c.id} />
-                    <button className="btn btn-danger px-3! py-1! text-xs!">{t("admin.categories.delete")}</button>
-                  </form>
+                  <DeleteCategoryButton categoryId={c.id} name={c.name} />
                 )}
               </div>
             </li>

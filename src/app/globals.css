@@ -278,6 +278,27 @@ h1, h2, h3 {
   font-variant-numeric: tabular-nums lining-nums;
 }
 
+/* Pass 2 / brief §4: Arabic never takes letter-spacing — cursive joins
+   crowd under the display's tight tracking and stretch under the pulse
+   labels' positive tracking. The class branches mirror the rules above
+   (equal specificity, placed later, so they win in RTL only), and the
+   `*` branch beats Tailwind's tracking-* utilities because unlayered
+   rules win over @layer utilities regardless of specificity — the same
+   precedence the component layer depends on above. Latin-only runs in
+   AR (wordmark, ticket codes) lose at most sub-pixel tracking: normal
+   is their default anyway. .display-figure is deliberately NOT reset:
+   it renders Latin numerals (tabular lining figures), whose tight
+   display tracking is numeral typography, not an Arabic adjustment. */
+:where(html[dir="rtl"]) h1,
+:where(html[dir="rtl"]) h2,
+:where(html[dir="rtl"]) h3,
+:where(html[dir="rtl"]) .display-hero,
+:where(html[dir="rtl"]) .display-chapter,
+:where(html[dir="rtl"]) .display-title,
+:where(html[dir="rtl"]) * {
+  letter-spacing: normal;
+}
+
 /* Proof band: one line of names cropped by both edges, drifting slowly. */
 .marquee {
   overflow: hidden;
@@ -296,6 +317,24 @@ h1, h2, h3 {
 /* Arabic reads right to left: the band drifts the other way so new names
    enter where the eye starts. */
 :where(html[dir="rtl"]) .marquee-track { animation-direction: reverse; }
+
+/* Events-explorer load choreography: the ink header and the filter rail
+   rise from the FIRST paint, not from hydration. The old gsap.from ran
+   after React hydrated — on a throttled phone that re-hid the SSR-painted
+   h1 ~3.2s in, and the LCP headline only re-qualified when the tween
+   showed it again (measured LCP 3.8s vs FCP 1.1s). CSS runs with the
+   first style resolution, so the largest text qualifies within a frame
+   of FCP while the motion stays identical (y40 → 0, opacity 0 → 1,
+   0.55s, staggered by the inline delays on the two bands). `backwards`
+   holds the start state through each delay; the global reduced-motion
+   block collapses the duration; fill reverts to the finished layout
+   when done, leaving no transform behind for Flip to read. */
+@keyframes cp-band-rise {
+  from { opacity: 0; transform: translateY(40px); }
+}
+[data-band] {
+  animation: cp-band-rise 0.55s cubic-bezier(0.215, 0.61, 0.355, 1) backwards;
+}
 
 /* CTA wallpaper: the word stack falls like water (doubled for a seamless
    loop), and hovering the flank pauses it while one word becomes the mark. */

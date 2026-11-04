@@ -293,7 +293,7 @@ export default async function EventPage({
                 aria-label={t("detail.spotsTakenLabel")}
               >
                 <div
-                  className="h-full bg-accent transition-all"
+                  className="h-full bg-accent"
                   style={{ width: `${percent}%` }}
                 />
               </div>

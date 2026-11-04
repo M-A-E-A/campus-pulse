@@ -13,7 +13,13 @@ export function CategoryForm() {
 
   return (
     <form action={formAction} className="flex gap-2">
-      <input className="input" name="name" placeholder={t("admin.categories.ph")} required />
+      <input
+        className="input"
+        name="name"
+        aria-label={t("admin.categories.nameLabel")}
+        placeholder={t("admin.categories.ph")}
+        required
+      />
       <button className="btn btn-primary shrink-0" disabled={pending}>
         {pending ? t("admin.categories.adding") : t("admin.categories.add")}
       </button>

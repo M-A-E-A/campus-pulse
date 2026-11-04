@@ -52,8 +52,22 @@ export async function generateMetadata(): Promise<Metadata> {
     metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3100"),
     title: t("meta.title"),
     description: t("meta.description"),
+    // The icon.* file convention can only yield ONE icon (Next's resolver
+    // stops at the first extension that exists, so app/icon.svg and
+    // app/icon.png cannot both auto-link). The favicon is therefore declared
+    // explicitly: SVG first for every modern browser, PNG as the Safari
+    // fallback (Safari has no SVG favicon support). app/favicon.ico still
+    // auto-prepends as the legacy 16px entry, and app/apple-icon.png keeps
+    // its file-convention ROUTE — this block only replaces the head tags.
+    icons: {
+      icon: [
+        { type: "image/svg+xml", url: "/icon.svg" },
+        { type: "image/png", url: "/icon.png" },
+      ],
+      apple: [{ url: "/apple-icon.png" }],
+    },
     // iOS ignores app/manifest.ts for home-screen chrome: it wants these meta
-    // tags (app/icon.png and app/apple-icon.png feed the link tags too).
+    // tags (app/apple-icon.png feeds the link tag from the icons block above).
     appleWebApp: {
       capable: true,
       title: "Campus Pulse",

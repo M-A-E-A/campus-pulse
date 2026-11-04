@@ -405,7 +405,7 @@ export function EventsMap({
         {/* Events with no coordinates stay listed — never silently dropped. */}
         {offMap.length > 0 && (
           <div className="border-2 border-ink bg-paper p-4 sm:col-span-1 lg:col-span-2">
-            <h3 className="text-sm font-extrabold uppercase tracking-wider">
+            <h3 className="text-sm font-extrabold">
               {t("events.mapNoVenue")}
             </h3>
             <ul className="mt-2 divide-y divide-line">

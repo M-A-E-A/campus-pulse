@@ -28,6 +28,23 @@ const OUT = "public/icons";
 mkdirSync(OUT, { recursive: true });
 mkdirSync("src/app", { recursive: true });
 
+/**
+ * The tab favicon in VECTOR (endgame "logo pick"): the same ink tile +
+ * accent stroke as every raster target below, hand-composed at 32×32 with
+ * the mark at the same 68% scale. SVG first in the head (type-aware
+ * browsers prefer it), icon.png stays as the raster fallback and the
+ * manifest keeps its PNG set (vector-derived already; iOS home screen
+ * ignores SVG regardless). Written here so it cannot drift from Logo.tsx
+ * or from the PNGs — one script owns every icon.
+ */
+const ICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <rect width="32" height="32" fill="${INK}"/>
+  <path d="${MARK_PATH}" transform="translate(5.12 5.12) scale(0.90667)" fill="none" stroke="${ACCENT}" stroke-width="2.6" stroke-linecap="square"/>
+</svg>
+`;
+writeFileSync("src/app/icon.svg", ICON_SVG);
+console.log("wrote src/app/icon.svg (vector favicon, 68% mark)");
+
 const TARGETS = [
   { file: join(OUT, "icon-192.png"), size: 192, scale: 68 },
   { file: join(OUT, "icon-512.png"), size: 512, scale: 68 },

@@ -24,8 +24,20 @@ export function ClubForms({ clubs }: { clubs: Array<{ id: string; name: string }
       <div className="card p-5">
         <h2 className="font-semibold">{t("admin.clubs.newClub")}</h2>
         <form action={createClub} className="mt-3 space-y-3">
-          <input className="input" name="name" placeholder={t("admin.clubs.namePh")} required />
-          <textarea className="input min-h-20" name="description" placeholder={t("admin.clubs.descPh")} required />
+          <input
+            className="input"
+            name="name"
+            aria-label={t("admin.clubs.namePh")}
+            placeholder={t("admin.clubs.namePh")}
+            required
+          />
+          <textarea
+            className="input min-h-20"
+            name="description"
+            aria-label={t("admin.clubs.descPh")}
+            placeholder={t("admin.clubs.descPh")}
+            required
+          />
           {clubState?.error && <p className="text-sm text-danger">{clubState.error}</p>}
           <button className="btn btn-primary w-full" disabled={clubPending}>
             {clubPending ? t("admin.clubs.creating") : t("admin.clubs.createBtn")}
@@ -39,7 +51,15 @@ export function ClubForms({ clubs }: { clubs: Array<{ id: string; name: string }
           {t("admin.clubs.promoteHint")}
         </p>
         <form action={promote} className="mt-3 space-y-3">
-          <input className="input" name="email" type="email" placeholder={t("admin.clubs.emailPh")} required />
+          <input
+            className="input"
+            name="email"
+            type="email"
+            autoComplete="email"
+            aria-label={t("admin.clubs.emailLabel")}
+            placeholder={t("admin.clubs.emailPh")}
+            required
+          />
           <select className="input" name="clubId" required defaultValue="">
             <option value="" disabled>{t("admin.clubs.pickClub")}</option>
             {clubs.map((c) => (

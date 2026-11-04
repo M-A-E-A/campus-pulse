@@ -335,7 +335,7 @@ export function CheckInScanner({
           server answers, then take their real row like any other scan. */}
       {(history.length > 0 || pending.length > 0) && (
         <section className="mt-8">
-          <h2 className="text-sm font-bold uppercase tracking-wide text-muted">{t("org.checkin.recent")}</h2>
+          <h2 className="text-sm font-bold text-muted">{t("org.checkin.recent")}</h2>
           <ul className="mt-2 divide-y divide-line">
             {pending.map((p) => (
               <li
