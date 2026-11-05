@@ -1,0 +1,1217 @@
+{
+ "url": "http://localhost:3100/tickets/cmvk03na6000guyyo7ifjsk1e",
+ "at": "2026-10-29T17:16:48.830Z",
+ "allow": [
+  "still-page"
+ ],
+ "dealtFonts": [
+  "Cabinet Grotesk",
+  "Cabinet Grotesk"
+ ],
+ "viewports": [
+  {
+   "width": 1440,
+   "height": 900,
+   "load": "load",
+   "screens": 2,
+   "motion": {
+    "elements": 1,
+    "css": 1,
+    "transitions": 0,
+    "scripted": 0,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "filled": [
+    0.26,
+    0.26
+   ],
+   "metrics": {
+    "viewport": {
+     "w": 1440,
+     "h": 900
+    },
+    "page": {
+     "height": 1060,
+     "screens": 1.2,
+     "words": 80,
+     "img": 1,
+     "video": 0,
+     "canvas": 0,
+     "svg": 4,
+     "sections": 0,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 1,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [
+      "QSJQMAAAABklEQVQDAHCSDo63SSTFAAAAAElFTkSuQmCC"
+     ],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": [],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "Atelier robotique: construire un line-follower",
+     "words": 5,
+     "chars": 46,
+     "lines": 2,
+     "size": 20,
+     "vw": 1.4,
+     "font": "Cabinet Grotesk",
+     "weight": 800,
+     "tracking": -0.02,
+     "leading": 1.25,
+     "top": 126,
+     "tag": "h1",
+     "kind": "heading",
+     "align": "left",
+     "position": "left"
+    },
+    "h1": {
+     "text": "Atelier robotique : construire un line-follower",
+     "words": 6,
+     "lines": 2,
+     "size": 20,
+     "font": "Cabinet Grotesk"
+    },
+    "headings": [],
+    "headingSummary": {
+     "count": 0,
+     "maxLines": 0,
+     "over2Lines": 0,
+     "statements": 0,
+     "centered": 0,
+     "medianWords": null,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Cabinet Grotesk",
+       "share": 0.96,
+       "mono": false
+      },
+      {
+       "family": "ui-monospace",
+       "share": 0.04,
+       "mono": false
+      }
+     ],
+     "familyCount": 2,
+     "sizes": [
+      12,
+      14,
+      15,
+      16,
+      18,
+      20
+     ],
+     "sizeCount": 6,
+     "notLoaded": [],
+     "body": {
+      "font": "Cabinet Grotesk",
+      "size": 12,
+      "leading": 1.33,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 5.4
+     },
+     "measureChars": 56,
+     "max": {
+      "size": 20,
+      "vw": 1.4,
+      "font": "Cabinet Grotesk",
+      "text": "Atelier robotique : construire un line-f"
+     },
+     "monoShare": 0.04,
+     "monoProseShare": 0.04,
+     "monoFamilies": [
+      "ui-monospace"
+     ],
+     "monoSamples": [
+      "demo-ticket-code-0001"
+     ],
+     "microLabels": 1,
+     "microLabelShare": 0.042,
+     "microSamples": [
+      "Club Innovation EMSI"
+     ],
+     "upperShare": 0.05,
+     "centerShare": 0.28,
+     "smallText": 3
+    },
+    "eyebrows": [],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#faf7f2",
+     "bodyBgHsl": {
+      "h": 38,
+      "s": 0.44,
+      "l": 0.96
+     },
+     "dark": false,
+     "sectionBgs": [],
+     "textColors": [
+      {
+       "color": "#6f6a5e",
+       "share": 0.38
+      },
+      {
+       "color": "#14130f",
+       "share": 0.24
+      },
+      {
+       "color": "#faf8f2",
+       "share": 0.14
+      },
+      {
+       "color": "#faf7f2",
+       "share": 0.1
+      },
+      {
+       "color": "#c93b00",
+       "share": 0.09
+      }
+     ],
+     "button": null,
+     "lowContrast": []
+    },
+    "buttons": {
+     "count": 3,
+     "inHero": 2,
+     "radius": 0,
+     "height": 42,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "Garder l'écran allumé",
+      "Retour à l'événement"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 0,
+     "scrims": 0,
+     "gradientSamples": [],
+     "gradientText": 0,
+     "hairlines": 0,
+     "hairlineSamples": [],
+     "outlinedBoxes": 0,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 0,
+     "boxRadius": 0,
+     "squareMedia": 1,
+     "roundedMedia": 0,
+     "mediaRadius": 0,
+     "textShadow": 0,
+     "cardRows": []
+    },
+    "heroMedia": [],
+    "nav": {
+     "links": 3,
+     "fixed": true,
+     "height": 56,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": [
+     "cabinet grotesk",
+     "cabinet grotesk fallback"
+    ]
+   },
+   "layout": {
+    "viewport": {
+     "w": 1440,
+     "h": 900
+    },
+    "pageH": 1060,
+    "margins": {
+     "left": 296,
+     "right": 200
+    },
+    "sections": [],
+    "gaps": [],
+    "h1s": [
+     {
+      "text": "Atelier robotique : construire un line-follower",
+      "size": 20,
+      "top": 126,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 534,
+      "n": 1
+     }
+    ],
+    "leftBlocks": 1,
+    "bodySize": 12,
+    "stage": false,
+    "explains": false,
+    "slivers": [],
+    "voidShare": 0.29,
+    "voidBox": {
+     "x": 0,
+     "y": 120,
+     "w": 480,
+     "h": 780
+    }
+   },
+   "app": {
+    "viewport": {
+     "w": 1440,
+     "h": 900
+    },
+    "dark": false,
+    "ground": "#faf7f2",
+    "sidebar": null,
+    "topbar": {
+     "h": 56
+    },
+    "canvas": {
+     "left": -1,
+     "right": 160
+    },
+    "hero": {
+     "text": "Atelier robotique: construire un line-follower",
+     "words": 5,
+     "chars": 46,
+     "lines": 2,
+     "size": 20,
+     "vw": 1.4,
+     "font": "Cabinet Grotesk",
+     "weight": 800,
+     "tracking": -0.02,
+     "leading": 1.25,
+     "top": 126,
+     "tag": "h1",
+     "kind": "heading",
+     "align": "left",
+     "position": "left"
+    },
+    "charts": 0,
+    "layout": {
+     "panels": 1,
+     "firstScreen": 1,
+     "ragged": [],
+     "voids": []
+    },
+    "tiles": 0,
+    "panels": {
+     "count": 3,
+     "radii": [
+      [
+       0,
+       3
+      ]
+     ],
+     "heavyBorders": 2,
+     "borderSamples": [
+      "#14130f on #ffffff (18.59:1)",
+      "#14130f on #ffffff (18.59:1)"
+     ],
+     "heavyShadows": 0,
+     "softShadows": 0,
+     "shadowSamples": [],
+     "glass": 0
+    },
+    "chips": {
+     "count": 0,
+     "hues": 0,
+     "samples": []
+    },
+    "numbers": {
+     "cells": 0,
+     "leftAligned": 0,
+     "figures": 0,
+     "tabularShare": null,
+     "kpiMax": null
+    },
+    "rows": null,
+    "chartHues": 0,
+    "placeholders": [],
+    "type": {
+     "under13": 0.32,
+     "tiny": 0,
+     "tinySamples": [],
+     "sizes": [
+      12,
+      14,
+      15,
+      16,
+      18,
+      20
+     ]
+    },
+    "title": {
+     "text": "Atelier robotique : construire un line-follower",
+     "size": 20,
+     "top": 126
+    },
+    "colourShare": 0.002
+   },
+   "consoleErrors": [
+    "Error: Minified React error #418; visit https://react.dev/errors/418?args[]=HTML&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings.\n    at rD (http://localhost:3100/_next/static/chunks/4bd1b696-f785427dddbba9fb.js:1:35057)\n    at oq "
+   ]
+  },
+  {
+   "width": 768,
+   "height": 1024,
+   "load": "load",
+   "screens": 2,
+   "motion": {
+    "elements": 1,
+    "css": 1,
+    "transitions": 0,
+    "scripted": 0,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "filled": [
+    0.56,
+    0.53
+   ],
+   "metrics": {
+    "viewport": {
+     "w": 768,
+     "h": 1024
+    },
+    "page": {
+     "height": 1060,
+     "screens": 1,
+     "words": 80,
+     "img": 1,
+     "video": 0,
+     "canvas": 0,
+     "svg": 4,
+     "sections": 0,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 1,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [
+      "CQAAAABJRU5ErkJggg=="
+     ],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": [],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "Atelier robotique: construire un line-follower",
+     "words": 5,
+     "chars": 46,
+     "lines": 2,
+     "size": 20,
+     "vw": 2.6,
+     "font": "Cabinet Grotesk",
+     "weight": 800,
+     "tracking": -0.02,
+     "leading": 1.25,
+     "top": 126,
+     "tag": "h1",
+     "kind": "heading",
+     "align": "left",
+     "position": "left"
+    },
+    "h1": {
+     "text": "Atelier robotique : construire un line-follower",
+     "words": 6,
+     "lines": 2,
+     "size": 20,
+     "font": "Cabinet Grotesk"
+    },
+    "headings": [],
+    "headingSummary": {
+     "count": 0,
+     "maxLines": 0,
+     "over2Lines": 0,
+     "statements": 0,
+     "centered": 0,
+     "medianWords": null,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Cabinet Grotesk",
+       "share": 0.96,
+       "mono": false
+      },
+      {
+       "family": "ui-monospace",
+       "share": 0.04,
+       "mono": false
+      }
+     ],
+     "familyCount": 2,
+     "sizes": [
+      12,
+      14,
+      15,
+      16,
+      18,
+      20
+     ],
+     "sizeCount": 6,
+     "notLoaded": [],
+     "body": {
+      "font": "Cabinet Grotesk",
+      "size": 12,
+      "leading": 1.33,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 5.4
+     },
+     "measureChars": 56,
+     "max": {
+      "size": 20,
+      "vw": 2.6,
+      "font": "Cabinet Grotesk",
+      "text": "Atelier robotique : construire un line-f"
+     },
+     "monoShare": 0.04,
+     "monoProseShare": 0.04,
+     "monoFamilies": [
+      "ui-monospace"
+     ],
+     "monoSamples": [
+      "demo-ticket-code-0001"
+     ],
+     "microLabels": 1,
+     "microLabelShare": 0.042,
+     "microSamples": [
+      "Club Innovation EMSI"
+     ],
+     "upperShare": 0.05,
+     "centerShare": 0.28,
+     "smallText": 3
+    },
+    "eyebrows": [],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#faf7f2",
+     "bodyBgHsl": {
+      "h": 38,
+      "s": 0.44,
+      "l": 0.96
+     },
+     "dark": false,
+     "sectionBgs": [
+      {
+       "color": "#ffffff",
+       "top": 88,
+       "hsl": {
+        "h": 0,
+        "s": 0,
+        "l": 1
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#6f6a5e",
+       "share": 0.38
+      },
+      {
+       "color": "#14130f",
+       "share": 0.24
+      },
+      {
+       "color": "#faf8f2",
+       "share": 0.14
+      },
+      {
+       "color": "#faf7f2",
+       "share": 0.1
+      },
+      {
+       "color": "#c93b00",
+       "share": 0.09
+      }
+     ],
+     "button": null,
+     "lowContrast": []
+    },
+    "buttons": {
+     "count": 3,
+     "inHero": 3,
+     "radius": 0,
+     "height": 42,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "Garder l'écran allumé",
+      "Retour à l'événement",
+      "Oublier cet appareil"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 0,
+     "scrims": 0,
+     "gradientSamples": [],
+     "gradientText": 0,
+     "hairlines": 0,
+     "hairlineSamples": [],
+     "outlinedBoxes": 0,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 0,
+     "boxRadius": 0,
+     "squareMedia": 1,
+     "roundedMedia": 0,
+     "mediaRadius": 0,
+     "textShadow": 0,
+     "cardRows": []
+    },
+    "heroMedia": [
+     {
+      "type": "img",
+      "ratio": 0.11
+     }
+    ],
+    "nav": {
+     "links": 3,
+     "fixed": true,
+     "height": 56,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": [
+     "cabinet grotesk",
+     "cabinet grotesk fallback"
+    ]
+   },
+   "layout": {
+    "viewport": {
+     "w": 768,
+     "h": 1024
+    },
+    "pageH": 1060,
+    "margins": {
+     "left": 152,
+     "right": 56
+    },
+    "sections": [],
+    "gaps": [],
+    "h1s": [
+     {
+      "text": "Atelier robotique : construire un line-follower",
+      "size": 20,
+      "top": 126,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 198,
+      "n": 1
+     }
+    ],
+    "leftBlocks": 1,
+    "bodySize": 12,
+    "stage": false,
+    "explains": false,
+    "slivers": [],
+    "voidShare": 0,
+    "voidBox": null
+   },
+   "app": {
+    "viewport": {
+     "w": 768,
+     "h": 1024
+    },
+    "dark": false,
+    "ground": "#faf7f2",
+    "sidebar": null,
+    "topbar": {
+     "h": 56
+    },
+    "canvas": {
+     "left": -1,
+     "right": 16
+    },
+    "hero": {
+     "text": "Atelier robotique: construire un line-follower",
+     "words": 5,
+     "chars": 46,
+     "lines": 2,
+     "size": 20,
+     "vw": 2.6,
+     "font": "Cabinet Grotesk",
+     "weight": 800,
+     "tracking": -0.02,
+     "leading": 1.25,
+     "top": 126,
+     "tag": "h1",
+     "kind": "heading",
+     "align": "left",
+     "position": "left"
+    },
+    "charts": 0,
+    "layout": {
+     "panels": 1,
+     "firstScreen": 1,
+     "ragged": [],
+     "voids": []
+    },
+    "tiles": 0,
+    "panels": {
+     "count": 3,
+     "radii": [
+      [
+       0,
+       3
+      ]
+     ],
+     "heavyBorders": 2,
+     "borderSamples": [
+      "#14130f on #ffffff (18.59:1)",
+      "#14130f on #ffffff (18.59:1)"
+     ],
+     "heavyShadows": 0,
+     "softShadows": 0,
+     "shadowSamples": [],
+     "glass": 0
+    },
+    "chips": {
+     "count": 0,
+     "hues": 0,
+     "samples": []
+    },
+    "numbers": {
+     "cells": 0,
+     "leftAligned": 0,
+     "figures": 0,
+     "tabularShare": null,
+     "kpiMax": null
+    },
+    "rows": null,
+    "chartHues": 0,
+    "placeholders": [],
+    "type": {
+     "under13": 0.32,
+     "tiny": 0,
+     "tinySamples": [],
+     "sizes": [
+      12,
+      14,
+      15,
+      16,
+      18,
+      20
+     ]
+    },
+    "title": {
+     "text": "Atelier robotique : construire un line-follower",
+     "size": 20,
+     "top": 126
+    },
+    "colourShare": 0.002
+   },
+   "consoleErrors": [
+    "Error: Minified React error #418; visit https://react.dev/errors/418?args[]=HTML&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings.\n    at rD (http://localhost:3100/_next/static/chunks/4bd1b696-f785427dddbba9fb.js:1:35057)\n    at oq "
+   ]
+  },
+  {
+   "width": 390,
+   "height": 844,
+   "load": "load",
+   "screens": 2,
+   "motion": {
+    "elements": 1,
+    "css": 1,
+    "transitions": 0,
+    "scripted": 0,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "filled": [
+    0.84,
+    0.84
+   ],
+   "metrics": {
+    "viewport": {
+     "w": 390,
+     "h": 844
+    },
+    "page": {
+     "height": 1038,
+     "screens": 1.2,
+     "words": 74,
+     "img": 1,
+     "video": 0,
+     "canvas": 0,
+     "svg": 4,
+     "sections": 0,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 1,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [
+      "CQAAAABJRU5ErkJggg=="
+     ],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": [],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "Atelier robotique: construire un line-follower",
+     "words": 5,
+     "chars": 46,
+     "lines": 2,
+     "size": 20,
+     "vw": 5.1,
+     "font": "Cabinet Grotesk",
+     "weight": 800,
+     "tracking": -0.02,
+     "leading": 1.25,
+     "top": 126,
+     "tag": "h1",
+     "kind": "heading",
+     "align": "left",
+     "position": "left"
+    },
+    "h1": {
+     "text": "Atelier robotique : construire un line-follower",
+     "words": 6,
+     "lines": 2,
+     "size": 20,
+     "font": "Cabinet Grotesk"
+    },
+    "headings": [],
+    "headingSummary": {
+     "count": 0,
+     "maxLines": 0,
+     "over2Lines": 0,
+     "statements": 0,
+     "centered": 0,
+     "medianWords": null,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Cabinet Grotesk",
+       "share": 0.95,
+       "mono": false
+      },
+      {
+       "family": "ui-monospace",
+       "share": 0.05,
+       "mono": false
+      }
+     ],
+     "familyCount": 2,
+     "sizes": [
+      12,
+      14,
+      15,
+      16,
+      18,
+      20
+     ],
+     "sizeCount": 6,
+     "notLoaded": [],
+     "body": {
+      "font": "Cabinet Grotesk",
+      "size": 12,
+      "leading": 1.33,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 5.4
+     },
+     "measureChars": 46,
+     "max": {
+      "size": 20,
+      "vw": 5.1,
+      "font": "Cabinet Grotesk",
+      "text": "Atelier robotique : construire un line-f"
+     },
+     "monoShare": 0.05,
+     "monoProseShare": 0.05,
+     "monoFamilies": [
+      "ui-monospace"
+     ],
+     "monoSamples": [
+      "demo-ticket-code-0001"
+     ],
+     "microLabels": 1,
+     "microLabelShare": 0.045,
+     "microSamples": [
+      "Club Innovation EMSI"
+     ],
+     "upperShare": 0.05,
+     "centerShare": 0.28,
+     "smallText": 3
+    },
+    "eyebrows": [],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#faf7f2",
+     "bodyBgHsl": {
+      "h": 38,
+      "s": 0.44,
+      "l": 0.96
+     },
+     "dark": false,
+     "sectionBgs": [
+      {
+       "color": "#ffffff",
+       "top": 88,
+       "hsl": {
+        "h": 0,
+        "s": 0,
+        "l": 1
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#6f6a5e",
+       "share": 0.37
+      },
+      {
+       "color": "#14130f",
+       "share": 0.21
+      },
+      {
+       "color": "#faf8f2",
+       "share": 0.15
+      },
+      {
+       "color": "#faf7f2",
+       "share": 0.11
+      },
+      {
+       "color": "#c93b00",
+       "share": 0.09
+      }
+     ],
+     "button": null,
+     "lowContrast": []
+    },
+    "buttons": {
+     "count": 3,
+     "inHero": 1,
+     "radius": 0,
+     "height": 42,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "Garder l'écran allumé"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 0,
+     "scrims": 0,
+     "gradientSamples": [],
+     "gradientText": 0,
+     "hairlines": 0,
+     "hairlineSamples": [],
+     "outlinedBoxes": 0,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 0,
+     "boxRadius": 0,
+     "squareMedia": 1,
+     "roundedMedia": 0,
+     "mediaRadius": 0,
+     "textShadow": 0,
+     "cardRows": []
+    },
+    "heroMedia": [
+     {
+      "type": "img",
+      "ratio": 0.23
+     }
+    ],
+    "nav": {
+     "links": 1,
+     "fixed": true,
+     "height": 56,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": [
+     "cabinet grotesk",
+     "cabinet grotesk fallback"
+    ]
+   },
+   "layout": {
+    "viewport": {
+     "w": 390,
+     "h": 844
+    },
+    "pageH": 1038,
+    "margins": {
+     "left": 38,
+     "right": 38
+    },
+    "sections": [
+     {
+      "sel": "div.border-b-2.border-ink",
+      "tag": "div",
+      "top": 90,
+      "height": 148,
+      "words": 22,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Atelier robotique : construire un line-follower",
+       "size": 20,
+       "tag": "h1"
+      },
+      "left": 38,
+      "right": 57,
+      "textLeft": 38,
+      "textRight": 57,
+      "fullBleed": false,
+      "footer": false,
+      "hero": true,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "div.px-5.py-5",
+      "tag": "div",
+      "top": 238,
+      "height": 734,
+      "words": 43,
+      "media": 1,
+      "middle": 0,
+      "heading": null,
+      "left": 38,
+      "right": 38,
+      "textLeft": 48,
+      "textRight": 83,
+      "fullBleed": false,
+      "footer": true,
+      "hero": true,
+      "continues": false,
+      "pinned": false
+     }
+    ],
+    "gaps": [],
+    "h1s": [
+     {
+      "text": "Atelier robotique : construire un line-follower",
+      "size": 20,
+      "top": 126,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 38,
+      "n": 1
+     }
+    ],
+    "leftBlocks": 1,
+    "bodySize": 12,
+    "stage": false,
+    "explains": false,
+    "slivers": [],
+    "voidShare": 0,
+    "voidBox": null
+   },
+   "app": {
+    "viewport": {
+     "w": 390,
+     "h": 844
+    },
+    "dark": false,
+    "ground": "#faf7f2",
+    "sidebar": null,
+    "topbar": {
+     "h": 56
+    },
+    "canvas": {
+     "left": -1,
+     "right": 16
+    },
+    "hero": {
+     "text": "Atelier robotique: construire un line-follower",
+     "words": 5,
+     "chars": 46,
+     "lines": 2,
+     "size": 20,
+     "vw": 5.1,
+     "font": "Cabinet Grotesk",
+     "weight": 800,
+     "tracking": -0.02,
+     "leading": 1.25,
+     "top": 126,
+     "tag": "h1",
+     "kind": "heading",
+     "align": "left",
+     "position": "left"
+    },
+    "charts": 0,
+    "layout": {
+     "panels": 1,
+     "firstScreen": 1,
+     "ragged": [],
+     "voids": []
+    },
+    "tiles": 0,
+    "panels": {
+     "count": 3,
+     "radii": [
+      [
+       0,
+       3
+      ]
+     ],
+     "heavyBorders": 2,
+     "borderSamples": [
+      "#14130f on #ffffff (18.59:1)",
+      "#14130f on #ffffff (18.59:1)"
+     ],
+     "heavyShadows": 0,
+     "softShadows": 0,
+     "shadowSamples": [],
+     "glass": 0
+    },
+    "chips": {
+     "count": 0,
+     "hues": 0,
+     "samples": []
+    },
+    "numbers": {
+     "cells": 0,
+     "leftAligned": 0,
+     "figures": 0,
+     "tabularShare": null,
+     "kpiMax": null
+    },
+    "rows": null,
+    "chartHues": 0,
+    "placeholders": [],
+    "type": {
+     "under13": 0.32,
+     "tiny": 0,
+     "tinySamples": [],
+     "sizes": [
+      12,
+      14,
+      15,
+      16,
+      18,
+      20
+     ]
+    },
+    "title": {
+     "text": "Atelier robotique : construire un line-follower",
+     "size": 20,
+     "top": 126
+    },
+    "colourShare": 0.005
+   },
+   "consoleErrors": [
+    "Error: Minified React error #418; visit https://react.dev/errors/418?args[]=HTML&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings.\n    at rD (http://localhost:3100/_next/static/chunks/4bd1b696-f785427dddbba9fb.js:1:35057)\n    at oq "
+   ]
+  }
+ ],
+ "findings": [
+  {
+   "level": "WARN",
+   "id": "micro-label",
+   "width": 1440,
+   "message": "1 tiny uppercase letter-spaced label(s): \"Club Innovation EMSI\"",
+   "fix": "Prefer sentence case at body size.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "WARN",
+   "id": "palette-cream",
+   "width": 1440,
+   "message": "Yellow-cream background (page background #faf7f2, text #faf8f2, text #faf7f2).",
+   "fix": "Use the drawn palette. If you want warmth, take a low-chroma stone or bone, not a yellow cream.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "WARN",
+   "id": "hero-void",
+   "width": 1440,
+   "message": "29% of the first screen is one empty block (480×780px at 0,120).",
+   "fix": "Place the void on purpose or fill it: move the picture, the film or one fact into it, grow the headline to meet it, or shrink the screen to its content. A void reads as placed only when something closes it on the far side and it is the screen's one rest."
+  },
+  {
+   "level": "WARN",
+   "id": "unused-canvas",
+   "width": 1440,
+   "message": "The content stops 160px short of the right edge while it starts -1px from the sidebar.",
+   "fix": "Let the grid fill the canvas (columns in fr units), or centre a capped canvas with equal margins. A dead strip on one side reads as unfinished."
+  }
+ ],
+ "images": [
+  {
+   "viewport": "desktop",
+   "width": 1440,
+   "fold": "C:\\Users\\Hp\\Desktop\\EMSI\\DEV- NUMERIQUE\\WEB\\WEB1\\.taste-skill\\inspect-ticket\\desktop-fold.jpg",
+   "pages": [
+    "C:\\Users\\Hp\\Desktop\\EMSI\\DEV- NUMERIQUE\\WEB\\WEB1\\.taste-skill\\inspect-ticket\\desktop-screen-00.jpg",
+    "C:\\Users\\Hp\\Desktop\\EMSI\\DEV- NUMERIQUE\\WEB\\WEB1\\.taste-skill\\inspect-ticket\\desktop-screen-01.jpg"
+   ]
+  },
+  {
+   "viewport": "tablet",
+   "width": 768,
+   "fold": "C:\\Users\\Hp\\Desktop\\EMSI\\DEV- NUMERIQUE\\WEB\\WEB1\\.taste-skill\\inspect-ticket\\tablet-fold.jpg",
+   "pages": [
+    "C:\\Users\\Hp\\Desktop\\EMSI\\DEV- NUMERIQUE\\WEB\\WEB1\\.taste-skill\\inspect-ticket\\tablet-screen-00.jpg",
+    "C:\\Users\\Hp\\Desktop\\EMSI\\DEV- NUMERIQUE\\WEB\\WEB1\\.taste-skill\\inspect-ticket\\tablet-screen-01.jpg"
+   ]
+  },
+  {
+   "viewport": "mobile",
+   "width": 390,
+   "fold": "C:\\Users\\Hp\\Desktop\\EMSI\\DEV- NUMERIQUE\\WEB\\WEB1\\.taste-skill\\inspect-ticket\\mobile-fold.jpg",
+   "pages": [
+    "C:\\Users\\Hp\\Desktop\\EMSI\\DEV- NUMERIQUE\\WEB\\WEB1\\.taste-skill\\inspect-ticket\\mobile-screen-00.jpg",
+    "C:\\Users\\Hp\\Desktop\\EMSI\\DEV- NUMERIQUE\\WEB\\WEB1\\.taste-skill\\inspect-ticket\\mobile-screen-01.jpg"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,2856 @@
+{
+ "url": "http://localhost:3100/",
+ "at": "2026-10-26T17:45:00.907Z",
+ "allow": [
+  "few-pictures"
+ ],
+ "viewports": [
+  {
+   "width": 1440,
+   "height": 900,
+   "load": "load",
+   "screens": 9,
+   "filled": [
+    0.92,
+    0.5,
+    0.42,
+    0.49,
+    0.41,
+    0.41,
+    0.82,
+    0.91,
+    0.91
+   ],
+   "motion": {
+    "elements": 12,
+    "css": 2,
+    "transitions": 0,
+    "scripted": 10,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 1440,
+     "h": 900
+    },
+    "page": {
+     "height": 7253,
+     "screens": 8.1,
+     "words": 453,
+     "img": 0,
+     "video": 0,
+     "canvas": 1,
+     "svg": 26,
+     "sections": 6,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 0,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": [],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "Événements. Un seul endroit.",
+     "words": 4,
+     "chars": 28,
+     "lines": 2,
+     "size": 127.7,
+     "vw": 8.9,
+     "font": "Cabinet Grotesk",
+     "weight": 800,
+     "tracking": -0.035,
+     "leading": 0.9,
+     "upper": false,
+     "italic": false,
+     "mono": false,
+     "align": "left",
+     "position": "center",
+     "widthRatio": 0.63,
+     "top": 136,
+     "tag": "h1",
+     "kind": "heading"
+    },
+    "h1": {
+     "text": "Événements. Un seul endroit.",
+     "words": 4,
+     "lines": 2,
+     "size": 127.7,
+     "font": "Cabinet Grotesk"
+    },
+    "headings": [
+     {
+      "text": "Événements. Un seul endroit.",
+      "words": 4,
+      "chars": 28,
+      "lines": 2,
+      "size": 127.7,
+      "vw": 8.9,
+      "font": "Cabinet Grotesk",
+      "weight": 800,
+      "tracking": -0.035,
+      "leading": 0.9,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.63,
+      "top": 136,
+      "tag": "h1",
+      "kind": "heading"
+     },
+     {
+      "text": "5",
+      "words": 1,
+      "chars": 1,
+      "lines": 1,
+      "size": 60,
+      "vw": 4.2,
+      "font": "Cabinet Grotesk",
+      "weight": 800,
+      "tracking": -0.03,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "right",
+      "widthRatio": 0.03,
+      "top": 791,
+      "tag": "span",
+      "kind": "heading"
+     },
+     {
+      "text": "Comment ça marche",
+      "words": 3,
+      "chars": 17,
+      "lines": 2,
+      "size": 60,
+      "vw": 4.2,
+      "font": "Cabinet Grotesk",
+      "weight": 800,
+      "tracking": -0.03,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.31,
+      "top": 992,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Trouver",
+      "words": 1,
+      "chars": 7,
+      "lines": 1,
+      "size": 40,
+      "vw": 2.8,
+      "font": "Cabinet Grotesk",
+      "weight": 800,
+      "tracking": -0.008,
+      "leading": 1.33,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.45,
+      "top": 1256,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "BDE EMSI Club de Lecture Club des Échecs Club Innovation EMSI Club Sportif EMSI Enactus EMSI Google Developer Student Clubs Hult Prize EMSI Jeunes Leaders Marocains",
+      "words": 26,
+      "chars": 164,
+      "lines": 1,
+      "size": 112,
+      "vw": 7.8,
+      "font": "Cabinet Grotesk",
+      "weight": 800,
+      "tracking": -0.025,
+      "leading": 1.5,
+      "upper": true,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "right",
+      "widthRatio": 5.9,
+      "top": 1971,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "BDE EMSI Club de Lecture Club des Échecs Club Innovation EMSI Club Sportif EMSI Enactus EMSI Google Developer Student Clubs Hult Prize EMSI Jeunes Leaders Marocains",
+      "words": 26,
+      "chars": 164,
+      "lines": 1,
+      "size": 112,
+      "vw": 7.8,
+      "font": "Cabinet Grotesk",
+      "weight": 800,
+      "tracking": -0.025,
+      "leading": 1.5,
+      "upper": true,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "right",
+      "widthRatio": 5.9,
+      "top": 1971,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "40+",
+      "words": 1,
+      "chars": 3,
+      "lines": 1,
+      "size": 36,
+      "vw": 2.5,
+      "font": "Cabinet Grotesk",
+      "weight": 800,
+      "tracking": 0,
+      "leading": 1.11,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.04,
+      "top": 2383,
+      "tag": "dt",
+      "kind": "heading"
+     },
+     {
+      "text": "20+",
+      "words": 1,
+      "chars": 3,
+      "lines": 1,
+      "size": 36,
+      "vw": 2.5,
+      "font": "Cabinet Grotesk",
+      "weight": 800,
+      "tracking": 0,
+      "leading": 1.11,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.04,
+      "top": 2383,
+      "tag": "dt",
+      "kind": "heading"
+     },
+     {
+      "text": "6",
+      "words": 1,
+      "chars": 1,
+      "lines": 1,
+      "size": 36,
+      "vw": 2.5,
+      "font": "Cabinet Grotesk",
+      "weight": 800,
+      "tracking": 0,
+      "leading": 1.11,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.02,
+      "top": 2383,
+      "tag": "dt",
+      "kind": "heading"
+     },
+     {
+      "text": "À venir",
+      "words": 2,
+      "chars": 7,
+      "lines": 1,
+      "size": 60,
+      "vw": 4.2,
+      "font": "Cabinet Grotesk",
+      "weight": 800,
+      "tracking": -0.03,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.78,
+      "top": 2595,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Atelier robotique : construire un line-follower",
+      "words": 6,
+      "chars": 47,
+      "lines": 2,
+      "size": 36,
+      "vw": 2.5,
+      "font": "Cabinet Grotesk",
+      "weight": 800,
+      "tracking": -0.02,
+      "leading": 1.05,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.33,
+      "top": 2951,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "Pitch de minuit — concours startup",
+      "words": 6,
+      "chars": 34,
+      "lines": 2,
+      "size": 36,
+      "vw": 2.5,
+      "font": "Cabinet Grotesk",
+      "weight": 800,
+      "tracking": -0.02,
+      "leading": 1.05,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "right",
+      "widthRatio": 0.33,
+      "top": 2951,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "Cinéma en plein air : classiques marocains",
+      "words": 7,
+      "chars": 42,
+      "lines": 2,
+      "size": 36,
+      "vw": 2.5,
+      "font": "Cabinet Grotesk",
+      "weight": 800,
+      "tracking": -0.02,
+      "leading": 1.05,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "right",
+      "widthRatio": 0.33,
+      "top": 2951,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "ETH 2026 — EMSI Tech Hackathon : Tech for Good",
+      "words": 10,
+      "chars": 46,
+      "lines": 2,
+      "size": 36,
+      "vw": 2.5,
+      "font": "Cabinet Grotesk",
+      "weight": 800,
+      "tracking": -0.02,
+      "leading": 1.05,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "right",
+      "widthRatio": 0.33,
+      "top": 2951,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "EMSI Robotic Competition (ERC) — tours éliminatoires",
+      "words": 7,
+      "chars": 52,
+      "lines": 2,
+      "size": 36,
+      "vw": 2.5,
+      "font": "Cabinet Grotesk",
+      "weight": 800,
+      "tracking": -0.02,
+      "leading": 1.05,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "right",
+      "widthRatio": 0.33,
+      "top": 2951,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "Un campus, compté.",
+      "words": 3,
+      "chars": 18,
+      "lines": 1,
+      "size": 60,
+      "vw": 4.2,
+      "font": "Cabinet Grotesk",
+      "weight": 800,
+      "tracking": -0.03,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.78,
+      "top": 5677,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "2",
+      "words": 1,
+      "chars": 1,
+      "lines": 1,
+      "size": 331.2,
+      "vw": 23,
+      "font": "Cabinet Grotesk",
+      "weight": 800,
+      "tracking": -0.04,
+      "leading": 0.8,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.78,
+      "top": 5925,
+      "tag": "p",
+      "kind": "statement"
+     },
+     {
+      "text": "Votre club a sa place sur ce mur.",
+      "words": 8,
+      "chars": 33,
+      "lines": 2,
+      "size": 40,
+      "vw": 2.8,
+      "font": "Cabinet Grotesk",
+      "weight": 800,
+      "tracking": -0.02,
+      "leading": 1.11,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.34,
+      "top": 6496,
+      "tag": "h2",
+      "kind": "heading"
+     }
+    ],
+    "headingSummary": {
+     "count": 18,
+     "maxLines": 2,
+     "over2Lines": 0,
+     "statements": 3,
+     "centered": 0,
+     "medianWords": 3,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Cabinet Grotesk",
+       "share": 1,
+       "mono": false
+      }
+     ],
+     "familyCount": 1,
+     "sizes": [
+      14,
+      16,
+      18,
+      19,
+      26,
+      36,
+      40,
+      60,
+      112,
+      128,
+      331
+     ],
+     "sizeCount": 11,
+     "notLoaded": [],
+     "body": {
+      "font": "Cabinet Grotesk",
+      "size": 19,
+      "leading": 1.5,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 17.4
+     },
+     "measureChars": 61,
+     "max": {
+      "size": 331.2,
+      "vw": 23,
+      "font": "Cabinet Grotesk",
+      "text": "2"
+     },
+     "monoShare": 0,
+     "monoProseShare": 0,
+     "monoFamilies": [],
+     "monoSamples": [],
+     "microLabels": 0,
+     "microLabelShare": 0,
+     "microSamples": [],
+     "upperShare": 0.01,
+     "centerShare": 0,
+     "smallText": 0
+    },
+    "eyebrows": [],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#faf7f2",
+     "bodyBgHsl": {
+      "h": 38,
+      "s": 0.44,
+      "l": 0.96
+     },
+     "dark": false,
+     "sectionBgs": [
+      {
+       "color": "#14130f",
+       "top": 56,
+       "hsl": {
+        "h": 48,
+        "s": 0.14,
+        "l": 0.07
+       }
+      },
+      {
+       "color": "#faf7f2",
+       "top": 884,
+       "hsl": {
+        "h": 38,
+        "s": 0.44,
+        "l": 0.96
+       }
+      },
+      {
+       "color": "#ff4d00",
+       "top": 1902,
+       "hsl": {
+        "h": 18,
+        "s": 1,
+        "l": 0.5
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#14130f",
+       "share": 0.45
+      },
+      {
+       "color": "#faf7f2",
+       "share": 0.3
+      },
+      {
+       "color": "#6f6a5e",
+       "share": 0.1
+      },
+      {
+       "color": "#faf8f2",
+       "share": 0.05
+      },
+      {
+       "color": "#f9f6f2",
+       "share": 0.04
+      }
+     ],
+     "button": {
+      "bg": "#c93b00",
+      "hsl": {
+       "h": 18,
+       "s": 1,
+       "l": 0.39
+      },
+      "fg": "#ffffff"
+     },
+     "lowContrast": []
+    },
+    "buttons": {
+     "count": 3,
+     "inHero": 2,
+     "radius": 0,
+     "height": 48,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "S'inscrire",
+      "Voir les événements"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 0,
+     "scrims": 0,
+     "gradientSamples": [],
+     "gradientText": 0,
+     "hairlines": 0,
+     "hairlineSamples": [],
+     "outlinedBoxes": 0,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 0,
+     "boxRadius": 0,
+     "squareMedia": 1,
+     "roundedMedia": 0,
+     "mediaRadius": 0,
+     "textShadow": 0,
+     "cardRows": [
+      {
+       "count": 5,
+       "iconTopped": false,
+       "rounded": false,
+       "top": 56
+      }
+     ]
+    },
+    "heroMedia": [
+     {
+      "type": "canvas",
+      "ratio": 0.92
+     },
+     {
+      "type": "svg",
+      "ratio": 0.09
+     }
+    ],
+    "nav": {
+     "links": 4,
+     "fixed": true,
+     "height": 56,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": [
+     "cabinet grotesk",
+     "cabinet grotesk fallback"
+    ]
+   },
+   "layout": {
+    "viewport": {
+     "w": 1440,
+     "h": 900
+    },
+    "pageH": 7253,
+    "margins": {
+     "left": 28,
+     "right": 20
+    },
+    "sections": [
+     {
+      "sel": "section.field-ink.relative",
+      "tag": "section",
+      "top": 56,
+      "height": 828,
+      "words": 49,
+      "media": 2,
+      "middle": 201,
+      "heading": {
+       "text": "Événements.",
+       "size": 128,
+       "tag": "h1"
+      },
+      "left": 160,
+      "right": 20,
+      "textLeft": 160,
+      "textRight": 20,
+      "fullBleed": true,
+      "footer": false,
+      "hero": true,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "section#how.field-paper.scroll-mt-14",
+      "tag": "section",
+      "top": 884,
+      "height": 1018,
+      "words": 45,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Comment ça marche",
+       "size": 60,
+       "tag": "h2"
+      },
+      "left": 160,
+      "right": 173,
+      "textLeft": 160,
+      "textRight": 173,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "section#clubs.scroll-mt-14",
+      "tag": "section",
+      "top": 1902,
+      "height": 585,
+      "words": 96,
+      "media": 0,
+      "middle": 11049,
+      "heading": {
+       "text": "BDE EMSI",
+       "size": 112,
+       "tag": "span"
+      },
+      "left": 0,
+      "right": 0,
+      "textLeft": -3242,
+      "textRight": -12316,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "div.mx-auto.max-w-6xl",
+      "tag": "div",
+      "top": 2487,
+      "height": 256,
+      "words": 8,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "À venir",
+       "size": 60,
+       "tag": "h2"
+      },
+      "left": 160,
+      "right": 815,
+      "textLeft": 160,
+      "textRight": 815,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "div.pin-spacer",
+      "tag": "div",
+      "top": 2743,
+      "height": 2712,
+      "words": 106,
+      "media": 0,
+      "middle": 1457,
+      "heading": {
+       "text": "Atelier robotique : construire un line-follower",
+       "size": 36,
+       "tag": "h3"
+      },
+      "left": 28,
+      "right": 0,
+      "textLeft": 28,
+      "textRight": -1578,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "div.mx-auto.max-w-6xl",
+      "tag": "div",
+      "top": 5455,
+      "height": 132,
+      "words": 4,
+      "media": 0,
+      "middle": 0,
+      "heading": null,
+      "left": 160,
+      "right": 1111,
+      "textLeft": 160,
+      "textRight": 1111,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section.field-ink.flex",
+      "tag": "section",
+      "top": 5587,
+      "height": 810,
+      "words": 22,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Un campus, compté.",
+       "size": 60,
+       "tag": "h2"
+      },
+      "left": 160,
+      "right": 784,
+      "textLeft": 160,
+      "textRight": 784,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "section.field-ink.pb-[12vh]",
+      "tag": "section",
+      "top": 6397,
+      "height": 504,
+      "words": 27,
+      "media": 0,
+      "middle": 568,
+      "heading": {
+       "text": "Votre club a sa place sur ce mur.",
+       "size": 40,
+       "tag": "h2"
+      },
+      "left": 252,
+      "right": 40,
+      "textLeft": 252,
+      "textRight": 672,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "footer.field-ink",
+      "tag": "footer",
+      "top": 6901,
+      "height": 352,
+      "words": 57,
+      "media": 0,
+      "middle": 61,
+      "heading": {
+       "text": "Contact",
+       "size": 14,
+       "tag": "h2"
+      },
+      "left": 160,
+      "right": 254,
+      "textLeft": 160,
+      "textRight": 254,
+      "fullBleed": false,
+      "footer": true,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     }
+    ],
+    "gaps": [],
+    "h1s": [
+     {
+      "text": "Événements. Un seul endroit.",
+      "size": 128,
+      "top": 136,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 160,
+      "n": 8
+     },
+     {
+      "x": 192,
+      "n": 2
+     },
+     {
+      "x": 252,
+      "n": 2
+     },
+     {
+      "x": 827,
+      "n": 2
+     },
+     {
+      "x": 951,
+      "n": 1
+     },
+     {
+      "x": 1069,
+      "n": 1
+     }
+    ],
+    "leftBlocks": 16,
+    "bodySize": 19,
+    "stage": false,
+    "explains": true,
+    "slivers": [
+     {
+      "text": "Club Sportif EMSI",
+      "px": 12,
+      "side": "left"
+     }
+    ],
+    "voidShare": 0,
+    "voidBox": null
+   },
+   "app": null,
+   "consoleErrors": []
+  },
+  {
+   "width": 768,
+   "height": 1024,
+   "load": "load",
+   "screens": 7,
+   "filled": [
+    0.98,
+    0.51,
+    0.48,
+    0.82,
+    0.78,
+    0.94,
+    0.94
+   ],
+   "motion": {
+    "elements": 10,
+    "css": 2,
+    "transitions": 0,
+    "scripted": 8,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 768,
+     "h": 1024
+    },
+    "page": {
+     "height": 6718,
+     "screens": 6.6,
+     "words": 435,
+     "img": 0,
+     "video": 0,
+     "canvas": 1,
+     "svg": 26,
+     "sections": 6,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 0,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": [],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "Événements. Un seul endroit.",
+     "words": 4,
+     "chars": 28,
+     "lines": 2,
+     "size": 79.3,
+     "vw": 10.3,
+     "font": "Cabinet Grotesk",
+     "weight": 800,
+     "tracking": -0.035,
+     "leading": 0.9,
+     "upper": false,
+     "italic": false,
+     "mono": false,
+     "align": "left",
+     "position": "center",
+     "widthRatio": 0.96,
+     "top": 136,
+     "tag": "h1",
+     "kind": "heading"
+    },
+    "h1": {
+     "text": "Événements. Un seul endroit.",
+     "words": 4,
+     "lines": 2,
+     "size": 79.3,
+     "font": "Cabinet Grotesk"
+    },
+    "headings": [
+     {
+      "text": "Événements. Un seul endroit.",
+      "words": 4,
+      "chars": 28,
+      "lines": 2,
+      "size": 79.3,
+      "vw": 10.3,
+      "font": "Cabinet Grotesk",
+      "weight": 800,
+      "tracking": -0.035,
+      "leading": 0.9,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.96,
+      "top": 136,
+      "tag": "h1",
+      "kind": "heading"
+     },
+     {
+      "text": "5",
+      "words": 1,
+      "chars": 1,
+      "lines": 1,
+      "size": 46.7,
+      "vw": 6.1,
+      "font": "Cabinet Grotesk",
+      "weight": 800,
+      "tracking": -0.03,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "right",
+      "widthRatio": 0.04,
+      "top": 918,
+      "tag": "span",
+      "kind": "heading"
+     },
+     {
+      "text": "Comment ça marche",
+      "words": 3,
+      "chars": 17,
+      "lines": 2,
+      "size": 46.7,
+      "vw": 6.1,
+      "font": "Cabinet Grotesk",
+      "weight": 800,
+      "tracking": -0.03,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.38,
+      "top": 1381,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Trouver",
+      "words": 1,
+      "chars": 7,
+      "lines": 1,
+      "size": 40,
+      "vw": 5.2,
+      "font": "Cabinet Grotesk",
+      "weight": 800,
+      "tracking": -0.008,
+      "leading": 1.33,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.56,
+      "top": 1676,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "BDE EMSI Club de Lecture Club des Échecs Club Innovation EMSI Club Sportif EMSI Enactus EMSI Google Developer Student Clubs Hult Prize EMSI Jeunes Leaders Marocains",
+      "words": 26,
+      "chars": 164,
+      "lines": 1,
+      "size": 61.4,
+      "vw": 8,
+      "font": "Cabinet Grotesk",
+      "weight": 800,
+      "tracking": -0.025,
+      "leading": 1.5,
+      "upper": true,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "right",
+      "widthRatio": 6.07,
+      "top": 2467,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "BDE EMSI Club de Lecture Club des Échecs Club Innovation EMSI Club Sportif EMSI Enactus EMSI Google Developer Student Clubs Hult Prize EMSI Jeunes Leaders Marocains",
+      "words": 26,
+      "chars": 164,
+      "lines": 1,
+      "size": 61.4,
+      "vw": 8,
+      "font": "Cabinet Grotesk",
+      "weight": 800,
+      "tracking": -0.025,
+      "leading": 1.5,
+      "upper": true,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "right",
+      "widthRatio": 6.07,
+      "top": 2467,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "40+",
+      "words": 1,
+      "chars": 3,
+      "lines": 1,
+      "size": 36,
+      "vw": 4.7,
+      "font": "Cabinet Grotesk",
+      "weight": 800,
+      "tracking": 0,
+      "leading": 1.11,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.08,
+      "top": 2858,
+      "tag": "dt",
+      "kind": "heading"
+     },
+     {
+      "text": "20+",
+      "words": 1,
+      "chars": 3,
+      "lines": 1,
+      "size": 36,
+      "vw": 4.7,
+      "font": "Cabinet Grotesk",
+      "weight": 800,
+      "tracking": 0,
+      "leading": 1.11,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.08,
+      "top": 2858,
+      "tag": "dt",
+      "kind": "heading"
+     },
+     {
+      "text": "6",
+      "words": 1,
+      "chars": 1,
+      "lines": 1,
+      "size": 36,
+      "vw": 4.7,
+      "font": "Cabinet Grotesk",
+      "weight": 800,
+      "tracking": 0,
+      "leading": 1.11,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.03,
+      "top": 2930,
+      "tag": "dt",
+      "kind": "heading"
+     },
+     {
+      "text": "À venir",
+      "words": 2,
+      "chars": 7,
+      "lines": 1,
+      "size": 46.7,
+      "vw": 6.1,
+      "font": "Cabinet Grotesk",
+      "weight": 800,
+      "tracking": -0.03,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.96,
+      "top": 3141,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Un campus, compté.",
+      "words": 3,
+      "chars": 18,
+      "lines": 1,
+      "size": 46.7,
+      "vw": 6.1,
+      "font": "Cabinet Grotesk",
+      "weight": 800,
+      "tracking": -0.03,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.96,
+      "top": 4853,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "2",
+      "words": 1,
+      "chars": 1,
+      "lines": 1,
+      "size": 176.6,
+      "vw": 23,
+      "font": "Cabinet Grotesk",
+      "weight": 800,
+      "tracking": -0.04,
+      "leading": 0.8,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.96,
+      "top": 5316,
+      "tag": "p",
+      "kind": "statement"
+     },
+     {
+      "text": "Votre club a sa place sur ce mur.",
+      "words": 8,
+      "chars": 33,
+      "lines": 2,
+      "size": 40,
+      "vw": 5.2,
+      "font": "Cabinet Grotesk",
+      "weight": 800,
+      "tracking": -0.02,
+      "leading": 1.11,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.63,
+      "top": 5778,
+      "tag": "h2",
+      "kind": "heading"
+     }
+    ],
+    "headingSummary": {
+     "count": 13,
+     "maxLines": 2,
+     "over2Lines": 0,
+     "statements": 3,
+     "centered": 0,
+     "medianWords": 2,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Cabinet Grotesk",
+       "share": 1,
+       "mono": false
+      }
+     ],
+     "familyCount": 1,
+     "sizes": [
+      14,
+      16,
+      18,
+      23,
+      24,
+      36,
+      40,
+      47,
+      61,
+      79,
+      177
+     ],
+     "sizeCount": 11,
+     "notLoaded": [],
+     "body": {
+      "font": "Cabinet Grotesk",
+      "size": 17.9,
+      "leading": 1.5,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 17.4
+     },
+     "measureChars": 64,
+     "max": {
+      "size": 176.6,
+      "vw": 23,
+      "font": "Cabinet Grotesk",
+      "text": "2"
+     },
+     "monoShare": 0,
+     "monoProseShare": 0,
+     "monoFamilies": [],
+     "monoSamples": [],
+     "microLabels": 0,
+     "microLabelShare": 0,
+     "microSamples": [],
+     "upperShare": 0.01,
+     "centerShare": 0,
+     "smallText": 0
+    },
+    "eyebrows": [],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#faf7f2",
+     "bodyBgHsl": {
+      "h": 38,
+      "s": 0.44,
+      "l": 0.96
+     },
+     "dark": false,
+     "sectionBgs": [
+      {
+       "color": "#14130f",
+       "top": 56,
+       "hsl": {
+        "h": 48,
+        "s": 0.14,
+        "l": 0.07
+       }
+      },
+      {
+       "color": "#faf7f2",
+       "top": 1258,
+       "hsl": {
+        "h": 38,
+        "s": 0.44,
+        "l": 0.96
+       }
+      },
+      {
+       "color": "#ff4d00",
+       "top": 2339,
+       "hsl": {
+        "h": 18,
+        "s": 1,
+        "l": 0.5
+       }
+      },
+      {
+       "color": "#fff0e6",
+       "top": 4136,
+       "hsl": {
+        "h": 24,
+        "s": 1,
+        "l": 0.95
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#14130f",
+       "share": 0.43
+      },
+      {
+       "color": "#faf7f2",
+       "share": 0.3
+      },
+      {
+       "color": "#6f6a5e",
+       "share": 0.11
+      },
+      {
+       "color": "#faf8f2",
+       "share": 0.05
+      },
+      {
+       "color": "#f9f6f2",
+       "share": 0.04
+      }
+     ],
+     "button": {
+      "bg": "#c93b00",
+      "hsl": {
+       "h": 18,
+       "s": 1,
+       "l": 0.39
+      },
+      "fg": "#ffffff"
+     },
+     "lowContrast": []
+    },
+    "buttons": {
+     "count": 3,
+     "inHero": 2,
+     "radius": 0,
+     "height": 48,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "S'inscrire",
+      "Voir les événements"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 0,
+     "scrims": 0,
+     "gradientSamples": [],
+     "gradientText": 0,
+     "hairlines": 0,
+     "hairlineSamples": [],
+     "outlinedBoxes": 0,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 0,
+     "boxRadius": 0,
+     "squareMedia": 1,
+     "roundedMedia": 0,
+     "mediaRadius": 0,
+     "textShadow": 0,
+     "cardRows": []
+    },
+    "heroMedia": [
+     {
+      "type": "canvas",
+      "ratio": 0.95
+     }
+    ],
+    "nav": {
+     "links": 4,
+     "fixed": true,
+     "height": 56,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": [
+     "cabinet grotesk",
+     "cabinet grotesk fallback"
+    ]
+   },
+   "layout": {
+    "viewport": {
+     "w": 768,
+     "h": 1024
+    },
+    "pageH": 6718,
+    "margins": {
+     "left": 16,
+     "right": 33
+    },
+    "sections": [
+     {
+      "sel": "section.field-ink.relative",
+      "tag": "section",
+      "top": 56,
+      "height": 1202,
+      "words": 49,
+      "media": 2,
+      "middle": 0,
+      "heading": {
+       "text": "Événements.",
+       "size": 79,
+       "tag": "h1"
+      },
+      "left": 16,
+      "right": 16,
+      "textLeft": 16,
+      "textRight": 16,
+      "fullBleed": true,
+      "footer": false,
+      "hero": true,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "section#how.field-paper.scroll-mt-14",
+      "tag": "section",
+      "top": 1258,
+      "height": 1081,
+      "words": 45,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Comment ça marche",
+       "size": 47,
+       "tag": "h2"
+      },
+      "left": 16,
+      "right": 54,
+      "textLeft": 16,
+      "textRight": 54,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "section#clubs.scroll-mt-14",
+      "tag": "section",
+      "top": 2339,
+      "height": 679,
+      "words": 96,
+      "media": 0,
+      "middle": 6529,
+      "heading": {
+       "text": "BDE EMSI",
+       "size": 61,
+       "tag": "span"
+      },
+      "left": 0,
+      "right": 0,
+      "textLeft": -1325,
+      "textRight": -7224,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "div.mx-auto.max-w-6xl",
+      "tag": "div",
+      "top": 3018,
+      "height": 254,
+      "words": 8,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "À venir",
+       "size": 47,
+       "tag": "h2"
+      },
+      "left": 16,
+      "right": 348,
+      "textLeft": 16,
+      "textRight": 348,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "ul.mx-auto.grid",
+      "tag": "ul",
+      "top": 3272,
+      "height": 1332,
+      "words": 106,
+      "media": 0,
+      "middle": 68,
+      "heading": {
+       "text": "Atelier robotique : construire un line-follower",
+       "size": 24,
+       "tag": "h3"
+      },
+      "left": 44,
+      "right": 44,
+      "textLeft": 44,
+      "textRight": 44,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "div.mx-auto.max-w-6xl",
+      "tag": "div",
+      "top": 4604,
+      "height": 147,
+      "words": 4,
+      "media": 0,
+      "middle": 0,
+      "heading": null,
+      "left": 16,
+      "right": 583,
+      "textLeft": 16,
+      "textRight": 583,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section.field-ink.flex",
+      "tag": "section",
+      "top": 4751,
+      "height": 922,
+      "words": 22,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Un campus, compté.",
+       "size": 47,
+       "tag": "h2"
+      },
+      "left": 16,
+      "right": 361,
+      "textLeft": 16,
+      "textRight": 361,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "section.field-ink.pb-[12vh]",
+      "tag": "section",
+      "top": 5672,
+      "height": 524,
+      "words": 27,
+      "media": 0,
+      "middle": 77,
+      "heading": {
+       "text": "Votre club a sa place sur ce mur.",
+       "size": 40,
+       "tag": "h2"
+      },
+      "left": 158,
+      "right": 6,
+      "textLeft": 158,
+      "textRight": 148,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "footer.field-ink",
+      "tag": "footer",
+      "top": 6196,
+      "height": 522,
+      "words": 57,
+      "media": 0,
+      "middle": 44,
+      "heading": {
+       "text": "Contact",
+       "size": 14,
+       "tag": "h2"
+      },
+      "left": 16,
+      "right": 38,
+      "textLeft": 16,
+      "textRight": 38,
+      "fullBleed": false,
+      "footer": true,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     }
+    ],
+    "gaps": [],
+    "h1s": [
+     {
+      "text": "Événements. Un seul endroit.",
+      "size": 79,
+      "top": 136,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 16,
+      "n": 8
+     },
+     {
+      "x": 48,
+      "n": 2
+     },
+     {
+      "x": 158,
+      "n": 2
+     },
+     {
+      "x": 459,
+      "n": 2
+     },
+     {
+      "x": 544,
+      "n": 1
+     },
+     {
+      "x": 621,
+      "n": 1
+     }
+    ],
+    "leftBlocks": 16,
+    "bodySize": 18,
+    "stage": false,
+    "explains": false,
+    "slivers": [],
+    "voidShare": 0,
+    "voidBox": null
+   },
+   "app": null,
+   "consoleErrors": []
+  },
+  {
+   "width": 390,
+   "height": 844,
+   "load": "load",
+   "screens": 9,
+   "filled": [
+    0.98,
+    0.53,
+    0.54,
+    0.55,
+    0.9,
+    0.84,
+    0.92,
+    0.91,
+    0.94
+   ],
+   "motion": {
+    "elements": 9,
+    "css": 1,
+    "transitions": 0,
+    "scripted": 8,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 390,
+     "h": 844
+    },
+    "page": {
+     "height": 7197,
+     "screens": 8.5,
+     "words": 430,
+     "img": 0,
+     "video": 0,
+     "canvas": 0,
+     "svg": 26,
+     "sections": 6,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 0,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": [],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "Événements. Un seul endroit.",
+     "words": 4,
+     "chars": 28,
+     "lines": 2,
+     "size": 52.1,
+     "vw": 13.4,
+     "font": "Cabinet Grotesk",
+     "weight": 800,
+     "tracking": -0.035,
+     "leading": 0.9,
+     "upper": false,
+     "italic": false,
+     "mono": false,
+     "align": "left",
+     "position": "center",
+     "widthRatio": 0.92,
+     "top": 136,
+     "tag": "h1",
+     "kind": "heading"
+    },
+    "h1": {
+     "text": "Événements. Un seul endroit.",
+     "words": 4,
+     "lines": 2,
+     "size": 52.1,
+     "font": "Cabinet Grotesk"
+    },
+    "headings": [
+     {
+      "text": "Événements. Un seul endroit.",
+      "words": 4,
+      "chars": 28,
+      "lines": 2,
+      "size": 52.1,
+      "vw": 13.4,
+      "font": "Cabinet Grotesk",
+      "weight": 800,
+      "tracking": -0.035,
+      "leading": 0.9,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.92,
+      "top": 136,
+      "tag": "h1",
+      "kind": "heading"
+     },
+     {
+      "text": "5",
+      "words": 1,
+      "chars": 1,
+      "lines": 1,
+      "size": 36,
+      "vw": 9.2,
+      "font": "Cabinet Grotesk",
+      "weight": 800,
+      "tracking": -0.03,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.06,
+      "top": 762,
+      "tag": "span",
+      "kind": "heading"
+     },
+     {
+      "text": "Comment ça marche",
+      "words": 3,
+      "chars": 17,
+      "lines": 1,
+      "size": 36,
+      "vw": 9.2,
+      "font": "Cabinet Grotesk",
+      "weight": 800,
+      "tracking": -0.03,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.92,
+      "top": 1194,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Trouver",
+      "words": 1,
+      "chars": 7,
+      "lines": 1,
+      "size": 24,
+      "vw": 6.2,
+      "font": "Cabinet Grotesk",
+      "weight": 800,
+      "tracking": -0.013,
+      "leading": 1.33,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.92,
+      "top": 1445,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "BDE EMSI Club de Lecture Club des Échecs Club Innovation EMSI Club Sportif EMSI Enactus EMSI Google Developer Student Clubs Hult Prize EMSI Jeunes Leaders Marocains",
+      "words": 26,
+      "chars": 164,
+      "lines": 1,
+      "size": 31.2,
+      "vw": 8,
+      "font": "Cabinet Grotesk",
+      "weight": 800,
+      "tracking": -0.025,
+      "leading": 1.5,
+      "upper": true,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "right",
+      "widthRatio": 6.1,
+      "top": 2055,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "BDE EMSI Club de Lecture Club des Échecs Club Innovation EMSI Club Sportif EMSI Enactus EMSI Google Developer Student Clubs Hult Prize EMSI Jeunes Leaders Marocains",
+      "words": 26,
+      "chars": 164,
+      "lines": 1,
+      "size": 31.2,
+      "vw": 8,
+      "font": "Cabinet Grotesk",
+      "weight": 800,
+      "tracking": -0.025,
+      "leading": 1.5,
+      "upper": true,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "right",
+      "widthRatio": 6.1,
+      "top": 2055,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "40+",
+      "words": 1,
+      "chars": 3,
+      "lines": 1,
+      "size": 36,
+      "vw": 9.2,
+      "font": "Cabinet Grotesk",
+      "weight": 800,
+      "tracking": 0,
+      "leading": 1.11,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.16,
+      "top": 2439,
+      "tag": "dt",
+      "kind": "heading"
+     },
+     {
+      "text": "20+",
+      "words": 1,
+      "chars": 3,
+      "lines": 1,
+      "size": 36,
+      "vw": 9.2,
+      "font": "Cabinet Grotesk",
+      "weight": 800,
+      "tracking": 0,
+      "leading": 1.11,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.16,
+      "top": 2511,
+      "tag": "dt",
+      "kind": "heading"
+     },
+     {
+      "text": "6",
+      "words": 1,
+      "chars": 1,
+      "lines": 1,
+      "size": 36,
+      "vw": 9.2,
+      "font": "Cabinet Grotesk",
+      "weight": 800,
+      "tracking": 0,
+      "leading": 1.11,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.06,
+      "top": 2567,
+      "tag": "dt",
+      "kind": "heading"
+     },
+     {
+      "text": "À venir",
+      "words": 2,
+      "chars": 7,
+      "lines": 1,
+      "size": 36,
+      "vw": 9.2,
+      "font": "Cabinet Grotesk",
+      "weight": 800,
+      "tracking": -0.03,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.92,
+      "top": 2756,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Atelier robotique : construire un line-follower",
+      "words": 6,
+      "chars": 47,
+      "lines": 2,
+      "size": 24,
+      "vw": 6.2,
+      "font": "Cabinet Grotesk",
+      "weight": 800,
+      "tracking": -0.02,
+      "leading": 1.05,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.77,
+      "top": 3070,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "Pitch de minuit — concours startup",
+      "words": 6,
+      "chars": 34,
+      "lines": 2,
+      "size": 24,
+      "vw": 6.2,
+      "font": "Cabinet Grotesk",
+      "weight": 800,
+      "tracking": -0.02,
+      "leading": 1.05,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.77,
+      "top": 3502,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "Cinéma en plein air : classiques marocains",
+      "words": 7,
+      "chars": 42,
+      "lines": 2,
+      "size": 24,
+      "vw": 6.2,
+      "font": "Cabinet Grotesk",
+      "weight": 800,
+      "tracking": -0.02,
+      "leading": 1.05,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.76,
+      "top": 3934,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "ETH 2026 — EMSI Tech Hackathon : Tech for Good",
+      "words": 10,
+      "chars": 46,
+      "lines": 2,
+      "size": 24,
+      "vw": 6.2,
+      "font": "Cabinet Grotesk",
+      "weight": 800,
+      "tracking": -0.02,
+      "leading": 1.05,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.77,
+      "top": 4366,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "EMSI Robotic Competition (ERC) — tours éliminatoires",
+      "words": 7,
+      "chars": 52,
+      "lines": 2,
+      "size": 24,
+      "vw": 6.2,
+      "font": "Cabinet Grotesk",
+      "weight": 800,
+      "tracking": -0.02,
+      "leading": 1.05,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.76,
+      "top": 4808,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "Un campus, compté.",
+      "words": 3,
+      "chars": 18,
+      "lines": 1,
+      "size": 36,
+      "vw": 9.2,
+      "font": "Cabinet Grotesk",
+      "weight": 800,
+      "tracking": -0.03,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.92,
+      "top": 5279,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "2",
+      "words": 1,
+      "chars": 1,
+      "lines": 1,
+      "size": 150,
+      "vw": 38.5,
+      "font": "Cabinet Grotesk",
+      "weight": 800,
+      "tracking": -0.04,
+      "leading": 0.8,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.92,
+      "top": 5641,
+      "tag": "p",
+      "kind": "statement"
+     },
+     {
+      "text": "Votre club a sa place sur ce mur.",
+      "words": 8,
+      "chars": 33,
+      "lines": 2,
+      "size": 36,
+      "vw": 9.2,
+      "font": "Cabinet Grotesk",
+      "weight": 800,
+      "tracking": -0.02,
+      "leading": 1.11,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.84,
+      "top": 6046,
+      "tag": "h2",
+      "kind": "heading"
+     }
+    ],
+    "headingSummary": {
+     "count": 18,
+     "maxLines": 2,
+     "over2Lines": 0,
+     "statements": 3,
+     "centered": 0,
+     "medianWords": 3,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Cabinet Grotesk",
+       "share": 1,
+       "mono": false
+      }
+     ],
+     "familyCount": 1,
+     "sizes": [
+      14,
+      16,
+      17,
+      18,
+      20,
+      24,
+      31,
+      36,
+      52,
+      150
+     ],
+     "sizeCount": 10,
+     "notLoaded": [],
+     "body": {
+      "font": "Cabinet Grotesk",
+      "size": 17,
+      "leading": 1.5,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 17.4
+     },
+     "measureChars": 42,
+     "max": {
+      "size": 150,
+      "vw": 38.5,
+      "font": "Cabinet Grotesk",
+      "text": "2"
+     },
+     "monoShare": 0,
+     "monoProseShare": 0,
+     "monoFamilies": [],
+     "monoSamples": [],
+     "microLabels": 0,
+     "microLabelShare": 0,
+     "microSamples": [],
+     "upperShare": 0.01,
+     "centerShare": 0,
+     "smallText": 0
+    },
+    "eyebrows": [],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#faf7f2",
+     "bodyBgHsl": {
+      "h": 38,
+      "s": 0.44,
+      "l": 0.96
+     },
+     "dark": false,
+     "sectionBgs": [
+      {
+       "color": "#14130f",
+       "top": 56,
+       "hsl": {
+        "h": 48,
+        "s": 0.14,
+        "l": 0.07
+       }
+      },
+      {
+       "color": "#faf7f2",
+       "top": 1092,
+       "hsl": {
+        "h": 38,
+        "s": 0.44,
+        "l": 0.96
+       }
+      },
+      {
+       "color": "#ff4d00",
+       "top": 1935,
+       "hsl": {
+        "h": 18,
+        "s": 1,
+        "l": 0.5
+       }
+      },
+      {
+       "color": "#ffffff",
+       "top": 3737,
+       "hsl": {
+        "h": 0,
+        "s": 0,
+        "l": 1
+       }
+      },
+      {
+       "color": "#a83000",
+       "top": 4169,
+       "hsl": {
+        "h": 17,
+        "s": 1,
+        "l": 0.33
+       }
+      },
+      {
+       "color": "#fff0e6",
+       "top": 4601,
+       "hsl": {
+        "h": 24,
+        "s": 1,
+        "l": 0.95
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#14130f",
+       "share": 0.43
+      },
+      {
+       "color": "#faf7f2",
+       "share": 0.31
+      },
+      {
+       "color": "#6f6a5e",
+       "share": 0.11
+      },
+      {
+       "color": "#faf8f2",
+       "share": 0.05
+      },
+      {
+       "color": "#f9f6f2",
+       "share": 0.04
+      }
+     ],
+     "button": {
+      "bg": "#ff4d00",
+      "hsl": {
+       "h": 18,
+       "s": 1,
+       "l": 0.5
+      },
+      "fg": "#14130f"
+     },
+     "lowContrast": []
+    },
+    "buttons": {
+     "count": 2,
+     "inHero": 1,
+     "radius": 0,
+     "height": 48,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "Voir les événements"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 0,
+     "scrims": 0,
+     "gradientSamples": [],
+     "gradientText": 0,
+     "hairlines": 0,
+     "hairlineSamples": [],
+     "outlinedBoxes": 0,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 0,
+     "boxRadius": 0,
+     "squareMedia": 0,
+     "roundedMedia": 0,
+     "mediaRadius": 0,
+     "textShadow": 0,
+     "cardRows": []
+    },
+    "heroMedia": [
+     {
+      "type": "svg",
+      "ratio": 0.09
+     }
+    ],
+    "nav": {
+     "links": 1,
+     "fixed": true,
+     "height": 56,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": [
+     "cabinet grotesk",
+     "cabinet grotesk fallback"
+    ]
+   },
+   "layout": {
+    "viewport": {
+     "w": 390,
+     "h": 844
+    },
+    "pageH": 7197,
+    "margins": {
+     "left": 16,
+     "right": 16
+    },
+    "sections": [
+     {
+      "sel": "section.field-ink.relative",
+      "tag": "section",
+      "top": 56,
+      "height": 1036,
+      "words": 49,
+      "media": 1,
+      "middle": 0,
+      "heading": {
+       "text": "Événements.",
+       "size": 52,
+       "tag": "h1"
+      },
+      "left": 16,
+      "right": 16,
+      "textLeft": 16,
+      "textRight": 16,
+      "fullBleed": true,
+      "footer": false,
+      "hero": true,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "section#how.field-paper.scroll-mt-14",
+      "tag": "section",
+      "top": 1092,
+      "height": 843,
+      "words": 45,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Comment ça marche",
+       "size": 36,
+       "tag": "h2"
+      },
+      "left": 16,
+      "right": 16,
+      "textLeft": 16,
+      "textRight": 17,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "section#clubs.scroll-mt-14",
+      "tag": "section",
+      "top": 1935,
+      "height": 720,
+      "words": 96,
+      "media": 0,
+      "middle": 3101,
+      "heading": {
+       "text": "40+",
+       "size": 36,
+       "tag": "dt"
+      },
+      "left": 0,
+      "right": 0,
+      "textLeft": -912,
+      "textRight": -3453,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "div.mx-auto.max-w-6xl",
+      "tag": "div",
+      "top": 2655,
+      "height": 218,
+      "words": 8,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "À venir",
+       "size": 36,
+       "tag": "h2"
+      },
+      "left": 16,
+      "right": 23,
+      "textLeft": 16,
+      "textRight": 23,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "li",
+      "tag": "li",
+      "top": 2873,
+      "height": 420,
+      "words": 22,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Atelier robotique : construire un line-follower",
+       "size": 24,
+       "tag": "h3"
+      },
+      "left": 44,
+      "right": 44,
+      "textLeft": 44,
+      "textRight": 44,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "li",
+      "tag": "li",
+      "top": 3305,
+      "height": 420,
+      "words": 19,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Pitch de minuit — concours startup",
+       "size": 24,
+       "tag": "h3"
+      },
+      "left": 44,
+      "right": 44,
+      "textLeft": 44,
+      "textRight": 44,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "li",
+      "tag": "li",
+      "top": 3737,
+      "height": 420,
+      "words": 17,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Cinéma en plein air : classiques marocains",
+       "size": 24,
+       "tag": "h3"
+      },
+      "left": 46,
+      "right": 126,
+      "textLeft": 46,
+      "textRight": 126,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "li",
+      "tag": "li",
+      "top": 4169,
+      "height": 420,
+      "words": 25,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "ETH 2026 — EMSI Tech Hackathon : Tech for Good",
+       "size": 24,
+       "tag": "h3"
+      },
+      "left": 44,
+      "right": 44,
+      "textLeft": 44,
+      "textRight": 44,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "li.sm:col-span-2",
+      "tag": "li",
+      "top": 4601,
+      "height": 420,
+      "words": 23,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "EMSI Robotic Competition (ERC) — tours éliminatoir",
+       "size": 24,
+       "tag": "h3"
+      },
+      "left": 46,
+      "right": 46,
+      "textLeft": 46,
+      "textRight": 46,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "div.mx-auto.max-w-6xl",
+      "tag": "div",
+      "top": 5069,
+      "height": 125,
+      "words": 4,
+      "media": 0,
+      "middle": 0,
+      "heading": null,
+      "left": 16,
+      "right": 205,
+      "textLeft": 16,
+      "textRight": 205,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section.field-ink.flex",
+      "tag": "section",
+      "top": 5194,
+      "height": 760,
+      "words": 22,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Un campus, compté.",
+       "size": 36,
+       "tag": "h2"
+      },
+      "left": 16,
+      "right": 23,
+      "textLeft": 16,
+      "textRight": 23,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "section.field-ink.pb-[12vh]",
+      "tag": "section",
+      "top": 5954,
+      "height": 601,
+      "words": 27,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Votre club a sa place sur ce mur.",
+       "size": 36,
+       "tag": "h2"
+      },
+      "left": 32,
+      "right": 32,
+      "textLeft": 32,
+      "textRight": 32,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "footer.field-ink",
+      "tag": "footer",
+      "top": 6555,
+      "height": 642,
+      "words": 57,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Contact",
+       "size": 14,
+       "tag": "h2"
+      },
+      "left": 16,
+      "right": 30,
+      "textLeft": 16,
+      "textRight": 30,
+      "fullBleed": false,
+      "footer": true,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     }
+    ],
+    "gaps": [],
+    "h1s": [
+     {
+      "text": "Événements. Un seul endroit.",
+      "size": 52,
+      "top": 136,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 16,
+      "n": 9
+     },
+     {
+      "x": 32,
+      "n": 7
+     }
+    ],
+    "leftBlocks": 16,
+    "bodySize": 17,
+    "stage": false,
+    "explains": false,
+    "slivers": [],
+    "voidShare": 0,
+    "voidBox": null
+   },
+   "app": null,
+   "consoleErrors": []
+  }
+ ],
+ "findings": [
+  {
+   "level": "WARN",
+   "id": "palette-cream",
+   "width": 1440,
+   "message": "Yellow-cream background (page background #faf7f2, section #faf7f2, text #faf7f2).",
+   "fix": "Use the drawn palette. If you want warmth, take a low-chroma stone or bone, not a yellow cream.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "WARN",
+   "id": "size-count",
+   "width": 1440,
+   "message": "11 different font sizes (14, 16, 18, 19, 26, 36, 40, 60, 112, 128, 331).",
+   "fix": "A page needs about five: display, heading, lead, body, small.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "WARN",
+   "id": "no-footage",
+   "width": 1440,
+   "message": "No video anywhere on the page.",
+   "fix": "Look for one honest clip with scripts/assets.mjs --video (the place, the material, the process) and use it as a muted loop with a poster frame. Defend its absence only if no clip fits the subject."
+  },
+  {
+   "level": "WARN",
+   "id": "empty-middle",
+   "width": 1440,
+   "message": "2 section(s) have content at both edges and 11049px of nothing between: \"BDE EMSI\"; \"Atelier robotique : construire un line-follower\"",
+   "fix": "Bring the two parts together on the grid, or put the picture or figure of the section in the middle. An empty middle third reads as a hole, the same as an empty half.",
+   "alsoAt": [
+    768
+   ]
+  },
+  {
+   "level": "WARN",
+   "id": "one-sided-bleed",
+   "width": 1440,
+   "message": "1 display line(s) start inside the margin but run off the left edge by a few pixels: \"Club Sportif EMSI\" (12px)",
+   "fix": "Fit the line to the content box by measurement (a small fit script, or SVG text with textLength), or bleed it on purpose by a clear amount from the margin. A name sliced by a few pixels on one side reads as a mistake."
+  },
+  {
+   "level": "WARN",
+   "id": "long-pin",
+   "width": 1440,
+   "message": "The same large text stays on screen for 3 screens in a row: \"Atelier robotique : construire un line-follower\"; \"Pitch de minuit — concours startup\"",
+   "fix": "A pinned element earns two screens, and something must change at each. Shorten the run or give every screen its own content."
+  },
+  {
+   "level": "WARN",
+   "id": "still-page",
+   "width": 1440,
+   "message": "Little motion: 12 element(s) moved while the page loaded and scrolled.",
+   "fix": "Give every section an entrance for its parts (not one fade of the whole block) and add one moving picture: a looping clip or a slow move on a photograph."
+  },
+  {
+   "level": "WARN",
+   "id": "off-centre",
+   "width": 768,
+   "message": "The margins differ: 16px on the left, 33px on the right, at 768px.",
+   "fix": "Put the navigation and the content on one pair of margins; check for padding on one side only, a scrollbar gutter, or a header on another inset than the page."
+  },
+  {
+   "level": "WARN",
+   "id": "lopsided",
+   "width": 768,
+   "message": "A section keeps its content on one side and leaves 361px of the width empty: \"Un campus, compté.\".",
+   "fix": "Fill the other side with what the section has (its picture, a second column, the figure), or defend the void in one sentence."
+  }
+ ],
+ "images": [
+  {
+   "viewport": "desktop",
+   "width": 1440,
+   "fold": "C:\\Users\\Hp\\Desktop\\EMSI\\DEV- NUMERIQUE\\WEB\\WEB1\\.taste-skill\\inspect-p1\\desktop-fold.jpg",
+   "pages": [
+    "C:\\Users\\Hp\\Desktop\\EMSI\\DEV- NUMERIQUE\\WEB\\WEB1\\.taste-skill\\inspect-p1\\desktop-page-01.jpg",
+    "C:\\Users\\Hp\\Desktop\\EMSI\\DEV- NUMERIQUE\\WEB\\WEB1\\.taste-skill\\inspect-p1\\desktop-page-02.jpg",
+    "C:\\Users\\Hp\\Desktop\\EMSI\\DEV- NUMERIQUE\\WEB\\WEB1\\.taste-skill\\inspect-p1\\desktop-page-03.jpg"
+   ],
+   "film": []
+  },
+  {
+   "viewport": "tablet",
+   "width": 768,
+   "fold": "C:\\Users\\Hp\\Desktop\\EMSI\\DEV- NUMERIQUE\\WEB\\WEB1\\.taste-skill\\inspect-p1\\tablet-fold.jpg",
+   "pages": [
+    "C:\\Users\\Hp\\Desktop\\EMSI\\DEV- NUMERIQUE\\WEB\\WEB1\\.taste-skill\\inspect-p1\\tablet-page-01.jpg",
+    "C:\\Users\\Hp\\Desktop\\EMSI\\DEV- NUMERIQUE\\WEB\\WEB1\\.taste-skill\\inspect-p1\\tablet-page-02.jpg"
+   ],
+   "film": []
+  },
+  {
+   "viewport": "mobile",
+   "width": 390,
+   "fold": "C:\\Users\\Hp\\Desktop\\EMSI\\DEV- NUMERIQUE\\WEB\\WEB1\\.taste-skill\\inspect-p1\\mobile-fold.jpg",
+   "pages": [
+    "C:\\Users\\Hp\\Desktop\\EMSI\\DEV- NUMERIQUE\\WEB\\WEB1\\.taste-skill\\inspect-p1\\mobile-page-01.jpg",
+    "C:\\Users\\Hp\\Desktop\\EMSI\\DEV- NUMERIQUE\\WEB\\WEB1\\.taste-skill\\inspect-p1\\mobile-page-02.jpg"
+   ],
+   "film": []
+  }
+ ]
+}

@@ -1,0 +1,1762 @@
+{
+ "url": "http://localhost:3100/clubs/cmvk03n5b0008uyyobibmjwlt",
+ "at": "2026-10-29T19:11:55.386Z",
+ "allow": [],
+ "dealtFonts": [
+  "Cabinet Grotesk",
+  "Cabinet Grotesk"
+ ],
+ "viewports": [
+  {
+   "width": 1440,
+   "height": 900,
+   "load": "load",
+   "screens": 2,
+   "motion": {
+    "elements": 5,
+    "css": 0,
+    "transitions": 0,
+    "scripted": 5,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "filled": [
+    0.59,
+    0.43
+   ],
+   "metrics": {
+    "viewport": {
+     "w": 1440,
+     "h": 900
+    },
+    "page": {
+     "height": 1251,
+     "screens": 1.4,
+     "words": 154,
+     "img": 0,
+     "video": 0,
+     "canvas": 0,
+     "svg": 5,
+     "sections": 0,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 0,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": [],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "Club Innovation EMSI",
+     "words": 3,
+     "chars": 20,
+     "lines": 1,
+     "size": 72,
+     "vw": 5,
+     "font": "Cabinet Grotesk",
+     "weight": 800,
+     "tracking": -0.03,
+     "leading": 0.95,
+     "top": 167,
+     "tag": "h1",
+     "kind": "heading",
+     "align": "left",
+     "position": "left"
+    },
+    "h1": {
+     "text": "Club Innovation EMSI",
+     "words": 3,
+     "lines": 1,
+     "size": 72,
+     "font": "Cabinet Grotesk"
+    },
+    "headings": [
+     {
+      "text": "Club Innovation EMSI",
+      "words": 3,
+      "chars": 20,
+      "lines": 1,
+      "size": 72,
+      "vw": 5,
+      "font": "Cabinet Grotesk",
+      "weight": 800,
+      "tracking": -0.03,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.44,
+      "top": 167,
+      "tag": "h1",
+      "kind": "heading"
+     },
+     {
+      "text": "À propos",
+      "words": 2,
+      "chars": 8,
+      "lines": 1,
+      "size": 60,
+      "vw": 4.2,
+      "font": "Cabinet Grotesk",
+      "weight": 800,
+      "tracking": -0.03,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.78,
+      "top": 507,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Événements à venir",
+      "words": 3,
+      "chars": 18,
+      "lines": 1,
+      "size": 60,
+      "vw": 4.2,
+      "font": "Cabinet Grotesk",
+      "weight": 800,
+      "tracking": -0.03,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.78,
+      "top": 698,
+      "tag": "h2",
+      "kind": "heading"
+     }
+    ],
+    "headingSummary": {
+     "count": 3,
+     "maxLines": 1,
+     "over2Lines": 0,
+     "statements": 0,
+     "centered": 0,
+     "medianWords": 3,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Cabinet Grotesk",
+       "share": 1,
+       "mono": false
+      }
+     ],
+     "familyCount": 1,
+     "sizes": [
+      12,
+      14,
+      16,
+      18,
+      19,
+      24,
+      36,
+      60,
+      72
+     ],
+     "sizeCount": 9,
+     "notLoaded": [],
+     "body": {
+      "font": "Cabinet Grotesk",
+      "size": 19,
+      "leading": 1.63,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 17.4
+     },
+     "measureChars": 64,
+     "max": {
+      "size": 72,
+      "vw": 5,
+      "font": "Cabinet Grotesk",
+      "text": "Club Innovation EMSI"
+     },
+     "monoShare": 0,
+     "monoProseShare": 0,
+     "monoFamilies": [],
+     "monoSamples": [],
+     "microLabels": 0,
+     "microLabelShare": 0,
+     "microSamples": [],
+     "upperShare": 0.01,
+     "centerShare": 0.03,
+     "smallText": 2
+    },
+    "eyebrows": [
+     {
+      "text": "Abonnés",
+      "above": "À propos",
+      "upper": false,
+      "tracked": false,
+      "mono": false,
+      "pill": false,
+      "size": 12,
+      "top": 425
+     }
+    ],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#faf7f2",
+     "bodyBgHsl": {
+      "h": 38,
+      "s": 0.44,
+      "l": 0.96
+     },
+     "dark": false,
+     "sectionBgs": [
+      {
+       "color": "#faf7f2",
+       "top": 56,
+       "hsl": {
+        "h": 38,
+        "s": 0.44,
+        "l": 0.96
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#14130f",
+       "share": 0.66
+      },
+      {
+       "color": "#faf7f2",
+       "share": 0.27
+      },
+      {
+       "color": "#6f6a5e",
+       "share": 0.07
+      }
+     ],
+     "button": {
+      "bg": "#14130f",
+      "hsl": {
+       "h": 48,
+       "s": 0.14,
+       "l": 0.07
+      },
+      "fg": "#faf7f2"
+     },
+     "lowContrast": []
+    },
+    "buttons": {
+     "count": 1,
+     "inHero": 1,
+     "radius": 0,
+     "height": 36,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "Club suivi"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 0,
+     "scrims": 0,
+     "gradientSamples": [],
+     "gradientText": 0,
+     "hairlines": 0,
+     "hairlineSamples": [],
+     "outlinedBoxes": 0,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 0,
+     "boxRadius": 0,
+     "squareMedia": 0,
+     "roundedMedia": 0,
+     "mediaRadius": 0,
+     "textShadow": 0,
+     "cardRows": [
+      {
+       "count": 3,
+       "iconTopped": false,
+       "rounded": false,
+       "top": 775
+      }
+     ]
+    },
+    "heroMedia": [],
+    "nav": {
+     "links": 4,
+     "fixed": true,
+     "height": 56,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": [
+     "cabinet grotesk",
+     "cabinet grotesk fallback"
+    ]
+   },
+   "layout": {
+    "viewport": {
+     "w": 1440,
+     "h": 900
+    },
+    "pageH": 1251,
+    "margins": {
+     "left": 160,
+     "right": 160
+    },
+    "sections": [
+     {
+      "sel": "header.field-ink",
+      "tag": "header",
+      "top": 56,
+      "height": 217,
+      "words": 6,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Club Innovation EMSI",
+       "size": 72,
+       "tag": "h1"
+      },
+      "left": 184,
+      "right": 545,
+      "textLeft": 184,
+      "textRight": 545,
+      "fullBleed": false,
+      "footer": false,
+      "hero": true,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "main.mx-auto.max-w-6xl",
+      "tag": "main",
+      "top": 341,
+      "height": 910,
+      "words": 124,
+      "media": 0,
+      "middle": 76,
+      "heading": {
+       "text": "À propos",
+       "size": 60,
+       "tag": "h2"
+      },
+      "left": 160,
+      "right": 217,
+      "textLeft": 160,
+      "textRight": 217,
+      "fullBleed": false,
+      "footer": true,
+      "hero": true,
+      "continues": false,
+      "pinned": false
+     }
+    ],
+    "gaps": [],
+    "h1s": [
+     {
+      "text": "Club Innovation EMSI",
+      "size": 72,
+      "top": 167,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 160,
+      "n": 3
+     },
+     {
+      "x": 184,
+      "n": 1
+     },
+     {
+      "x": 260,
+      "n": 1
+     },
+     {
+      "x": 561,
+      "n": 1
+     },
+     {
+      "x": 941,
+      "n": 1
+     }
+    ],
+    "leftBlocks": 7,
+    "bodySize": 16,
+    "stage": false,
+    "explains": true,
+    "slivers": [],
+    "voidShare": 0.23,
+    "voidBox": {
+     "x": 720,
+     "y": 360,
+     "w": 720,
+     "h": 420
+    }
+   },
+   "app": {
+    "viewport": {
+     "w": 1440,
+     "h": 900
+    },
+    "dark": false,
+    "ground": "#faf7f2",
+    "sidebar": null,
+    "topbar": {
+     "h": 56
+    },
+    "canvas": {
+     "left": -1,
+     "right": 160
+    },
+    "hero": {
+     "text": "Club Innovation EMSI",
+     "words": 3,
+     "chars": 20,
+     "lines": 1,
+     "size": 72,
+     "vw": 5,
+     "font": "Cabinet Grotesk",
+     "weight": 800,
+     "tracking": -0.03,
+     "leading": 0.95,
+     "top": 167,
+     "tag": "h1",
+     "kind": "heading",
+     "align": "left",
+     "position": "left"
+    },
+    "charts": 0,
+    "layout": {
+     "panels": 6,
+     "firstScreen": 6,
+     "ragged": [
+      {
+       "diff": 80,
+       "top": 775
+      }
+     ],
+     "voids": [
+      {
+       "gap": 84,
+       "at": 1006,
+       "panel": "Atelier robotique : construire un line-f"
+      }
+     ]
+    },
+    "tiles": 0,
+    "panels": {
+     "count": 6,
+     "radii": [
+      [
+       0,
+       6
+      ]
+     ],
+     "heavyBorders": 4,
+     "borderSamples": [
+      "#14130f on #ffffff (18.59:1)",
+      "#14130f on #ffffff (18.59:1)",
+      "#14130f on #ffffff (18.59:1)"
+     ],
+     "heavyShadows": 0,
+     "softShadows": 0,
+     "shadowSamples": [],
+     "glass": 0
+    },
+    "chips": {
+     "count": 0,
+     "hues": 0,
+     "samples": []
+    },
+    "numbers": {
+     "cells": 0,
+     "leftAligned": 0,
+     "figures": 0,
+     "tabularShare": null,
+     "kpiMax": null
+    },
+    "rows": null,
+    "chartHues": 0,
+    "placeholders": [],
+    "type": {
+     "under13": 0.04,
+     "tiny": 0,
+     "tinySamples": [],
+     "sizes": [
+      12,
+      14,
+      16,
+      18,
+      19,
+      24,
+      60,
+      72
+     ]
+    },
+    "title": {
+     "text": "Club Innovation EMSI",
+     "size": 72,
+     "top": 167
+    },
+    "colourShare": 0.118
+   },
+   "consoleErrors": []
+  },
+  {
+   "width": 768,
+   "height": 1024,
+   "load": "load",
+   "screens": 2,
+   "motion": {
+    "elements": 5,
+    "css": 0,
+    "transitions": 0,
+    "scripted": 5,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "filled": [
+    0.73,
+    0.61
+   ],
+   "metrics": {
+    "viewport": {
+     "w": 768,
+     "h": 1024
+    },
+    "page": {
+     "height": 1622,
+     "screens": 1.6,
+     "words": 154,
+     "img": 0,
+     "video": 0,
+     "canvas": 0,
+     "svg": 5,
+     "sections": 0,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 0,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": [],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "Club Innovation EMSI",
+     "words": 3,
+     "chars": 20,
+     "lines": 1,
+     "size": 55,
+     "vw": 7.1,
+     "font": "Cabinet Grotesk",
+     "weight": 800,
+     "tracking": -0.03,
+     "leading": 0.95,
+     "top": 175,
+     "tag": "h1",
+     "kind": "heading",
+     "align": "left",
+     "position": "left"
+    },
+    "h1": {
+     "text": "Club Innovation EMSI",
+     "words": 3,
+     "lines": 1,
+     "size": 54.6,
+     "font": "Cabinet Grotesk"
+    },
+    "headings": [
+     {
+      "text": "Club Innovation EMSI",
+      "words": 3,
+      "chars": 20,
+      "lines": 1,
+      "size": 54.6,
+      "vw": 7.1,
+      "font": "Cabinet Grotesk",
+      "weight": 800,
+      "tracking": -0.03,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.63,
+      "top": 175,
+      "tag": "h1",
+      "kind": "heading"
+     },
+     {
+      "text": "À propos",
+      "words": 2,
+      "chars": 8,
+      "lines": 1,
+      "size": 46.7,
+      "vw": 6.1,
+      "font": "Cabinet Grotesk",
+      "weight": 800,
+      "tracking": -0.03,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.96,
+      "top": 515,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Événements à venir",
+      "words": 3,
+      "chars": 18,
+      "lines": 1,
+      "size": 46.7,
+      "vw": 6.1,
+      "font": "Cabinet Grotesk",
+      "weight": 800,
+      "tracking": -0.03,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.96,
+      "top": 690,
+      "tag": "h2",
+      "kind": "heading"
+     }
+    ],
+    "headingSummary": {
+     "count": 3,
+     "maxLines": 1,
+     "over2Lines": 0,
+     "statements": 0,
+     "centered": 0,
+     "medianWords": 3,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Cabinet Grotesk",
+       "share": 1,
+       "mono": false
+      }
+     ],
+     "familyCount": 1,
+     "sizes": [
+      12,
+      14,
+      16,
+      18,
+      24,
+      36,
+      47,
+      55
+     ],
+     "sizeCount": 8,
+     "notLoaded": [],
+     "body": {
+      "font": "Cabinet Grotesk",
+      "size": 17.9,
+      "leading": 1.63,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 17.4
+     },
+     "measureChars": 68,
+     "max": {
+      "size": 54.6,
+      "vw": 7.1,
+      "font": "Cabinet Grotesk",
+      "text": "Club Innovation EMSI"
+     },
+     "monoShare": 0,
+     "monoProseShare": 0,
+     "monoFamilies": [],
+     "monoSamples": [],
+     "microLabels": 0,
+     "microLabelShare": 0,
+     "microSamples": [],
+     "upperShare": 0.01,
+     "centerShare": 0.03,
+     "smallText": 2
+    },
+    "eyebrows": [
+     {
+      "text": "Abonnés",
+      "above": "À propos",
+      "upper": false,
+      "tracked": false,
+      "mono": false,
+      "pill": false,
+      "size": 12,
+      "top": 433
+     }
+    ],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#faf7f2",
+     "bodyBgHsl": {
+      "h": 38,
+      "s": 0.44,
+      "l": 0.96
+     },
+     "dark": false,
+     "sectionBgs": [
+      {
+       "color": "#faf7f2",
+       "top": 56,
+       "hsl": {
+        "h": 38,
+        "s": 0.44,
+        "l": 0.96
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#14130f",
+       "share": 0.66
+      },
+      {
+       "color": "#faf7f2",
+       "share": 0.27
+      },
+      {
+       "color": "#6f6a5e",
+       "share": 0.07
+      }
+     ],
+     "button": {
+      "bg": "#14130f",
+      "hsl": {
+       "h": 48,
+       "s": 0.14,
+       "l": 0.07
+      },
+      "fg": "#faf7f2"
+     },
+     "lowContrast": []
+    },
+    "buttons": {
+     "count": 1,
+     "inHero": 1,
+     "radius": 0,
+     "height": 44,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "Club suivi"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 0,
+     "scrims": 0,
+     "gradientSamples": [],
+     "gradientText": 0,
+     "hairlines": 0,
+     "hairlineSamples": [],
+     "outlinedBoxes": 0,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 0,
+     "boxRadius": 0,
+     "squareMedia": 0,
+     "roundedMedia": 0,
+     "mediaRadius": 0,
+     "textShadow": 0,
+     "cardRows": [
+      {
+       "count": 3,
+       "iconTopped": false,
+       "rounded": false,
+       "top": 754
+      }
+     ]
+    },
+    "heroMedia": [],
+    "nav": {
+     "links": 4,
+     "fixed": true,
+     "height": 56,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": [
+     "cabinet grotesk",
+     "cabinet grotesk fallback"
+    ]
+   },
+   "layout": {
+    "viewport": {
+     "w": 768,
+     "h": 1024
+    },
+    "pageH": 1622,
+    "margins": {
+     "left": 16,
+     "right": 16
+    },
+    "sections": [
+     {
+      "sel": "header.field-ink",
+      "tag": "header",
+      "top": 56,
+      "height": 217,
+      "words": 6,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Club Innovation EMSI",
+       "size": 55,
+       "tag": "h1"
+      },
+      "left": 40,
+      "right": 170,
+      "textLeft": 40,
+      "textRight": 170,
+      "fullBleed": false,
+      "footer": false,
+      "hero": true,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "main.mx-auto.max-w-6xl",
+      "tag": "main",
+      "top": 349,
+      "height": 1273,
+      "words": 124,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "À propos",
+       "size": 47,
+       "tag": "h2"
+      },
+      "left": 16,
+      "right": 51,
+      "textLeft": 16,
+      "textRight": 51,
+      "fullBleed": false,
+      "footer": true,
+      "hero": true,
+      "continues": false,
+      "pinned": false
+     }
+    ],
+    "gaps": [],
+    "h1s": [
+     {
+      "text": "Club Innovation EMSI",
+      "size": 55,
+      "top": 175,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 16,
+      "n": 3
+     },
+     {
+      "x": 40,
+      "n": 2
+     },
+     {
+      "x": 116,
+      "n": 1
+     },
+     {
+      "x": 414,
+      "n": 1
+     }
+    ],
+    "leftBlocks": 7,
+    "bodySize": 16,
+    "stage": false,
+    "explains": false,
+    "slivers": [],
+    "voidShare": 0,
+    "voidBox": null
+   },
+   "app": {
+    "viewport": {
+     "w": 768,
+     "h": 1024
+    },
+    "dark": false,
+    "ground": "#faf7f2",
+    "sidebar": null,
+    "topbar": {
+     "h": 56
+    },
+    "canvas": {
+     "left": -1,
+     "right": 16
+    },
+    "hero": {
+     "text": "Club Innovation EMSI",
+     "words": 3,
+     "chars": 20,
+     "lines": 1,
+     "size": 55,
+     "vw": 7.1,
+     "font": "Cabinet Grotesk",
+     "weight": 800,
+     "tracking": -0.03,
+     "leading": 0.95,
+     "top": 175,
+     "tag": "h1",
+     "kind": "heading",
+     "align": "left",
+     "position": "left"
+    },
+    "charts": 0,
+    "layout": {
+     "panels": 6,
+     "firstScreen": 5,
+     "ragged": [
+      {
+       "diff": 80,
+       "top": 754
+      }
+     ],
+     "voids": [
+      {
+       "gap": 84,
+       "at": 985,
+       "panel": "Atelier robotique : construire un line-f"
+      }
+     ]
+    },
+    "tiles": 0,
+    "panels": {
+     "count": 6,
+     "radii": [
+      [
+       0,
+       6
+      ]
+     ],
+     "heavyBorders": 4,
+     "borderSamples": [
+      "#14130f on #ffffff (18.59:1)",
+      "#14130f on #ffffff (18.59:1)",
+      "#14130f on #ffffff (18.59:1)"
+     ],
+     "heavyShadows": 0,
+     "softShadows": 0,
+     "shadowSamples": [],
+     "glass": 0
+    },
+    "chips": {
+     "count": 0,
+     "hues": 0,
+     "samples": []
+    },
+    "numbers": {
+     "cells": 0,
+     "leftAligned": 0,
+     "figures": 0,
+     "tabularShare": null,
+     "kpiMax": null
+    },
+    "rows": null,
+    "chartHues": 0,
+    "placeholders": [],
+    "type": {
+     "under13": 0.04,
+     "tiny": 0,
+     "tinySamples": [],
+     "sizes": [
+      12,
+      14,
+      16,
+      18,
+      24,
+      47,
+      55
+     ]
+    },
+    "title": {
+     "text": "Club Innovation EMSI",
+     "size": 55,
+     "top": 175
+    },
+    "colourShare": 0.196
+   },
+   "consoleErrors": []
+  },
+  {
+   "width": 390,
+   "height": 844,
+   "load": "load",
+   "screens": 3,
+   "motion": {
+    "elements": 5,
+    "css": 0,
+    "transitions": 0,
+    "scripted": 5,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "filled": [
+    0.66,
+    0.84,
+    0.84
+   ],
+   "metrics": {
+    "viewport": {
+     "w": 390,
+     "h": 844
+    },
+    "page": {
+     "height": 2010,
+     "screens": 2.4,
+     "words": 147,
+     "img": 0,
+     "video": 0,
+     "canvas": 0,
+     "svg": 5,
+     "sections": 0,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 0,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": [],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "Club Innovation EMSI",
+     "words": 3,
+     "chars": 20,
+     "lines": 1,
+     "size": 29,
+     "vw": 7.5,
+     "font": "Cabinet Grotesk",
+     "weight": 800,
+     "tracking": -0.03,
+     "leading": 0.95,
+     "top": 171,
+     "tag": "h1",
+     "kind": "heading",
+     "align": "left",
+     "position": "left"
+    },
+    "h1": {
+     "text": "Club Innovation EMSI",
+     "words": 3,
+     "lines": 1,
+     "size": 29.4,
+     "font": "Cabinet Grotesk"
+    },
+    "headings": [
+     {
+      "text": "C Club Innovation EMSI",
+      "words": 4,
+      "chars": 22,
+      "lines": 1,
+      "size": 36,
+      "vw": 9.2,
+      "font": "Cabinet Grotesk",
+      "weight": 800,
+      "tracking": 0,
+      "leading": 1.11,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.92,
+      "top": 145,
+      "tag": "div",
+      "kind": "heading"
+     },
+     {
+      "text": "1",
+      "words": 1,
+      "chars": 1,
+      "lines": 1,
+      "size": 24,
+      "vw": 6.2,
+      "font": "Cabinet Grotesk",
+      "weight": 700,
+      "tracking": 0,
+      "leading": 1.33,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.19,
+      "top": 415,
+      "tag": "p",
+      "kind": "statement"
+     },
+     {
+      "text": "3",
+      "words": 1,
+      "chars": 1,
+      "lines": 1,
+      "size": 24,
+      "vw": 6.2,
+      "font": "Cabinet Grotesk",
+      "weight": 700,
+      "tracking": 0,
+      "leading": 1.33,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.19,
+      "top": 415,
+      "tag": "p",
+      "kind": "statement"
+     },
+     {
+      "text": "2",
+      "words": 1,
+      "chars": 1,
+      "lines": 1,
+      "size": 24,
+      "vw": 6.2,
+      "font": "Cabinet Grotesk",
+      "weight": 700,
+      "tracking": 0,
+      "leading": 1.33,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "right",
+      "widthRatio": 0.19,
+      "top": 415,
+      "tag": "p",
+      "kind": "statement"
+     },
+     {
+      "text": "À propos",
+      "words": 2,
+      "chars": 8,
+      "lines": 1,
+      "size": 36,
+      "vw": 9.2,
+      "font": "Cabinet Grotesk",
+      "weight": 800,
+      "tracking": -0.03,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.92,
+      "top": 547,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Événements à venir",
+      "words": 3,
+      "chars": 18,
+      "lines": 1,
+      "size": 36,
+      "vw": 9.2,
+      "font": "Cabinet Grotesk",
+      "weight": 800,
+      "tracking": -0.03,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.92,
+      "top": 736,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Atelier robotique : construire un line-follower",
+      "words": 6,
+      "chars": 47,
+      "lines": 2,
+      "size": 24,
+      "vw": 6.2,
+      "font": "Cabinet Grotesk",
+      "weight": 800,
+      "tracking": -0.02,
+      "leading": 1.05,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.79,
+      "top": 970,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "ETH 2026 — EMSI Tech Hackathon : Tech for Good",
+      "words": 10,
+      "chars": 46,
+      "lines": 2,
+      "size": 24,
+      "vw": 6.2,
+      "font": "Cabinet Grotesk",
+      "weight": 800,
+      "tracking": -0.02,
+      "leading": 1.05,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.79,
+      "top": 1326,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "EMSI Robotic Competition (ERC) — tours éliminatoires",
+      "words": 7,
+      "chars": 52,
+      "lines": 2,
+      "size": 24,
+      "vw": 6.2,
+      "font": "Cabinet Grotesk",
+      "weight": 800,
+      "tracking": -0.02,
+      "leading": 1.05,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.78,
+      "top": 1734,
+      "tag": "h3",
+      "kind": "heading"
+     }
+    ],
+    "headingSummary": {
+     "count": 9,
+     "maxLines": 2,
+     "over2Lines": 0,
+     "statements": 3,
+     "centered": 0,
+     "medianWords": 3,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Cabinet Grotesk",
+       "share": 1,
+       "mono": false
+      }
+     ],
+     "familyCount": 1,
+     "sizes": [
+      12,
+      14,
+      16,
+      17,
+      18,
+      24,
+      29,
+      36
+     ],
+     "sizeCount": 8,
+     "notLoaded": [],
+     "body": {
+      "font": "Cabinet Grotesk",
+      "size": 17,
+      "leading": 1.63,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 17.4
+     },
+     "measureChars": 42,
+     "max": {
+      "size": 36,
+      "vw": 9.2,
+      "font": "Cabinet Grotesk",
+      "text": "C"
+     },
+     "monoShare": 0,
+     "monoProseShare": 0,
+     "monoFamilies": [],
+     "monoSamples": [],
+     "microLabels": 0,
+     "microLabelShare": 0,
+     "microSamples": [],
+     "upperShare": 0,
+     "centerShare": 0.02,
+     "smallText": 2
+    },
+    "eyebrows": [],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#faf7f2",
+     "bodyBgHsl": {
+      "h": 38,
+      "s": 0.44,
+      "l": 0.96
+     },
+     "dark": false,
+     "sectionBgs": [
+      {
+       "color": "#faf7f2",
+       "top": 56,
+       "hsl": {
+        "h": 38,
+        "s": 0.44,
+        "l": 0.96
+       }
+      },
+      {
+       "color": "#14130f",
+       "top": 790,
+       "hsl": {
+        "h": 48,
+        "s": 0.14,
+        "l": 0.07
+       }
+      },
+      {
+       "color": "#ff4d00",
+       "top": 1222,
+       "hsl": {
+        "h": 18,
+        "s": 1,
+        "l": 0.5
+       }
+      },
+      {
+       "color": "#ffffff",
+       "top": 1574,
+       "hsl": {
+        "h": 0,
+        "s": 0,
+        "l": 1
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#14130f",
+       "share": 0.67
+      },
+      {
+       "color": "#faf7f2",
+       "share": 0.28
+      },
+      {
+       "color": "#6f6a5e",
+       "share": 0.05
+      }
+     ],
+     "button": {
+      "bg": "#14130f",
+      "hsl": {
+       "h": 48,
+       "s": 0.14,
+       "l": 0.07
+      },
+      "fg": "#faf7f2"
+     },
+     "lowContrast": []
+    },
+    "buttons": {
+     "count": 1,
+     "inHero": 1,
+     "radius": 0,
+     "height": 44,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "Club suivi"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 0,
+     "scrims": 0,
+     "gradientSamples": [],
+     "gradientText": 0,
+     "hairlines": 0,
+     "hairlineSamples": [],
+     "outlinedBoxes": 0,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 0,
+     "boxRadius": 0,
+     "squareMedia": 0,
+     "roundedMedia": 0,
+     "mediaRadius": 0,
+     "textShadow": 0,
+     "cardRows": []
+    },
+    "heroMedia": [],
+    "nav": {
+     "links": 1,
+     "fixed": true,
+     "height": 56,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": [
+     "cabinet grotesk",
+     "cabinet grotesk fallback"
+    ]
+   },
+   "layout": {
+    "viewport": {
+     "w": 390,
+     "h": 844
+    },
+    "pageH": 2010,
+    "margins": {
+     "left": 16,
+     "right": 19
+    },
+    "sections": [
+     {
+      "sel": "header.field-ink",
+      "tag": "header",
+      "top": 56,
+      "height": 201,
+      "words": 6,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Club Innovation EMSI",
+       "size": 29,
+       "tag": "h1"
+      },
+      "left": 40,
+      "right": 19,
+      "textLeft": 40,
+      "textRight": 19,
+      "fullBleed": false,
+      "footer": false,
+      "hero": true,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "main.mx-auto.max-w-6xl",
+      "tag": "main",
+      "top": 365,
+      "height": 1645,
+      "words": 124,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "À propos",
+       "size": 36,
+       "tag": "h2"
+      },
+      "left": 16,
+      "right": 36,
+      "textLeft": 16,
+      "textRight": 36,
+      "fullBleed": false,
+      "footer": true,
+      "hero": true,
+      "continues": false,
+      "pinned": false
+     }
+    ],
+    "gaps": [],
+    "h1s": [
+     {
+      "text": "Club Innovation EMSI",
+      "size": 29,
+      "top": 171,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 16,
+      "n": 3
+     },
+     {
+      "x": 40,
+      "n": 3
+     },
+     {
+      "x": 116,
+      "n": 1
+     }
+    ],
+    "leftBlocks": 7,
+    "bodySize": 16,
+    "stage": false,
+    "explains": false,
+    "slivers": [],
+    "voidShare": 0,
+    "voidBox": null
+   },
+   "app": {
+    "viewport": {
+     "w": 390,
+     "h": 844
+    },
+    "dark": false,
+    "ground": "#faf7f2",
+    "sidebar": null,
+    "topbar": {
+     "h": 56
+    },
+    "canvas": {
+     "left": -1,
+     "right": 16
+    },
+    "hero": {
+     "text": "Club Innovation EMSI",
+     "words": 3,
+     "chars": 20,
+     "lines": 1,
+     "size": 29,
+     "vw": 7.5,
+     "font": "Cabinet Grotesk",
+     "weight": 800,
+     "tracking": -0.03,
+     "leading": 0.95,
+     "top": 171,
+     "tag": "h1",
+     "kind": "heading",
+     "align": "left",
+     "position": "left"
+    },
+    "charts": 0,
+    "layout": {
+     "panels": 3,
+     "firstScreen": 1,
+     "ragged": [],
+     "voids": [
+      {
+       "gap": 84,
+       "at": 1021,
+       "panel": "Atelier robotique : construire un line-f"
+      }
+     ]
+    },
+    "tiles": 0,
+    "panels": {
+     "count": 3,
+     "radii": [
+      [
+       0,
+       3
+      ]
+     ],
+     "heavyBorders": 1,
+     "borderSamples": [
+      "#14130f on #ffffff (18.59:1)"
+     ],
+     "heavyShadows": 0,
+     "softShadows": 0,
+     "shadowSamples": [],
+     "glass": 0
+    },
+    "chips": {
+     "count": 0,
+     "hues": 0,
+     "samples": []
+    },
+    "numbers": {
+     "cells": 0,
+     "leftAligned": 0,
+     "figures": 0,
+     "tabularShare": null,
+     "kpiMax": null
+    },
+    "rows": null,
+    "chartHues": 0,
+    "placeholders": [],
+    "type": {
+     "under13": 0.04,
+     "tiny": 0,
+     "tinySamples": [],
+     "sizes": [
+      12,
+      14,
+      16,
+      17,
+      18,
+      24,
+      29,
+      36
+     ]
+    },
+    "title": {
+     "text": "Club Innovation EMSI",
+     "size": 29,
+     "top": 171
+    },
+    "colourShare": 0.13
+   },
+   "consoleErrors": []
+  }
+ ],
+ "findings": [
+  {
+   "level": "WARN",
+   "id": "palette-cream",
+   "width": 1440,
+   "message": "Yellow-cream background (page background #faf7f2, section #faf7f2, text #faf7f2).",
+   "fix": "Use the drawn palette. If you want warmth, take a low-chroma stone or bone, not a yellow cream.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "WARN",
+   "id": "unused-canvas",
+   "width": 1440,
+   "message": "The content stops 160px short of the right edge while it starts -1px from the sidebar.",
+   "fix": "Let the grid fill the canvas (columns in fr units), or centre a capped canvas with equal margins. A dead strip on one side reads as unfinished."
+  },
+  {
+   "level": "WARN",
+   "id": "heavy-borders",
+   "width": 1440,
+   "message": "4 panel borders are dark against their ground: #14130f on #ffffff (18.59:1) | #14130f on #ffffff (18.59:1) | #14130f on #ffffff (18.59:1)",
+   "fix": "A panel border is a whisper: about 1.1–1.3:1 against its ground on a light screen (#e5e7eb–#ededed on white), and about 1.2–1.5:1 on a dark one (#1a1a1a on #000, #2e2e2e on #111). Darker lines turn the screen into a grid of boxes; keep the stronger line for controls.",
+   "alsoAt": [
+    768
+   ]
+  },
+  {
+   "level": "WARN",
+   "id": "ragged-row",
+   "width": 1440,
+   "message": "1 pair(s) of cards in one row end at different heights (by 80px).",
+   "fix": "Cards that share a row share a bottom edge: balance them by their content (the same number of rows, a block of similar height beside it), or stack them. In testing, ragged rows were marked down every time.",
+   "alsoAt": [
+    768
+   ]
+  },
+  {
+   "level": "WARN",
+   "id": "panel-void",
+   "width": 1440,
+   "message": "1 card(s) hold a blank band inside: 84px in \"Atelier robotique : construire un line-f\".",
+   "fix": "A card stretches to its neighbour only when it has content to fill. Keep a legend or a note directly under its chart (only an action or a total may sit at a stretched card's foot), let a short card keep its own height (align-items: start), and let a filtered block shrink to its rows."
+  },
+  {
+   "level": "WARN",
+   "id": "app-title-size",
+   "width": 1440,
+   "message": "The h1 is 72px (\"Club Innovation EMSI\").",
+   "fix": "An app screen is not a landing page: the title is 18-32px (20-24px on a phone).",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "FAIL",
+   "id": "still-page",
+   "width": 1440,
+   "message": "Only 5 element(s) moved while the page loaded and scrolled.",
+   "fix": "Build the motion layer (SKILL.md step 9, references/motion.md): the signature move, an entrance for the parts of every section, feedback on every control, and one moving picture. Transform and opacity only, with a reduced-motion fallback."
+  },
+  {
+   "level": "WARN",
+   "id": "colour-sprawl",
+   "width": 768,
+   "message": "20% of the first screen is strongly coloured.",
+   "fix": "Keep the screen neutral and spend colour on data and status: the studied screens sit near 3%, and only tinted styles reach 10–15%, as pale tints rather than saturated fills.",
+   "alsoAt": [
+    390
+   ]
+  }
+ ],
+ "images": [
+  {
+   "viewport": "desktop",
+   "width": 1440,
+   "fold": "C:\\Users\\Hp\\Desktop\\EMSI\\DEV- NUMERIQUE\\WEB\\WEB1\\.taste-skill\\insp-clubprofile.json\\desktop-fold.jpg",
+   "pages": [
+    "C:\\Users\\Hp\\Desktop\\EMSI\\DEV- NUMERIQUE\\WEB\\WEB1\\.taste-skill\\insp-clubprofile.json\\desktop-screen-00.jpg",
+    "C:\\Users\\Hp\\Desktop\\EMSI\\DEV- NUMERIQUE\\WEB\\WEB1\\.taste-skill\\insp-clubprofile.json\\desktop-screen-01.jpg"
+   ]
+  },
+  {
+   "viewport": "tablet",
+   "width": 768,
+   "fold": "C:\\Users\\Hp\\Desktop\\EMSI\\DEV- NUMERIQUE\\WEB\\WEB1\\.taste-skill\\insp-clubprofile.json\\tablet-fold.jpg",
+   "pages": [
+    "C:\\Users\\Hp\\Desktop\\EMSI\\DEV- NUMERIQUE\\WEB\\WEB1\\.taste-skill\\insp-clubprofile.json\\tablet-screen-00.jpg",
+    "C:\\Users\\Hp\\Desktop\\EMSI\\DEV- NUMERIQUE\\WEB\\WEB1\\.taste-skill\\insp-clubprofile.json\\tablet-screen-01.jpg"
+   ]
+  },
+  {
+   "viewport": "mobile",
+   "width": 390,
+   "fold": "C:\\Users\\Hp\\Desktop\\EMSI\\DEV- NUMERIQUE\\WEB\\WEB1\\.taste-skill\\insp-clubprofile.json\\mobile-fold.jpg",
+   "pages": [
+    "C:\\Users\\Hp\\Desktop\\EMSI\\DEV- NUMERIQUE\\WEB\\WEB1\\.taste-skill\\insp-clubprofile.json\\mobile-screen-00.jpg",
+    "C:\\Users\\Hp\\Desktop\\EMSI\\DEV- NUMERIQUE\\WEB\\WEB1\\.taste-skill\\insp-clubprofile.json\\mobile-screen-01.jpg",
+    "C:\\Users\\Hp\\Desktop\\EMSI\\DEV- NUMERIQUE\\WEB\\WEB1\\.taste-skill\\insp-clubprofile.json\\mobile-screen-02.jpg"
+   ]
+  }
+ ]
+}

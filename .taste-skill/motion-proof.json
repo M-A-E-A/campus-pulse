@@ -1,0 +1,41 @@
+{
+  "url": "http://localhost:3100",
+  "at": "2026-10-25T15:33:46.465Z",
+  "checks": {
+    "heroEntrance": {
+      "samples": 40,
+      "moved": true
+    },
+    "media": {
+      "reduce": false,
+      "noPref": true,
+      "cores": 5
+    },
+    "marquee": {
+      "animations": [
+        "cp-marquee",
+        "cp-fall"
+      ],
+      "x1": -568,
+      "x2": -700,
+      "movedPx": -132
+    },
+    "canvas": {
+      "onLoad": 1,
+      "afterSettle": 1
+    },
+    "accordion": {
+      "widthBefore": 118,
+      "widthMid": 457,
+      "widthAfter": 650,
+      "csstransitions": 0,
+      "animated": true
+    },
+    "deck": {
+      "pinned": true,
+      "rowTransform": "matrix(1, 0, 0, 1, -1804, 0)",
+      "scrollY": 6405
+    }
+  },
+  "consoleErrors": []
+}
