@@ -10,7 +10,7 @@ import type { Role } from "@prisma/client";
 
 // Full config for the server: real credentials check against the database.
 // Middleware loads only auth.config.ts (see src/middleware.ts).
-export const { handlers, auth, signIn, signOut } = NextAuth({
+export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
   ...authConfig,
   adapter: PrismaAdapter(prisma),
   providers: [

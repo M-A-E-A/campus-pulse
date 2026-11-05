@@ -15,7 +15,8 @@ export default auth((req) => {
   const needsAuth =
     pathname.startsWith("/dashboard") ||
     pathname.startsWith("/organizer") ||
-    pathname.startsWith("/admin");
+    pathname.startsWith("/admin") ||
+    pathname.startsWith("/choose");
 
   if (needsAuth && !user) {
     const login = new URL("/login", req.url);
@@ -40,5 +41,5 @@ export default auth((req) => {
 });
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/organizer/:path*", "/admin/:path*"],
+  matcher: ["/dashboard/:path*", "/organizer/:path*", "/admin/:path*", "/choose/:path*"],
 };

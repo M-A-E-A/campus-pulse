@@ -2,7 +2,8 @@
 
 import bcrypt from "bcryptjs";
 import { AuthError } from "next-auth";
-import { signIn, signOut } from "@/lib/auth";
+import { redirect } from "next/navigation";
+import { auth, signIn, signOut, unstable_update } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { loginLimiter, loginKey, LOGIN_LIMIT } from "@/lib/rate-limit";
 import { recordAudit } from "@/lib/audit";
@@ -12,17 +13,16 @@ import { getT, firstZodMessage } from "@/i18n/server";
 export type FormState = { error?: string } | null;
 
 /**
- * Where a role lands after signing in. This only decides when there is no
- * `from` — the middleware already sets `from` whenever it bounces someone off
- * a protected page, and that return trip still wins (a student who tapped Save
- * on an event has to come back to that event). Without this, every direct
- * sign-in landed on the student dashboard, so organizers and admins were
- * dropped on a page they cannot use.
+ * Where a sign-in lands when there is no `from` return trip. Admins go
+ * straight to their console; everyone else answers "student or
+ * event organizer?" on /choose first — that page picks the home they need
+ * and, from the organizer card, grants the role. The middleware already
+ * sets `from` whenever it bounces someone off a protected page, and that
+ * return trip still wins (a student who tapped Save on an event has to
+ * come back to that event).
  */
-function homePathFor(role: string | undefined): string {
-  if (role === "ADMIN") return "/admin";
-  if (role === "ORGANIZER") return "/organizer";
-  return "/dashboard";
+function postLoginPath(role: string | undefined): string {
+  return role === "ADMIN" ? "/admin" : "/choose";
 }
 
 /** `from` is caller-controlled, so it is only ever honoured as an in-app path.
@@ -63,8 +63,9 @@ export async function registerAction(_prev: FormState, formData: FormData): Prom
   await signIn("credentials", {
     email: parsed.data.email,
     password: parsed.data.password,
-    // Everyone registers as a student, so this is the student landing.
-    redirectTo: homePathFor("STUDENT"),
+    // Everyone registers as a student — the choice page asks who they are
+    // before landing them (admins do not exist yet at this point).
+    redirectTo: "/choose",
   });
   return null;
 }
@@ -92,7 +93,7 @@ export async function loginAction(_prev: FormState, formData: FormData): Promise
     await signIn("credentials", {
       email,
       password: formData.get("password"),
-      redirectTo: safeFrom(formData.get("from")) ?? homePathFor(user?.role),
+      redirectTo: safeFrom(formData.get("from")) ?? postLoginPath(user?.role),
     });
     return null;
   } catch (error) {
@@ -124,4 +125,37 @@ export async function loginAction(_prev: FormState, formData: FormData): Promise
 
 export async function logoutAction() {
   await signOut({ redirectTo: "/" });
+}
+
+/**
+ * The /choose organizer card. A student is promoted to ORGANIZER here —
+ * self-serve, because real event power still needs an admin-curated
+ * ClubMember row (this only opens the console, whose no-club state already
+ * says "Ask an admin to add you"). The fresh role is then written into the
+ * session cookie: edge middleware reads only the JWT, so without the
+ * `unstable_update` refresh it would bounce the caller it was just granted
+ * access to. Existing organizers only redirect; admins never see the page.
+ */
+export async function chooseRoleAction(): Promise<never> {
+  const session = await auth();
+  const user = session?.user;
+  if (!user) redirect("/login?from=/choose");
+  if (user.role === "ADMIN") redirect("/admin");
+
+  if (user.role === "STUDENT") {
+    await prisma.user.update({ where: { id: user.id }, data: { role: "ORGANIZER" } });
+    await recordAudit({
+      actorId: user.id,
+      actorName: user.name ?? user.email ?? "unknown",
+      action: "user.self_promoted_organizer",
+      targetType: "user",
+      targetId: user.id,
+      targetLabel: user.email ?? user.id,
+      meta: { via: "choose" },
+    });
+    // Re-signs the JWT with the new role and sets the cookie on this
+    // response, so the redirect below passes middleware as an organizer.
+    await unstable_update({ user: { role: "ORGANIZER" } });
+  }
+  redirect("/organizer");
 }

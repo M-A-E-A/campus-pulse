@@ -20,10 +20,20 @@ export const authConfig = {
   trustHost: true,
   providers: [], // added in src/lib/auth.ts
   callbacks: {
-    jwt({ token, user }) {
+    jwt({ token, user, session, trigger }) {
       if (user) {
         token.id = user.id as string;
         token.role = user.role;
+      }
+      // /choose's organizer card promotes through `unstable_update()`, which
+      // reaches this callback as `session` with trigger "update" — there is
+      // no `user` on that path. Middleware is edge-only (no Prisma) and reads
+      // this JWT alone, so the new role has to be written into the token and
+      // re-signed here or /organizer would bounce the caller it was just
+      // granted access to.
+      if (trigger === "update" && session) {
+        const role = (session.user?.role ?? session.role) as Role | undefined;
+        if (role) token.role = role;
       }
       return token;
     },

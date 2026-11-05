@@ -246,17 +246,28 @@ async function main() {
     categoryId: categories["Ingénierie Automatisme et Informatique Industrielle"],
   });
 
-  // The demo student's QR ticket (demo-ticket-code-0001) — used in the pitch.
-  await prisma.rsvp.upsert({
-    where: { userId_eventId: { userId: student.id, eventId: lineFollowerId } },
-    update: {},
-    create: {
-      userId: student.id,
-      eventId: lineFollowerId,
-      status: "CONFIRMED",
-      ticketCode: "demo-ticket-code-0001",
-    },
-  });
+  // The demo student's QR ticket (demo-ticket-code-0001) — used in the pitch —
+  // plus two more confirmed RSVPs: the poster event's going-block names the
+  // first two by RSVP date, and probe-going asserts the exact three-name line
+  // (the FR plural "three" is exercised nowhere else). createdAt is staggered
+  // so the order survives every re-seed: three rows written in the same
+  // millisecond would tie, and the page and the probe's own query could then
+  // disagree on the order and render different lines.
+  const goingHours = [6, 3, 1];
+  for (const [i, user] of [student, organizer, admin].entries()) {
+    const createdAt = new Date(Date.now() - goingHours[i] * 3_600_000);
+    await prisma.rsvp.upsert({
+      where: { userId_eventId: { userId: user.id, eventId: lineFollowerId } },
+      update: { createdAt },
+      create: {
+        userId: user.id,
+        eventId: lineFollowerId,
+        status: "CONFIRMED",
+        ticketCode: `demo-ticket-code-000${i + 1}`,
+        createdAt,
+      },
+    });
+  }
 
   await upsertEvent({
     id: "seed-event-midnight-pitch",

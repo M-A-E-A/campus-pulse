@@ -1153,3 +1153,57 @@ Endgame: ~~SVG logo pick~~ ✅ → ~~`npx ui-craft-detect ./src`~~ ✅ →
 ## Throughout — credibility layer
 E2E on the critical path (RSVP transaction, waitlist promotion, QR check-in),
 GitHub Actions CI, rate limiting on auth/RSVP, audit log.
+
+## Feature ✅ — choose-role gate `/choose` (student or event organizer?)
+- After every non-admin sign-in the app asks "Student or event
+  organizer?" before choosing a home. `postLoginPath()`: ADMIN → `/admin`,
+  everyone else → `/choose`; `registerAction` lands there too; a
+  middleware `from` return-trip still wins (a bounced `/dashboard` or
+  saved-event visit goes straight back). `/choose` joined `needsAuth` +
+  the matcher — anonymous visits bounce to `/login?from=%2Fchoose`.
+- The organizer card runs `chooseRoleAction`: STUDENT → ORGANIZER (prisma
+  update + `recordAudit` `user.self_promoted_organizer` `{via:"choose"}` +
+  `unstable_update({ user: { role } })` + redirect `/organizer`). The jwt
+  callback's new `trigger === "update"` branch writes the role into the
+  token — edge middleware reads ONLY the JWT, so without that re-sign the
+  caller would be bounced off the very console it was just granted
+  (probe-choose exists for exactly that regression). Real event power
+  still needs an admin-curated `ClubMember`: the no-club console keeps
+  its honest "Ask an admin…" state, so the grant only opens the console.
+  Student card = plain link to `/dashboard` (no demotion); existing
+  organizers route without a second promotion; admins never see the page.
+- Page: headline on the page grid (wordmark's left edge) over a pair of
+  colour fields — surface (student) / ink (organizer) — display-chapter
+  h1 → h2 ×2, forward-arrow CTAs (`rtl:-scale-x-100`, direction-neutral
+  `group-hover:underline`), no entrance motion (utility gate). Copy
+  net-new: `auth.choose.*` ×3 locales + audit label ×3.
+- `scripts/probe-choose.mjs` **14/14** (permanent; throwaway account
+  registered through the real form each run, user + audit rows deleted
+  after): anon bounce with `from`, register → `/choose`, FR content,
+  promotion → session role + DB role + audit row, `/organizer` entered on
+  the fresh JWT (never bounced to `/dashboard`), honest no-club console,
+  student routing, AR `dir=rtl` + AR title, admin skip, organizer
+  every-login, `from=/dashboard` bypass. En route fix: the session
+  cookie outlived `Network.clearBrowserCookies` once — the helper now
+  deletes cookies by name.
+- Seed contract fixed (found by probe-going after the DB wipe): the
+  poster event's going-block promises three confirmed RSVPs, but the
+  committed seed only ever wrote Salma's — the FR three-name line was
+  living on probe residue (`door-probe-omar`). `prisma/seed.ts` now
+  writes the trio (Salma / Omar / Admin) with staggered `createdAt`, so
+  the order — and the line — survive every re-seed. probe-going back to
+  **10/10** standalone.
+- Gates: tsc 0 · eslint 0 · build 0 (`/choose` 179 B) · smoke **84/84** ·
+  probe-choose **14/14** · login-driving regressions: audit **11/11** ·
+  camera **8/8** · categories **9/9** · door **12/12** · going **10/10** ·
+  offline **7/7** · pass **16/16** · scan **5/5** · wallet **15/15** ·
+  detector **0 new FAIL** (touched files clean; the repo-wide 61 FAIL
+  are pre-existing asset/offline/insights/emoji findings) · Lighthouse
+  `/choose` (mobile, authed via Cookie extra-header) **93 / 100 / 100 /
+  100**, FCP = LCP 905 ms.
+- Copy follow-up pending approval (existing-page copy change): the
+  register sub line — "Everyone starts as a student. Clubs promote
+  organizers." / FR / AR — is stale now that the choice page grants the
+  organizer role. Proposed: "Everyone starts as a student. Pick
+  organizer from your next login." (FR/AR to match). Left untouched
+  pending sign-off.

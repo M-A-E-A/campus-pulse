@@ -46,6 +46,10 @@ export const en = {
   "admin.clubs.promoteHint":
     "They must already have an account (registered as a student).",
   "admin.clubs.emailPh": "student@univ.ma",
+  // Label, not the example address — the placeholder shows the FORMAT,
+  // the label names the FIELD (screen readers must not read an email
+  // address as the field's name).
+  "admin.clubs.emailLabel": "Email",
   "admin.clubs.pickClub": "Pick a club",
   "admin.clubs.promoting": "Promoting…",
   "admin.clubs.promoteBtn": "Promote to organizer",
@@ -55,6 +59,11 @@ export const en = {
   "admin.categories.addTitle": "Add a category",
   "admin.categories.count": "{n} events",
   "admin.categories.delete": "Delete",
+  // Two-step delete (house pattern: RejectForm) — the confirm button
+  // carries the item's name so nobody deletes the wrong row by reflex.
+  "admin.categories.deleteConfirm": "Delete “{name}”?",
+  "admin.categories.deleteCancel": "Cancel",
+  "admin.categories.nameLabel": "Category name",
   "admin.categories.ph": "e.g. Sports",
   "admin.categories.adding": "Adding…",
   "admin.categories.add": "Add",
@@ -83,6 +92,7 @@ export const en = {
   "admin.audit.action.category.deleted": "Category deleted",
   "admin.audit.action.club.created": "Club created",
   "admin.audit.action.user.promoted_organizer": "Promoted to organizer",
+  "admin.audit.action.user.self_promoted_organizer": "Became an organizer",
   "admin.audit.action.auth.rate_limited": "Login locked (too many attempts)",
 } as const;
 
@@ -126,6 +136,7 @@ export const fr: Record<keyof typeof en, string> = {
   "admin.clubs.promoteHint":
     "Cette personne doit déjà avoir un compte (inscrite comme étudiant).",
   "admin.clubs.emailPh": "student@univ.ma",
+  "admin.clubs.emailLabel": "E-mail",
   "admin.clubs.pickClub": "Choisissez un club",
   "admin.clubs.promoting": "Promotion en cours…",
   "admin.clubs.promoteBtn": "Promouvoir organisateur",
@@ -134,6 +145,9 @@ export const fr: Record<keyof typeof en, string> = {
   "admin.categories.addTitle": "Ajouter une catégorie",
   "admin.categories.count": "{n} événements",
   "admin.categories.delete": "Supprimer",
+  "admin.categories.deleteConfirm": "Supprimer « {name} » ?",
+  "admin.categories.deleteCancel": "Annuler",
+  "admin.categories.nameLabel": "Nom de la catégorie",
   "admin.categories.ph": "ex. Sport",
   "admin.categories.adding": "Ajout en cours…",
   "admin.categories.add": "Ajouter",
@@ -158,6 +172,7 @@ export const fr: Record<keyof typeof en, string> = {
   "admin.audit.action.category.deleted": "Catégorie supprimée",
   "admin.audit.action.club.created": "Club créé",
   "admin.audit.action.user.promoted_organizer": "Promu organisateur",
+  "admin.audit.action.user.self_promoted_organizer": "S'est promu organisateur",
   "admin.audit.action.auth.rate_limited": "Connexion verrouillée (trop de tentatives)",
 };
 
@@ -198,6 +213,7 @@ export const ar: Record<keyof typeof en, string> = {
   "admin.clubs.promoteTitle": "ترقية شخص إلى منظم",
   "admin.clubs.promoteHint": "يجب أن يملك حساباً مسبقاً (مسجّل كطالب).",
   "admin.clubs.emailPh": "student@univ.ma",
+  "admin.clubs.emailLabel": "البريد الإلكتروني",
   "admin.clubs.pickClub": "اختر نادياً",
   "admin.clubs.promoting": "جارٍ الترقية…",
   "admin.clubs.promoteBtn": "ترقية إلى منظم",
@@ -206,6 +222,9 @@ export const ar: Record<keyof typeof en, string> = {
   "admin.categories.addTitle": "إضافة فئة",
   "admin.categories.count": "{n} فعاليات",
   "admin.categories.delete": "حذف",
+  "admin.categories.deleteConfirm": "حذف «{name}»؟",
+  "admin.categories.deleteCancel": "إلغاء",
+  "admin.categories.nameLabel": "اسم الفئة",
   "admin.categories.ph": "مثال: رياضة",
   "admin.categories.adding": "جارٍ الإضافة…",
   "admin.categories.add": "إضافة",
@@ -230,5 +249,6 @@ export const ar: Record<keyof typeof en, string> = {
   "admin.audit.action.category.deleted": "تم حذف الفئة",
   "admin.audit.action.club.created": "تم إنشاء النادي",
   "admin.audit.action.user.promoted_organizer": "ترقية إلى منظم",
+  "admin.audit.action.user.self_promoted_organizer": "ترقّى نفسه إلى منظم",
   "admin.audit.action.auth.rate_limited": "قفل الدخول (محاولات كثيرة)",
 };
