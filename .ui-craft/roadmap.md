@@ -1114,7 +1114,7 @@ fix:
   896 ↔ 3211ms — `Entrance.tsx` has the same post-paint `gsap.from`
   re-hide; the seen-elements rule from EventsExplorer would stabilize
   it. Also: `/events` a11y 98 = `heading-order` (h1 → h3, cards skip
-  h2).
+  h2) — closed ✅, see "Follow-ups" at the end.
 
 ## Endgame — step 6: honest score ✅ DONE (judged — deterministic tool absent)
 The deterministic UICraftScore tooling is **not installed in this
@@ -1274,3 +1274,74 @@ GitHub Actions CI, rate limiting on auth/RSVP, audit log.
   meta description, link text, anchors, hreflang) passes at 100;
   dropping noindex to chase the number would advertise the creator
   door to search engines.
+
+## Follow-ups ✅ — the three picked tails, closed
+
+### 1. `/events` a11y 98 → 100 (`heading-order`)
+- Cause: the card wall sits directly under the page `h1` while every
+  `EventCard` title was a hardcoded `h3` — the outline read
+  `h1 → h3 ×5` (cards skip h2).
+- Fix: `EventCard headingLevel?: 2 | 3` (default 3) renders a dynamic
+  `Title` tag. Grid wall and map panel pass 2 (nothing sits between h1
+  and the cards); calendar (day `h2` already above) and the club page
+  (section `h2`s above) keep 3. EventsMap's off-map list heading went
+  `h3` → `h2` too: it is the only section below the h1 when no card is
+  selected.
+- Probes that pinned the tag (`probe-map.mjs:43`, `probe-geo.mjs:30`)
+  now select `[data-flip-id] :is(h2,h3)` — level-agnostic.
+- Verified: rendered `/events` outline `h1 h2 h2 h2 h2 h2`; Lighthouse
+  13.6.0 `/events` **a11y 100** with `heading-order` score 1 (was
+  score 0 / category 98), bp 100, seo 100.
+
+### 2. Em-dash copy: 51 → 0 on the gate scope
+- The gate's scope, reconstructed: the 21 files touched since
+  `a5774ee` produce exactly `51 em dashes` (one aggregate WARN, the
+  detector only fires above 4). The round scope adds the four touched
+  components + `prisma.config.ts` → 26 files, 55 counted.
+- Per file (counted, comments stripped): `prisma/seed.ts` **41** ·
+  `dict/admin.ts` **6** (reject placeholder + audit lead ×3 locales) ·
+  `dict/auth.ts` **3** (`choose.sub` ×3 locales) ·
+  `creator/(console)/page.tsx` **1** (JSX comment) · `EventCard.tsx`
+  **3** (comments) · `PostEventThanks.tsx` **1** (→ `·`).
+- Tactics: prose got real punctuation (full stops / colons); labels,
+  titles and venues got ` - ` (seed's `VENUE_COORDS` keys and every
+  `location` value swapped together, so campus ordering still
+  matches); seed re-seeded through the config's `migrations.seed`.
+- Two pre-existing findings that widening the scope exposed were fixed,
+  not defended: EventsMap `divide-y` hairline FAIL → `space-y-1`;
+  EventsExplorer `min-h-screen` WARN → `min-h-dvh`.
+- Verified: detector **0 FAIL / 0 WARN** on the 26-file scope; no probe
+  or smoke assertion pins an em-dash (probe-audit's verbatim JOINED
+  string lives in `dict/detail.ts`, untouched).
+- Standing, out of scope: 155 counted em-dashes remain in 36 files the
+  gate never scans (`dict/detail.ts` JOINED, `events/[id]`, both
+  `opengraph-image.tsx`, other dicts). A full-app sweep is its own
+  pass — this tail only closed the gate scope.
+
+### 3. `package.json#prisma` → `prisma.config.ts`
+- The deprecated `prisma` block is gone from `package.json`;
+  `prisma.config.ts` carries `defineConfig({ schema, migrations: {
+  seed: "tsx prisma/seed.ts" } })`.
+- Gotcha: with a config file present the CLI skips `.env` auto-loading
+  ("Prisma config detected, skipping environment variable loading")
+  and died with `P1012 Environment variable not found: DIRECT_URL`.
+  The config now loads `.env` itself — zero-dep KEY=VALUE parser (`#`
+  comments, quotes), real environment variables always win (CI),
+  missing file tolerated (fresh clone).
+- Verified: `prisma generate` 0 with the deprecation warning gone ·
+  `migrate status` 0 (8 migrations, up to date) · `npx prisma db seed`
+  0 through `migrations.seed` (new copy in the DB).
+
+### Gates (whole round)
+tsc 0 · eslint 0 · build 0 · smoke **84/84** · detector **0 FAIL /
+0 WARN** (26 files; was 51 em dashes) · probe-choose **14/14** ·
+probe-creator **13/13** · probe-map **11/11** · probe-geo **10/10** ·
+probe-search **17/17** · probe-audit **11/11** · probe-feedback
+**14/14** · Lighthouse `/events` **100 a11y / 100 bp / 100 seo** with
+`heading-order` score 1. Perf 62 → 54 on back-to-back runs is load
+noise: TTFB 90–120 ms, TBT swinging 1110 ↔ 3280 ms while Spotify and
+Opera share the 5 logical cores (calm runs measured 83/85).
+- Build note: two identical `npm run build` crashes inside webpack's
+  `WasmHash._updateWithBuffer`, before any app code compiled — stale
+  `.next/cache` from the interrupted session. `Remove-Item .next` +
+  rebuild green (24/24 static pages).

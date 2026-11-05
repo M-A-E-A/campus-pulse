@@ -27,7 +27,7 @@ const check = (name, cond, detail) => {
 
 const has = (page, sel) => page.eval(`!!document.querySelector(${JSON.stringify(sel)})`);
 const firstTitle = (page) =>
-  page.eval(`(document.querySelector("[data-flip-id] h3")?.innerText ?? "")`);
+  page.eval(`(document.querySelector("[data-flip-id] :is(h2,h3)")?.innerText ?? "")`);
 const firstHasKm = (page) =>
   page.eval(`((document.querySelector("[data-flip-id]")?.innerText ?? "").includes(" km"))`);
 const campusValue = (page) =>

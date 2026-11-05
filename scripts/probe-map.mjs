@@ -40,7 +40,7 @@ async function click(page, sel) {
 
 const pinCount = (page) => page.eval(`document.querySelectorAll("[data-pin]").length`);
 const panelTitle = (page) =>
-  page.eval(`(document.querySelector("[data-flip-id] h3")?.innerText ?? "")`);
+  page.eval(`(document.querySelector("[data-flip-id] :is(h2,h3)")?.innerText ?? "")`);
 const hintShown = (page) =>
   page.eval(`document.body.innerText.includes("Sélectionnez un repère")`);
 

@@ -388,6 +388,9 @@ export function EventsMap({
           {selected ? (
             <EventCard
               event={selected}
+              // Map view has no intermediate sections: straight from the
+              // page h1 to the card title (a11y heading-order).
+              headingLevel={2}
               dealIndex={slots.get(selected.id) ?? 0}
               distance={
                 pos && selected.lat !== null && selected.lng !== null
@@ -405,10 +408,14 @@ export function EventsMap({
         {/* Events with no coordinates stay listed — never silently dropped. */}
         {offMap.length > 0 && (
           <div className="border-2 border-ink bg-paper p-4 sm:col-span-1 lg:col-span-2">
-            <h3 className="text-sm font-extrabold">
+            {/* h2, not h3: the map panel is the only section below the
+                page h1 (the card above may not be selected). */}
+            <h2 className="text-sm font-extrabold">
               {t("events.mapNoVenue")}
-            </h3>
-            <ul className="mt-2 divide-y divide-line">
+            </h2>
+            {/* Space, not rules: the detector bans hairline dividers (the
+                rows already carry py + a hover tone). */}
+            <ul className="mt-2 space-y-1">
               {offMap.map((e) => (
                 <li key={e.id}>
                   <Link

@@ -23,7 +23,7 @@ export const en = {
   // Post-login crossroads (src/app/choose/page.tsx): shown on every sign-in
   // except admins, who skip it. The organizer card promotes on the spot.
   "auth.choose.title": "Student or event organizer?",
-  "auth.choose.sub": "Choose the home you need — you can switch again every time you sign in.",
+  "auth.choose.sub": "Choose the home you need. You can switch again every time you sign in.",
   "auth.choose.student.title": "Student",
   "auth.choose.student.blurb": "Browse events, RSVP, and keep every ticket in one place.",
   "auth.choose.student.cta": "Open my tickets",
@@ -59,7 +59,7 @@ export const fr: Record<keyof typeof en, string> = {
 
   "auth.choose.title": "Étudiant ou organisateur ?",
   "auth.choose.sub":
-    "Choisissez l'accueil dont vous avez besoin — vous pourrez changer à chaque connexion.",
+    "Choisissez l'accueil dont vous avez besoin. Vous pourrez changer à chaque connexion.",
   "auth.choose.student.title": "Étudiant",
   "auth.choose.student.blurb":
     "Parcourez les événements, inscrivez-vous et retrouvez tous vos billets.",
@@ -93,7 +93,7 @@ export const ar: Record<keyof typeof en, string> = {
   "auth.register.hasAccount": "لديك حساب بالفعل؟",
 
   "auth.choose.title": "طالب أم منظم فعاليات؟",
-  "auth.choose.sub": "اختر الصفحة الرئيسية التي تحتاجها — يمكنك التبديل في كل تسجيل دخول.",
+  "auth.choose.sub": "اختر الصفحة الرئيسية التي تحتاجها. يمكنك التبديل في كل تسجيل دخول.",
   "auth.choose.student.title": "طالب",
   "auth.choose.student.blurb": "تصفّح الفعاليات، سجّل حضورك، واحتفظ بكل تذاكرك في مكان واحد.",
   "auth.choose.student.cta": "فتح تذاكري",

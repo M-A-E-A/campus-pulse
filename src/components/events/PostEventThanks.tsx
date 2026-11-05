@@ -115,7 +115,7 @@ export function PostEventThanks({
                   href={`/events/${nextUp.id}`}
                   className="font-semibold underline underline-offset-4 hover:text-accent"
                 >
-                  {nextUp.title} — {nextUp.dateLabel} →
+                  {nextUp.title} · {nextUp.dateLabel} →
                 </Link>
               </p>
             )}

@@ -61,6 +61,7 @@ export function EventCard({
   event,
   dealIndex,
   distance,
+  headingLevel = 3,
 }: {
   event: EventCardData;
   /** The event's index in the server's initial list — NOT its position in
@@ -69,6 +70,10 @@ export function EventCard({
   /** Straight-line distance from the visitor in near-me mode. Absent =
    *  location line only (unknown venue, or near-me off). */
   distance?: number;
+  /** Heading level for the card title: 2 when the wall sits directly under
+   *  the page h1 (grid wall, map panel), 3 under an existing section
+   *  heading (calendar day, club page). Keeps the outline sequential. */
+  headingLevel?: 2 | 3;
 }) {
   const t = useT();
   const locale = useLocale();
@@ -77,6 +82,9 @@ export function EventCard({
   const tone = dealIndex % TONES.length;
   const spotsLeft =
     event.capacity !== null ? event.capacity - event._count.rsvps : null;
+  // The outline tag: h2 on the bare wall (grid / map), h3 under an owning
+  // section heading. One component, no duplicated markup.
+  const Title = headingLevel === 2 ? "h2" : "h3";
 
   return (
     <Link
@@ -99,7 +107,7 @@ export function EventCard({
 
       {/* Stacked, not side by side: the top block stays tidy however long the
           club and category run. Body text at the body step (16px), not the
-          small step — the inspector flags 14px as the running size. */}
+          small step: the inspector flags 14px as the running size. */}
       <div className="space-y-0.5">
         <span className="block font-semibold">{event.club.name}</span>
         <span className="block opacity-[var(--meta,0.75)]">
@@ -107,16 +115,16 @@ export function EventCard({
         </span>
       </div>
 
-      {/* Title at the full card measure — a capped measure forced real long
+      {/* Title at the full card measure: a capped measure forced real long
           event names onto three lines (headline-lines). 24px keeps every
           title above the 16px body step while wrapping at two lines. */}
-      <h3 className="w-full text-2xl font-extrabold leading-[1.05] tracking-tight">
+      <Title className="w-full text-2xl font-extrabold leading-[1.05] tracking-tight">
         {event.title}
-      </h3>
+      </Title>
 
       <div className="space-y-1">
         {/* Overnight / multi-day ranges already open with the full start
-            date — printing dateLabel again doubled it ("Fri, 30 Oct 2026 ·
+            date: printing dateLabel again doubled it ("Fri, 30 Oct 2026 ·
             Fri, 30 Oct 2026 22:00 – …"). */}
         <p className="font-semibold">
           {event.rangeLabel.startsWith(event.dateLabel)

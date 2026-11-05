@@ -181,7 +181,7 @@ export default async function CreatorDashboard() {
           </div>
           <div className="flex items-center gap-4">
             {/* Plain link = a real reload, so the numbers are always the
-                server's latest read — no client cache to distrust. */}
+                server's latest read: no client cache to distrust. */}
             <a
               href="/creator"
               className="text-sm font-medium text-paper/70 underline-offset-4 hover:text-paper hover:underline"

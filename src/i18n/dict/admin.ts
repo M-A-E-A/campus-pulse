@@ -23,7 +23,7 @@ export const en = {
   "admin.reject.open": "Reject…",
   "admin.reject.reasonLabel": "Reason (the organizer sees this)",
   "admin.reject.reasonPh":
-    "e.g. Missing location — add a room number and resubmit.",
+    "e.g. Missing location: add a room number and resubmit.",
   "admin.reject.pending": "Rejecting…",
   "admin.reject.confirm": "Confirm rejection",
   "admin.reject.cancel": "Cancel",
@@ -73,7 +73,7 @@ export const en = {
   // and falls back to the raw string for an action this dict hasn't
   // caught up with (the probe asserts every wired action has a label).
   "admin.audit.header": "Audit log",
-  "admin.audit.lead": "Who did what, newest first — the last 200 entries.",
+  "admin.audit.lead": "Who did what, newest first: the last 200 entries.",
   "admin.audit.th.when": "When",
   "admin.audit.th.who": "Who",
   "admin.audit.th.what": "What",
@@ -114,7 +114,7 @@ export const fr: Record<keyof typeof en, string> = {
   "admin.reject.open": "Rejeter…",
   "admin.reject.reasonLabel": "Raison (l'organisateur la verra)",
   "admin.reject.reasonPh":
-    "ex. Lieu manquant — ajoutez un numéro de salle et renvoyez.",
+    "ex. Lieu manquant : ajoutez un numéro de salle et renvoyez.",
   "admin.reject.pending": "Rejet en cours…",
   "admin.reject.confirm": "Confirmer le rejet",
   "admin.reject.cancel": "Annuler",
@@ -153,7 +153,7 @@ export const fr: Record<keyof typeof en, string> = {
   "admin.categories.add": "Ajouter",
 
   "admin.audit.header": "Journal d'audit",
-  "admin.audit.lead": "Qui a fait quoi, du plus récent au plus ancien — les 200 dernières entrées.",
+  "admin.audit.lead": "Qui a fait quoi, du plus récent au plus ancien : les 200 dernières entrées.",
   "admin.audit.th.when": "Quand",
   "admin.audit.th.who": "Qui",
   "admin.audit.th.what": "Quoi",
@@ -193,7 +193,7 @@ export const ar: Record<keyof typeof en, string> = {
 
   "admin.reject.open": "رفض…",
   "admin.reject.reasonLabel": "السبب (سيراه المنظم)",
-  "admin.reject.reasonPh": "مثال: المكان ناقص — أضف رقم القاعة وأعد الإرسال.",
+  "admin.reject.reasonPh": "مثال: المكان ناقص. أضف رقم القاعة وأعد الإرسال.",
   "admin.reject.pending": "جارٍ الرفض…",
   "admin.reject.confirm": "تأكيد الرفض",
   "admin.reject.cancel": "إلغاء",
@@ -230,7 +230,7 @@ export const ar: Record<keyof typeof en, string> = {
   "admin.categories.add": "إضافة",
 
   "admin.audit.header": "سجل التدقيق",
-  "admin.audit.lead": "من فعل ماذا، الأحدث أولاً — آخر 200 سجل.",
+  "admin.audit.lead": "من فعل ماذا، الأحدث أولاً: آخر 200 سجل.",
   "admin.audit.th.when": "الوقت",
   "admin.audit.th.who": "المنفّذ",
   "admin.audit.th.what": "الإجراء",

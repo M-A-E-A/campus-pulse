@@ -291,7 +291,7 @@ export function EventsExplorer({
   );
 
   return (
-    <div ref={root} className="field-paper min-h-screen">
+    <div ref={root} className="field-paper min-h-dvh">
       {/* Header: an ink band, cropped by the fold, the words carrying it. */}
       <header className="field-ink" data-band style={{ animationDelay: "0.05s" }}>
         <div className="mx-auto max-w-6xl px-4 pb-10 pt-12 sm:pt-16">
@@ -448,6 +448,10 @@ export function EventsExplorer({
               <EventCard
                 key={e.id}
                 event={e}
+                // Under the page h1 only: no day or section heading in the
+                // grid view, so the card title owns the next level (a11y
+                // heading-order on /events).
+                headingLevel={2}
                 dealIndex={slots.get(e.id) ?? 0}
                 distance={
                   locState === "on" && pos && e.lat !== null && e.lng !== null
