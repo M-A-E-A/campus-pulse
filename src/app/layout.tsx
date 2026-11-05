@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import { IBM_Plex_Sans_Arabic } from "next/font/google";
 import { Nav } from "@/components/Nav";
 import { RegisterSW } from "@/components/pwa/RegisterSW";
+import { ViewReporter } from "@/components/traffic/ViewReporter";
 import { getLocale, getDict, getT, LOCALE_DIRS } from "@/i18n/server";
 import { I18nProvider } from "@/i18n/provider";
 import "./globals.css";
@@ -104,6 +105,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <main id="main">{children}</main>
           {/* PWA: registers the service worker (prod only, no-op otherwise). */}
           <RegisterSW />
+          {/* Creator traffic: one beacon per client-side navigation (fire-and-forget). */}
+          <ViewReporter />
         </I18nProvider>
       </body>
     </html>

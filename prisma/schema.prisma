@@ -249,3 +249,25 @@ model PushSubscription {
 
   @@index([userId])
 }
+
+// Site-wide traffic for the creator console: one row per page view the
+// reporter in the root layout beacons. path/referrer are snapshots, not
+// relations — they describe requests, not domain objects, and they must
+// survive any future route renaming. visitorId is a first-party uuid the
+// reporter keeps in localStorage (key cp-visitor): no third-party tracker,
+// no cookie. The reporter only runs in real browsers, so a row means
+// "someone with JS actually rendered this page" — the honest count for an
+// app where nothing works without JS anyway. The console's own pages are
+// never reported (the creator checking their dashboard is not traffic).
+model PageView {
+  id        String   @id @default(cuid())
+  path      String   // "/events/seed-event-line-follower"
+  referrer  String?  // previous in-app path, external origin, or null (direct)
+  visitorId String   // first-party uuid (localStorage key cp-visitor)
+  userAgent String?  // raw UA, truncated at 300; device/browser parsed at read time
+  createdAt DateTime @default(now())
+
+  // The console reads rolling "last N days" windows and orders newest-first.
+  @@index([createdAt])
+  @@index([path, createdAt])
+}

@@ -1,0 +1,145 @@
+/**
+ * Creator console copy — net-new namespace (auth.*, admin.* etc. are
+ * untouched). Sentence case, no uppercase labels, no emoji, no em dashes:
+ * the same house rules every other dict follows. All three locales are
+ * type-checked against `en`, so a missing translation is a tsc error.
+ */
+export const en = {
+  // ---- Login ----
+  "creator.login.title": "Creator access",
+  "creator.login.lead": "Private console: every page view on this site.",
+  "creator.login.login": "Login",
+  "creator.login.password": "Password",
+  "creator.login.submit": "Sign in",
+  "creator.login.pending": "Signing in…",
+  "creator.login.invalid": "Wrong login or password.",
+  "creator.login.tooMany": "Too many attempts. Try again in a few minutes.",
+  "creator.login.notConfigured":
+    "Creator access is not configured: set CREATOR_LOGIN and CREATOR_PASSWORD in .env, then restart the server.",
+  "creator.login.back": "Back to the site",
+
+  // ---- Dashboard ----
+  "creator.dash.title": "Traffic",
+  "creator.dash.lead":
+    "Every page view recorded on the site. The console's own pages are not counted.",
+  "creator.dash.signOut": "Sign out",
+  "creator.dash.refresh": "Refresh",
+  "creator.dash.views24": "Views · last 24 hours",
+  "creator.dash.views7": "Views · last 7 days",
+  "creator.dash.visitors7": "Visitors · last 7 days",
+  "creator.dash.total": "Views · all time",
+  "creator.dash.daily": "Daily views · last 14 days",
+  "creator.dash.window14": "Last 14 days",
+  "creator.dash.paths": "Top paths",
+  "creator.dash.referrers": "Where visits came from",
+  "creator.dash.devices": "Devices and browsers",
+  "creator.dash.recent": "Recent views",
+  "creator.dash.empty":
+    "No page views recorded yet. Counting starts with the first visitor after this deployment.",
+  "creator.dash.emptyTable": "Nothing in this window yet.",
+  "creator.dash.colPath": "Path",
+  "creator.dash.colViews": "Views",
+  "creator.dash.colShare": "Share",
+  "creator.dash.colSource": "Source",
+  "creator.dash.colDevice": "Device",
+  "creator.dash.colBrowser": "Browser",
+  "creator.dash.colWhen": "When",
+  "creator.dash.colFrom": "From",
+  "creator.dash.direct": "Direct",
+  "creator.dash.internal": "Same site",
+  "creator.dash.mobile": "Phone",
+  "creator.dash.desktop": "Desktop",
+  "creator.dash.browserOther": "Other",
+} as const;
+
+export const fr: Record<keyof typeof en, string> = {
+  "creator.login.title": "Accès créateur",
+  "creator.login.lead": "Console privée : chaque vue de page du site.",
+  "creator.login.login": "Identifiant",
+  "creator.login.password": "Mot de passe",
+  "creator.login.submit": "Se connecter",
+  "creator.login.pending": "Connexion…",
+  "creator.login.invalid": "Identifiant ou mot de passe incorrect.",
+  "creator.login.tooMany": "Trop de tentatives. Réessayez dans quelques minutes.",
+  "creator.login.notConfigured":
+    "L'accès créateur n'est pas configuré : définissez CREATOR_LOGIN et CREATOR_PASSWORD dans .env, puis redémarrez le serveur.",
+  "creator.login.back": "Retour au site",
+
+  "creator.dash.title": "Trafic",
+  "creator.dash.lead":
+    "Chaque vue de page enregistrée sur le site. Les pages de la console ne sont pas comptées.",
+  "creator.dash.signOut": "Se déconnecter",
+  "creator.dash.refresh": "Actualiser",
+  "creator.dash.views24": "Vues · dernières 24 heures",
+  "creator.dash.views7": "Vues · 7 derniers jours",
+  "creator.dash.visitors7": "Visiteurs · 7 derniers jours",
+  "creator.dash.total": "Vues · depuis le début",
+  "creator.dash.daily": "Vues quotidiennes · 14 derniers jours",
+  "creator.dash.window14": "14 derniers jours",
+  "creator.dash.paths": "Pages les plus vues",
+  "creator.dash.referrers": "Origine des visites",
+  "creator.dash.devices": "Appareils et navigateurs",
+  "creator.dash.recent": "Vues récentes",
+  "creator.dash.empty":
+    "Aucune vue de page enregistrée pour l'instant. Le comptage commence avec la première visite après ce déploiement.",
+  "creator.dash.emptyTable": "Rien dans cette période.",
+  "creator.dash.colPath": "Page",
+  "creator.dash.colViews": "Vues",
+  "creator.dash.colShare": "Part",
+  "creator.dash.colSource": "Source",
+  "creator.dash.colDevice": "Appareil",
+  "creator.dash.colBrowser": "Navigateur",
+  "creator.dash.colWhen": "Quand",
+  "creator.dash.colFrom": "Depuis",
+  "creator.dash.direct": "Direct",
+  "creator.dash.internal": "Même site",
+  "creator.dash.mobile": "Mobile",
+  "creator.dash.desktop": "Ordinateur",
+  "creator.dash.browserOther": "Autre",
+};
+
+export const ar: Record<keyof typeof en, string> = {
+  "creator.login.title": "دخول المنشئ",
+  "creator.login.lead": "لوحة خاصة: كل مشاهدة صفحة على الموقع.",
+  "creator.login.login": "اسم الدخول",
+  "creator.login.password": "كلمة المرور",
+  "creator.login.submit": "تسجيل الدخول",
+  "creator.login.pending": "جارٍ تسجيل الدخول…",
+  "creator.login.invalid": "اسم الدخول أو كلمة المرور غير صحيحة.",
+  "creator.login.tooMany": "محاولات كثيرة جدًا. أعد المحاولة بعد دقائق.",
+  "creator.login.notConfigured":
+    "دخول المنشئ غير مهيأ: اضبط القيمتين CREATOR_LOGIN وCREATOR_PASSWORD في ملف البيئة ثم أعد تشغيل الخادم.",
+  "creator.login.back": "العودة إلى الموقع",
+
+  "creator.dash.title": "الزيارات",
+  "creator.dash.lead":
+    "كل مشاهدة صفحة مسجّلة على الموقع. صفحات اللوحة نفسها لا تُحتسب.",
+  "creator.dash.signOut": "خروج",
+  "creator.dash.refresh": "تحديث",
+  "creator.dash.views24": "مشاهدات · آخر 24 ساعة",
+  "creator.dash.views7": "مشاهدات · آخر 7 أيام",
+  "creator.dash.visitors7": "زوار · آخر 7 أيام",
+  "creator.dash.total": "مشاهدات · منذ البداية",
+  "creator.dash.daily": "المشاهدات اليومية · آخر 14 يومًا",
+  "creator.dash.window14": "آخر 14 يومًا",
+  "creator.dash.paths": "الصفحات الأكثر مشاهدة",
+  "creator.dash.referrers": "مصادر الزيارات",
+  "creator.dash.devices": "الأجهزة والمتصفحات",
+  "creator.dash.recent": "مشاهدات حديثة",
+  "creator.dash.empty":
+    "لا توجد مشاهدة صفحة مسجّلة بعد. يبدأ العدّ مع أول زائر بعد هذا النشر.",
+  "creator.dash.emptyTable": "لا شيء في هذه الفترة.",
+  "creator.dash.colPath": "الصفحة",
+  "creator.dash.colViews": "المشاهدات",
+  "creator.dash.colShare": "النسبة",
+  "creator.dash.colSource": "المصدر",
+  "creator.dash.colDevice": "الجهاز",
+  "creator.dash.colBrowser": "المتصفح",
+  "creator.dash.colWhen": "الوقت",
+  "creator.dash.colFrom": "الوصول عبر",
+  "creator.dash.direct": "مباشر",
+  "creator.dash.internal": "نفس الموقع",
+  "creator.dash.mobile": "هاتف",
+  "creator.dash.desktop": "حاسوب",
+  "creator.dash.browserOther": "أخرى",
+};

@@ -1207,3 +1207,70 @@ GitHub Actions CI, rate limiting on auth/RSVP, audit log.
   organizer role. Proposed: "Everyone starts as a student. Pick
   organizer from your next login." (FR/AR to match). Left untouched
   pending sign-off.
+
+## Feature ✅ — creator traffic console `/creator`
+- The creator gets a door of their own: `CREATOR_LOGIN` /
+  `CREATOR_PASSWORD` in `.env` (gitignored; placeholders + instructions
+  in `.env.example` — change them there) instead of a `User` row, a
+  role, or any NextAuth surface. Both halves compare as SHA-256
+  digests (constant-time) and the action signs `cp-creator` =
+  `${exp}.${HMAC-SHA256("cp-creator:${exp}")}` — 7d, httpOnly, lax,
+  pure Web Crypto, fail-closed without a ≥16-char key
+  (`CREATOR_SESSION_SECRET`, else `AUTH_SECRET`). Attempts reuse
+  `loginLimiter` keyed `creator:<login>` (8/10 min — the same NAT
+  reasoning as the app login).
+- Guard = route-group layout `src/app/creator/(console)/layout.tsx`
+  (cookie verify → `/creator/login`, `robots: noindex`); the login
+  lives outside the group. Deliberately NOT middleware — the creator
+  session is not a NextAuth session, so the feature-held
+  `middleware.ts` and its JWT matcher stay untouched. Wrong password
+  keeps you on the door with an honest alert; a valid cookie skips the
+  door entirely.
+- Collector: `ViewReporter` in the root layout beacons
+  `POST /api/traffic` per navigation (fire-and-forget keepalive,
+  Strict-Mode `lastSent` dedupe, skips `/creator*` — the console never
+  counts itself; visitorId = first-party `cp-visitor` in localStorage
+  with a per-load fallback; referrer = previous path / same-origin
+  path / external URL). The route validates (path starts `/`, not
+  `//`, not `/api/`; visitorId `^[A-Za-z0-9-]{8,64}$`),
+  `trafficLimiter` 60/10min per visitor, stores raw UA parsed at read
+  time (`src/lib/traffic.ts`). Honest scope: a row = "a real browser
+  rendered this page" — no JS, no row.
+- Prisma `PageView` (path, referrer?, visitorId, userAgent?,
+  createdAt; indexes `[createdAt]`, `[path, createdAt]`), migration
+  `20261104223333_creator_traffic` applied.
+- Dashboard `/creator`: ink header band + Refresh (plain
+  `<a href="/creator">` — a real reload, so the numbers are always the
+  server's latest read) + sign-out server action; four stat cards
+  (24h / 7d / 7d visitors / all-time) as plain
+  `text-[32px] font-display font-extrabold tabular-nums` — NOT
+  `.display-figure`, which is an unlayered 150–380px landing figure;
+  14-campus-day area chart (flat `fill-accent/15`,
+  `vector-effect=non-scaling-stroke`, aria-hidden, campus-noon anchored
+  buckets via `campusDayLimit(-13)`); top paths / referrers / devices
+  tables with horizontal accent share bars; recent-20 table; `.empty`
+  zero state. One 14-day query + one all-time count, all groupings in
+  JS. Copy net-new `src/i18n/dict/creator.ts` ×3 locales (merged in
+  `i18n/index.ts`).
+- `scripts/probe-creator.mjs` **13/13** (permanent; deletes its own
+  PageView rows on the way out): reporter row for a real `/events`
+  render · anon bounce · wrong-password alert · real creds → dashboard
+  (h1 "Traffic", four stats, `/events` visible in the tables) · login
+  door skips when signed in · **session separation** — `cp-creator`
+  opens no NextAuth door (`/admin` still demands login) · logout drops
+  the cookie and a fresh anon visit bounces again · AR `dir=rtl` + AR
+  title · collector validation (`javascript:`, `//host`, missing
+  visitorId → 400; well-formed → 200) · zero `/creator*` rows ever.
+- Gates: tsc 0 · eslint 0 · build 0 (`/creator` 185 B,
+  `/creator/login` 1.23 kB) · smoke **84/84** (on the final build) ·
+  detector **0 FAIL / 0 WARN** on all 10 new files · probe-creator
+  **13/13** · Lighthouse mobile — `/creator/login` **80 / 100 / 100 /
+  60** (LCP 1.1 s), `/creator` authed via Cookie extra-header **98 /
+  100 / 100 / 60** (LCP 1.0 s) [perf / a11y / bp / seo].
+- SEO 60 is the one deliberate gate exception, not a defect: the sole
+  failing audit is `is-crawlable` (weight 4.04) — both pages carry
+  the `robots: noindex` a private console must have, and the category
+  cannot pass while noindex stands. Every crawl-quality audit (title,
+  meta description, link text, anchors, hreflang) passes at 100;
+  dropping noindex to chase the number would advertise the creator
+  door to search engines.

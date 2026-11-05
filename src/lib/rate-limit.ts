@@ -86,9 +86,15 @@ function singleton<T>(name: string, create: () => T): T {
 
 export const loginLimiter = singleton("cp_login_limiter", createRateLimiter);
 export const rsvpLimiter = singleton("cp_rsvp_limiter", createRateLimiter);
+export const trafficLimiter = singleton("cp_traffic_limiter", createRateLimiter);
 
 /** 8 failed logins per email per 10 minutes; a success forgives. */
 export const LOGIN_LIMIT = { limit: 8, windowMs: 10 * 60_000 } as const;
 /** 10 RSVP/cancel attempts per user per minute (both share one bucket —
  *  toggling is the abuse pattern, not either action alone). */
 export const RSVP_LIMIT = { limit: 10, windowMs: 60_000 } as const;
+/** 60 recorded page views per visitor per 10 minutes: a fast human browsing
+ *  never reaches it, a script replaying the beacon does. Keyed by the
+ *  reporter's visitorId (the beacon is anonymous — there is no account or
+ *  IP to key on that a NAT'd campus would not share). */
+export const TRAFFIC_LIMIT = { limit: 60, windowMs: 10 * 60_000 } as const;
