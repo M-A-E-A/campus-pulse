@@ -7,11 +7,15 @@ import gsap from "gsap";
 const useIsoLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
 /**
- * Load choreography for rebuilt pages: every [data-rise] element settles into
- * place with a stagger. The start state exists only in JS and only where
- * motion is allowed — first paint is already the finished layout, so the
- * reduced page is the finished page (nothing stays hidden waiting for an
- * animation that will not run).
+ * Load choreography for rebuilt pages: [data-rise] elements below the fold
+ * settle into place with a stagger. The start state exists only in JS and
+ * only where motion is allowed — first paint is already the finished
+ * layout, so the reduced page is the finished page (nothing stays hidden
+ * waiting for an animation that will not run). Elements the user can
+ * already see are skipped entirely: they were painted by the server, and
+ * re-hiding them after hydration makes the LCP element re-qualify only
+ * when the tween shows it again (same rule as the posters in
+ * EventsExplorer).
  */
 export function Entrance() {
   const started = useRef(false);
@@ -19,7 +23,10 @@ export function Entrance() {
     if (started.current) return;
     started.current = true;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const els = document.querySelectorAll<HTMLElement>("[data-rise]");
+    const vh = window.innerHeight;
+    const els = [
+      ...document.querySelectorAll<HTMLElement>("[data-rise]"),
+    ].filter((el) => el.getBoundingClientRect().top >= vh);
     if (!els.length) return;
     gsap.from(els, {
       y: 30,

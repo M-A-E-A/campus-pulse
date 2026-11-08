@@ -15,7 +15,8 @@ import { Browser, sleep } from "../.agents/skills/design-taste-frontend/scripts/
 
 const origin = "http://localhost:3100";
 const OUT = ".taste-skill";
-const ROUDANI = { latitude: 33.5735, longitude: -7.5879, accuracy: 20 };
+// The Roudani campus centre (where the seed places Hall B).
+const ROUDANI = { latitude: 33.5815206, longitude: -7.6338858, accuracy: 20 };
 
 const results = [];
 const check = (name, cond, detail) => {
@@ -45,7 +46,10 @@ const hintShown = (page) =>
   page.eval(`document.body.innerText.includes("Sélectionnez un repère")`);
 
 /** Create/remove a PUBLISHED upcoming event with no coordinates, so the
- *  "Not on the map" branch is exercised against real data. */
+ *  "Not on the map" branch is exercised against real data. Returns the
+ *  cleanup fn plus the pin count the map must render: every seeded wall
+ *  event that carries coordinates, read from the database instead of a
+ *  hard-coded number (the wall grows with every campus the seed adds). */
 async function makeNoVenueEvent() {
   const { PrismaClient } = await import("@prisma/client");
   const prisma = new PrismaClient();
@@ -70,14 +74,26 @@ async function makeNoVenueEvent() {
     },
     update: {},
   });
-  return async () => {
-    await prisma.event.delete({ where: { id } }).catch(() => {});
-    await prisma.$disconnect();
+  // The temp event itself carries no coordinates, so it never counts in.
+  const expected = await prisma.event.count({
+    where: {
+      status: "PUBLISHED",
+      endsAt: { gte: new Date() },
+      lat: { not: null },
+      lng: { not: null },
+    },
+  });
+  return {
+    expected,
+    cleanup: async () => {
+      await prisma.event.delete({ where: { id } }).catch(() => {});
+      await prisma.$disconnect();
+    },
   };
 }
 
 const main = async () => {
-  const cleanup = await makeNoVenueEvent();
+  const { cleanup, expected } = await makeNoVenueEvent();
   const browser = await Browser.launch();
   try {
     await browser.send("Browser.grantPermissions", { origin, permissions: ["geolocation"] });
@@ -100,14 +116,16 @@ const main = async () => {
 
     // getPublishedEvents is wrapped in unstable_cache (revalidate: 60), so a
     // wall rendered before the temp event existed can be served for up to a
-    // minute. Poll the grid for the temp card so the assertions below always
-    // read a wall that includes it.
+    // minute — and the server-rendered DOM never updates itself. Reload on
+    // every poll so an expired entry is re-fetched, and the assertions below
+    // always read a wall that includes the temp card.
     let wallFresh = false;
     for (let i = 0; i < 30; i++) {
       if (await page.eval(`document.body.innerText.includes("partenaire")`)) {
         wallFresh = true;
         break;
       }
+      await page.goto(`${origin}/events`);
       await sleep(3000);
     }
     check("Wall picks up the coordinate-less event", wallFresh, `fresh=${wallFresh}`);
@@ -119,8 +137,8 @@ const main = async () => {
     const pins = await pinCount(page);
     check(
       "Map field renders with one pin per coordinate",
-      mapShown && pins === 5,
-      `map=${mapShown}, pins=${pins} (5 seeded events carry venue coords)`
+      mapShown && pins === expected,
+      `map=${mapShown}, pins=${pins} (${expected} seeded events carry venue coords)`
     );
 
     // 3 — nothing is hidden: the coordinate-less event stays listed.
@@ -194,24 +212,32 @@ const main = async () => {
     );
     await page.screenshot({ path: `${OUT}/probe-map-here.jpg` });
 
-    // 9 — Arabic: the map survives RTL, pins keep their projections.
+    // 9 — Arabic: the map survives RTL, pins keep their projections. The
+    // per-locale cache entry can predate this run (the data cache survives
+    // server restarts), so reload until it has revalidated to this wall.
     await page.send("Network.setCookie", {
       name: "cp-locale",
       value: "ar",
       url: origin,
     });
-    await page.goto(`${origin}/events`);
-    await sleep(600);
-    await click(page, '[data-view="map"]');
-    await sleep(700);
-    const rtl = await page.eval(`document.documentElement.dir`);
-    const arPins = await pinCount(page);
-    const arLabel = await page.eval(
-      `document.querySelector("[data-map]")?.getAttribute("aria-label") ?? ""`
-    );
+    let rtl = "";
+    let arPins = -1;
+    let arLabel = "";
+    for (let i = 0; i < 8; i++) {
+      await page.goto(`${origin}/events`);
+      await sleep(600);
+      await click(page, '[data-view="map"]');
+      await sleep(700);
+      rtl = await page.eval(`document.documentElement.dir`);
+      arPins = await pinCount(page);
+      arLabel = await page.eval(
+        `document.querySelector("[data-map]")?.getAttribute("aria-label") ?? ""`
+      );
+      if (rtl === "rtl" && arPins === expected && arLabel.includes("خريطة")) break;
+    }
     check(
       "Arabic flips the map to RTL with every pin intact",
-      rtl === "rtl" && arPins === 5 && arLabel.includes("خريطة"),
+      rtl === "rtl" && arPins === expected && arLabel.includes("خريطة"),
       `dir=${rtl}, pins=${arPins}, label=${arLabel.slice(0, 22)}`
     );
     await page.screenshot({ path: `${OUT}/probe-map-ar.jpg` });
@@ -233,7 +259,7 @@ const main = async () => {
     const mPins = await pinCount(mobile);
     check(
       "Mobile map fits the viewport, pins intact",
-      overflow.scroll <= overflow.view + 1 && mPins === 5,
+      overflow.scroll <= overflow.view + 1 && mPins === expected,
       `map ${overflow.w}px, scrollWidth=${overflow.scroll}, view=${overflow.view}, pins=${mPins}`
     );
     await mobile.screenshot({ path: `${OUT}/probe-map-mobile.jpg` });

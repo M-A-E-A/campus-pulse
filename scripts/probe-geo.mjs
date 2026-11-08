@@ -8,8 +8,10 @@
  * Chromium is told it stands at Smartilab Hall B on the Roudani campus
  * (Emulation.setGeolocationOverride) with geolocation permission granted
  * via CDP Browser.grantPermissions, then every flow is driven through the
- * real UI. Campus/ordering assertions assume the seeded wall: 4 Roudani
- * events + "Pitch de minuit" at Campus Maarif.
+ * real UI. Campus/ordering assertions assume the seeded wall: every one of
+ * the 19 campuses carries an event, the workshop's venue sits exactly on
+ * the Roudani centre the browser stands at (0 km, hence first), and
+ * "Pitch de minuit" is the only event Campus Maarif claims.
  *
  * Usage: node scripts/probe-geo.mjs   (prod server on :3100)
  */
@@ -17,7 +19,8 @@ import { Browser, sleep } from "../.agents/skills/design-taste-frontend/scripts/
 
 const origin = "http://localhost:3100";
 const OUT = ".taste-skill";
-const ROUDANI = { latitude: 33.5735, longitude: -7.5879, accuracy: 20 }; // Hall B
+// The Roudani campus centre: exactly where the seed places Hall B.
+const ROUDANI = { latitude: 33.5815206, longitude: -7.6338858, accuracy: 20 };
 
 const results = [];
 const check = (name, cond, detail) => {

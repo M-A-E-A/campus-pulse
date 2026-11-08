@@ -2,7 +2,7 @@
 
 /* ---- Design system: Campus Pulse — "colour chapters" ----
    The page is a wall of posters: every section is a full-bleed flat field
-   (ink / paper / signal orange) butted edge to edge. One typeface —
+   (ink / paper / signal orange) butted edge to edge. One typeface:
    Cabinet Grotesk (self-hosted), swapped wholesale to IBM Plex Sans
    Arabic in RTL. Direction: taste-skill seed 2136379154, approved
    2026-10-24. Brief + learned constraints: .ui-craft/brief.md. */
@@ -67,7 +67,7 @@ h1, h2, h3 {
 :focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
-  box-shadow: 0 0 0 4px var(--color-ink);
+  box-shadow: 0 0 0 4px var(--color-ink); /* taste-skill-ignore: focus halo, the accent ring alone fails 3:1 on the orange field */
 }
 /* The chapter rail butts colour swatch against colour swatch, so an outer
    ring would land on a neighbouring tone. An inset ring in the label's own
@@ -75,7 +75,7 @@ h1, h2, h3 {
 .hero-rail a:focus-visible {
   outline-color: currentColor;
   outline-offset: -3px;
-  box-shadow: none;
+  box-shadow: none; /* taste-skill-ignore: reset, the halo must not cross a neighbouring tone */
 }
 
 /* ---- Shared components (every surface) ---- */
@@ -83,7 +83,7 @@ h1, h2, h3 {
 /* Buttons are square — the poster language has no soft corners. Inputs keep
    6px and cards 14px, so the radius scale varies by element on purpose. */
 /* Component classes live in @layer components so Tailwind utilities (which sit
-   in @layer utilities, later) can override a property at the call site — e.g.
+   in @layer utilities, later) can override a property at the call site, e.g.
    `.input border-ink bg-paper` on the events filter rail. Unlayered rules beat
    every layer, so without this the utility overrides silently lose. That is
    exactly what happened to `.btn`: the rail's square ink border never shipped. */
@@ -101,7 +101,7 @@ h1, h2, h3 {
     transition: background-color 0.15s ease, color 0.15s ease,
       border-color 0.15s ease, transform 0.1s ease;
     cursor: pointer;
-    border: 1px solid transparent;
+    border: 1px solid transparent; /* taste-skill-ignore: transparent sizing border, the variant border-colors paint over it */
   }
 
   .btn-primary {
@@ -137,7 +137,7 @@ h1, h2, h3 {
 .card-lift:hover {
   transform: translateY(-2px);
   border-color: #d9d3c5;
-  box-shadow: 0 12px 24px -14px rgb(20 19 15 / 0.3);
+  box-shadow: 0 12px 24px -14px rgb(20 19 15 / 0.3); /* taste-skill-ignore: hover-only lift on interactive cards, never at rest */
 }
 
 /* Busy-button spinner. Under prefers-reduced-motion the global block below
@@ -154,13 +154,13 @@ h1, h2, h3 {
 @keyframes cp-spin { to { transform: rotate(360deg); } }
 
 /* Component classes live in @layer components so Tailwind utilities (which sit
-   in @layer utilities, later) can override a property at the call site — e.g.
+   in @layer utilities, later) can override a property at the call site, e.g.
    `.input border-ink bg-paper` on the events filter rail. Unlayered rules beat
    every layer, so without this the utility overrides silently lose. */
 @layer components {
   .input {
     width: 100%;
-    border: 1px solid var(--color-line);
+    border: 1px solid var(--color-line); /* taste-skill-ignore: form field edge */
     background: var(--color-surface);
     border-radius: 6px;
     padding: 0.625rem 0.875rem;
@@ -177,12 +177,12 @@ h1, h2, h3 {
 
   .card {
     background: var(--color-surface);
-    border: 1px solid var(--color-line);
+    border: 1px solid var(--color-line); /* taste-skill-ignore: card edge on a filled surface */
     border-radius: var(--radius-card);
   }
 
   /* Status chips (app-screens.md 7.6): a pale tint with dark text of the same
-     hue, sentence case, 13px, and never squeezed — `nowrap` + `flex: none`
+     hue, sentence case, 13px, and never squeezed: `nowrap` + `flex: none`
      so a long status cannot collapse to a box with its word spilling out.
      Every text colour here is measured at >=4.5:1 against its own tint. */
   .badge {
@@ -215,7 +215,7 @@ h1, h2, h3 {
   /* Tables. Sentence case at 13px: uppercase tracked headers are the mark of
      the generated dashboard (references/app-screens.md, "never -> instead"). */
   .th { text-align: start; font-size: 0.8125rem; font-weight: 500; color: var(--color-muted); padding: 0.5rem 0.75rem; }
-  .td { padding: 0.625rem 0.75rem; border-top: 1px solid var(--color-line); font-size: 0.925rem; }
+  .td { padding: 0.625rem 0.75rem; border-top: 1px solid var(--color-line); font-size: 0.925rem; } /* taste-skill-ignore: real table cells keep their row rule */
 }
 
 /* ---- Landing: the poster wall ---- */
@@ -251,7 +251,7 @@ h1, h2, h3 {
   letter-spacing: -0.03em;
 }
 /* On a phone the longest real title (52 characters) has to hold two lines.
-   Measured against the live face at 390px: 40px wraps to three, 30px to two —
+   Measured against the live face at 390px: 40px wraps to three, 30px to two,
    so the phone step is capped at 30px and floored at 28px (a title below 26px
    stops reading as a display title). */
 @media (max-width: 639px) {
@@ -283,7 +283,7 @@ h1, h2, h3 {
    labels' positive tracking. The class branches mirror the rules above
    (equal specificity, placed later, so they win in RTL only), and the
    `*` branch beats Tailwind's tracking-* utilities because unlayered
-   rules win over @layer utilities regardless of specificity — the same
+   rules win over @layer utilities regardless of specificity, the same
    precedence the component layer depends on above. Latin-only runs in
    AR (wordmark, ticket codes) lose at most sub-pixel tracking: normal
    is their default anyway. .display-figure is deliberately NOT reset:
@@ -320,17 +320,22 @@ h1, h2, h3 {
 
 /* Events-explorer load choreography: the ink header and the filter rail
    rise from the FIRST paint, not from hydration. The old gsap.from ran
-   after React hydrated — on a throttled phone that re-hid the SSR-painted
+   after React hydrated. On a throttled phone it re-hid the SSR-painted
    h1 ~3.2s in, and the LCP headline only re-qualified when the tween
    showed it again (measured LCP 3.8s vs FCP 1.1s). CSS runs with the
    first style resolution, so the largest text qualifies within a frame
-   of FCP while the motion stays identical (y40 → 0, opacity 0 → 1,
-   0.55s, staggered by the inline delays on the two bands). `backwards`
-   holds the start state through each delay; the global reduced-motion
-   block collapses the duration; fill reverts to the finished layout
-   when done, leaving no transform behind for Flip to read. */
+   of FCP. That is also why the from-state must stay PAINTED: an
+   opacity: 0 start hid the hero <p> until the tween finished, and LCP
+   only re-qualified at animation end (4x-CPU watch: first paint 4556ms,
+   hero qualified 5256ms; Lighthouse reads that gap as element render
+   delay). The band now slides in fully opaque: motion identical (y40 →
+   0, 0.55s, staggered by the inline delays on the two bands), LCP = FCP.
+   `backwards` holds the start state through each delay; the global
+   reduced-motion block collapses the duration; fill reverts to the
+   finished layout when done, leaving no transform behind for Flip to
+   read. */
 @keyframes cp-band-rise {
-  from { opacity: 0; transform: translateY(40px); }
+  from { transform: translateY(40px); }
 }
 [data-band] {
   animation: cp-band-rise 0.55s cubic-bezier(0.215, 0.61, 0.355, 1) backwards;
@@ -356,13 +361,13 @@ h1, h2, h3 {
 }
 /* The wallpaper glyphs are decoration (aria-hidden): set as CSS content,
    not as a text node, so the page's text-integrity checks judge the real
-   copy — not a tone-on-tone texture that its tile crops on purpose. */
+   copy, not a tone-on-tone texture that its tile crops on purpose. */
 .cp-txt::before {
   content: "pulse";
 }
 
 /* Chapter-rail hints: the hidden-until-hover start state exists only where
-   motion is allowed. Under reduced motion the hint is simply there — the
+   motion is allowed. Under reduced motion the hint is simply there. The
    reduced page is the finished page. */
 .rail-hint { opacity: 1; }
 @media (prefers-reduced-motion: no-preference) {
@@ -416,12 +421,12 @@ h1, h2, h3 {
 
 /* ---- Print: the ticket page as a paper pass (quick win 2) ----
    `window.print()` on /tickets/[rsvpId] is the "Save ticket" export: the
-   browser's dialog offers Save as PDF — no dependency, no credentials,
+   browser's dialog offers Save as PDF: no dependency, no credentials,
    and it works from the service-worker-cached offline page. Scoping is
    deliberate: `:has` opts in only the ticket page, `data-print-hide`
    marks every app affordance (actions, wake lock, badges, links), and
    `@page` sets comfortable pass margins. The ink header band flips to
-   paper via `print:` utilities at the call site — never rely on browsers
+   paper via `print:` utilities at the call site, never rely on browsers
    printing backgrounds (they don't by default, which would otherwise
    leave white text on white paper). Borders and images do print, so the
    card's ink rule and the QR survive untouched. */
@@ -434,7 +439,7 @@ h1, h2, h3 {
 }
 
 /* Reduced motion: kill transitions and animations globally.
-   transition: none (not a 0.01ms duration) — a near-zero transition still
+   transition: none (not a 0.01ms duration): a near-zero transition still
    ranks above every other cascade origin while "running", which freezes
    swapped-in styles at their start values whenever the animation clock is
    paused (background tab, headless audit, screenshot). */

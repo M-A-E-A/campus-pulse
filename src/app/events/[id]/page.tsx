@@ -7,7 +7,7 @@ import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { getWaitlistRank } from "@/lib/rsvp-core";
 import { formatDate, formatEventRange, formatDateTime, isSameCampusDay } from "@/lib/tz";
-import { getT, getLocale } from "@/i18n/server";
+import { getT, getLocale, type Locale } from "@/i18n/server";
 import { RsvpSection } from "@/components/events/RsvpSection";
 import { AttendeeGrid } from "@/components/events/AttendeeGrid";
 import { PostEventThanks } from "@/components/events/PostEventThanks";
@@ -28,6 +28,8 @@ const getEvent = cache(async (id: string) =>
     },
   })
 );
+
+type EventRecord = NonNullable<Awaited<ReturnType<typeof getEvent>>>;
 
 export async function generateMetadata({
   params,
@@ -62,13 +64,65 @@ export default async function EventPage({
   const { id } = await params;
   // Locale drives the printed dates: a French page must not print English
   // weekday names under its headline.
-  const [session, t, locale] = await Promise.all([auth(), getT(), getLocale()]);
-
+  const locale = await getLocale();
   const event = await getEvent(id);
 
   if (!event || event.status !== "PUBLISHED") notFound();
 
   const start = event.startsAt;
+  const end = event.endsAt;
+
+  return (
+    <div className="field-paper detail-page min-h-dvh">
+      {/* The poster: full-bleed ink band, the title carrying it. The whole
+          page renders before first flush (no streaming boundary: the same
+          single-flush rule the club profile follows), so every visible
+          element including the RSVP panel paints together at first paint
+          and nothing can re-qualify as LCP a beat later. */}
+      <header className="field-ink">
+        <div className="mx-auto max-w-6xl px-4 pb-10 pt-12 sm:pt-16">
+          <h1 className="display-title" data-rise>
+            {event.title}
+          </h1>
+          {/* The range already carries both dates on a multi-day event:
+              prepending the start date would print it twice. */}
+          <p
+            className="mt-5 max-w-[52ch] text-balance text-[length:var(--step-lead)]"
+            data-rise
+          >
+            {isSameCampusDay(start, end)
+              ? `${formatDate(start, locale)} · ${formatEventRange(start, end, locale)}`
+              : formatEventRange(start, end, locale)}
+          </p>
+          {/* Credits line sits below the title on purpose: category and club
+              above a headline read as a kicker, which the poster system bans. */}
+          <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2" data-rise>
+            <span className="bg-accent px-2.5 py-1 text-sm font-bold text-ink">
+              {event.category.name}
+            </span>
+            <span className="text-sm font-semibold text-paper/75">{event.club.name}</span>
+          </div>
+        </div>
+      </header>
+
+      <EventBody event={event} locale={locale} />
+    </div>
+  );
+}
+
+/** Everything below the poster header that needs the session or extra
+ *  queries: the orange facts rail, the post-event loop, the cover and the
+ *  story grid. Rendered without a boundary on purpose: the page waits for
+ *  it, and first paint shows the finished page. */
+async function EventBody({
+  event,
+  locale,
+}: {
+  event: EventRecord;
+  locale: Locale;
+}) {
+  const [session, t] = await Promise.all([auth(), getT()]);
+
   const end = event.endsAt;
   const taken = event._count.rsvps;
   const spotsLeft = event.capacity !== null ? event.capacity - taken : null;
@@ -177,50 +231,23 @@ export default async function EventPage({
   }
 
   return (
-    <div className="field-paper detail-page min-h-screen">
+    <>
       <Entrance />
-
-      {/* The poster: full-bleed ink band, the title carrying it. */}
-      <header className="field-ink">
-        <div className="mx-auto max-w-6xl px-4 pb-10 pt-12 sm:pt-16">
-          <h1 className="display-title" data-rise>
-            {event.title}
-          </h1>
-          {/* The range already carries both dates on a multi-day event —
-              prepending the start date would print it twice. */}
-          <p
-            className="mt-5 max-w-[52ch] text-balance text-[length:var(--step-lead)]"
-            data-rise
-          >
-            {isSameCampusDay(start, end)
-              ? `${formatDate(start, locale)} · ${formatEventRange(start, end, locale)}`
-              : formatEventRange(start, end, locale)}
-          </p>
-          {/* Credits line sits below the title on purpose: category and club
-              above a headline read as a kicker, which the poster system bans. */}
-          <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2" data-rise>
-            <span className="bg-accent px-2.5 py-1 text-sm font-bold text-ink">
-              {event.category.name}
-            </span>
-            <span className="text-sm font-semibold text-paper/75">{event.club.name}</span>
-          </div>
-        </div>
-      </header>
 
       {/* Facts rail: the same orange band the events list runs on. The venue
           and the live capacity sit here so both clear the mobile fold. */}
       <div className="field-orange" data-rise>
         <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-8 gap-y-3 px-4 py-4">
           {/* 20px: the venue is a fact on the rail. Set any smaller it reads as
-              a label sitting above the next heading — the banned kicker. */}
+              a label sitting above the next heading, which is the banned kicker. */}
           <span className="text-xl font-semibold text-balance">{event.location}</span>
-          {/* Distance renders ONLY when geolocation was already granted —
-              a page load never asks (DistanceAway's own rule). */}
+          {/* Distance renders ONLY when geolocation was already granted.
+              A page load never asks (DistanceAway's own rule). */}
           {event.lat !== null && event.lng !== null && (
             <DistanceAway lat={event.lat} lng={event.lng} />
           )}
           {/* text-xl, not the inherited 16: at 16 this live fact reads as a
-              small label sitting above the next heading — the banned kicker.
+              small label sitting above the next heading, which is the banned kicker.
               The numeric fact is lg+ only: on phones the meter panel directly
               under the rail already states the capacity, and repeating it
               spends fold height on the one screen with none to spare. An
@@ -244,7 +271,7 @@ export default async function EventPage({
         </div>
       </div>
 
-      {/* Phase 7: the post-event loop — a closing cover for people who were
+      {/* Phase 7: the post-event loop, a closing cover for people who were
           there, asking the one question that feeds recommendations. */}
       {postEvent && (
         <PostEventThanks
@@ -271,14 +298,14 @@ export default async function EventPage({
 
       {/* gap-20 (80px) on phones/tablets: the action panel is DOM-first now, so
           its last control must clear the 72px proximity band the next heading
-          scans — otherwise a control label reads as that heading's kicker.
+          scans. Otherwise a control label reads as that heading's kicker.
           lg restores the 40px column gutter. */}
       <div className="mx-auto grid max-w-6xl gap-20 px-4 py-10 lg:grid-cols-[1fr_22rem] lg:gap-10">
         {/* The RSVP action leads. On a phone the grid is one column, so putting
             the sidebar first in the DOM keeps the capacity meter and the CTA
             above the fold instead of trailing the whole article. On lg the
             columns are placed explicitly, so the story sits left and the panel
-            right — reading order and DOM order agree at both sizes. */}
+            right; reading order and DOM order agree at both sizes. */}
         <aside className="space-y-4 lg:sticky lg:top-20 lg:col-start-2 lg:row-start-1 lg:self-start">
           {/* Meter only: the "X of Y taken" headline now lives on the facts
               rail above, so repeating it here would print the number twice. */}
@@ -334,7 +361,7 @@ export default async function EventPage({
             </a>
             {/* The poster is the event leaving the site: Web Share where the
                 browser supports sharing files, otherwise the poster document
-                opens — which is also the print path (vector, any size). */}
+                opens, which is also the print path (vector, any size). */}
             <SharePosterButton eventId={event.id} title={event.title} />
             {session?.user && (
               <Link
@@ -374,7 +401,7 @@ export default async function EventPage({
             </div>
             <div>
               <p className="font-bold">
-                {/* The club name leads to its poster profile — the same
+                {/* The club name leads to its poster profile, the same
                     entity the byline credits. */}
                 <Link
                   href={`/clubs/${event.club.id}`}
@@ -390,6 +417,6 @@ export default async function EventPage({
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

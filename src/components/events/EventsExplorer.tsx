@@ -265,14 +265,13 @@ export function EventsExplorer({
   useGSAP(
     () => {
       if (reduced.current || !root.current) return;
-      // The bands (ink header, filter rail) rise from first paint via the
-      // [data-band] CSS animation in globals.css — a gsap.from here would
-      // re-hide the SSR-painted h1 only after hydration, and the LCP
-      // headline would not re-qualify until the tween showed it again
-      // (measured: LCP 3.8s vs FCP 1.1s on a throttled phone). Posters
-      // still rise in JS, but only the ones outside the viewport: anything
-      // this user can already see was painted by the server and must not
-      // blink out from under the paint.
+      // The filter rail rises from first paint via the [data-band] CSS
+      // animation in globals.css (the ink header, now in the page shell,
+      // follows the same rule). A gsap.from here would re-hide the
+      // SSR-painted rail only after hydration, and anything this user can
+      // already see must not blink out from under the paint. Posters still
+      // rise in JS, but only the ones outside the viewport: the ones this
+      // user can already see were painted by the server.
       const vh = window.innerHeight;
       const posters = [
         ...(gridRef.current?.querySelectorAll("[data-flip-id]") ?? []),
@@ -292,17 +291,8 @@ export function EventsExplorer({
 
   return (
     <div ref={root} className="field-paper min-h-dvh">
-      {/* Header: an ink band, cropped by the fold, the words carrying it. */}
-      <header className="field-ink" data-band style={{ animationDelay: "0.05s" }}>
-        <div className="mx-auto max-w-6xl px-4 pb-10 pt-12 sm:pt-16">
-          <h1 className="display-hero">{t("events.title")}</h1>
-          <p className="mt-3 max-w-[46ch] text-[length:var(--step-lead)]">
-            {t("events.sub")}
-          </p>
-        </div>
-      </header>
-
-      {/* Filter rail: a flat orange band butted against the ink header. */}
+      {/* Filter rail: a flat orange band butted against the ink header
+          (which the page shell renders above this component now). */}
       <div className="field-orange" data-band style={{ animationDelay: "0.12s" }}>
         <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-3 px-4 py-4">
           <input
@@ -375,8 +365,14 @@ export function EventsExplorer({
             data-campus
           >
             <option value="">{t("events.campusAll")}</option>
-            {CAMPUSES.map((c) => (
-              <option key={c.id} value={c.id}>{c.name}</option>
+            {/* One optgroup per city: nineteen sites in a flat list is a
+                wall of names, and the order already groups them. */}
+            {[...new Set(CAMPUSES.map((c) => c.city))].map((city) => (
+              <optgroup key={city} label={city}>
+                {CAMPUSES.filter((c) => c.city === city).map((c) => (
+                  <option key={c.id} value={c.id}>{c.name}</option>
+                ))}
+              </optgroup>
             ))}
           </select>
           {locState === "denied" && (
